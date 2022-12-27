@@ -1,13 +1,14 @@
 import React from 'react';
+import AuthBox from '../component/containers/AuthBox';
 import Layout from '../templates/Layout';
 
 const Main = () => {
     return (
         <Layout>
-
-        <div>
-          <h1>Main</h1>  
-        </div>
+        <section>
+          
+          <AuthBox />
+        </section>
         </Layout>
     );
 };
