@@ -4,12 +4,13 @@ import Layout from '../templates/Layout';
 
 const Main = () => {
     return (
-        <Layout>
+      <Layout>
         <section>
-          
-          <AuthBox />
+          {/* <AuthBox>
+            hello
+          </AuthBox>  */}
         </section>
-        </Layout>
+      </Layout>
     );
 };
 

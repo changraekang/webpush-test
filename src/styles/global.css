@@ -13,7 +13,7 @@ a {
   text-decoration: none;
 }
 
-div {
+div, button {
   box-sizing: border-box;
 }
 

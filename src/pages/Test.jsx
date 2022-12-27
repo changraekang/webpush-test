@@ -1,8 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
-import { ACTIVE_BUTTON_COLOR } from "../constants/color";
-import { AuthList } from "../atom/test";
+import {
+  ACTIVE_BUTTON_COLOR,
+  NAV_BUTTON_HOVER_COLOR,
+  NAV_MY_MENU_COLOR,
+  NAV_MY_MENU_LINE_COLOR,
+} from "../constants/color";
+import {
+  AuthList,
+  CategoryList,
+  MemberList,
+  MessageList,
+  ProjectList,
+} from "../atom/test";
 import { instanceAxios } from "../api/axios";
+import fox from "../assets/images/fox.png";
 const TestWapper = styled.div`
   display: flex;
   width: 155px;
@@ -42,6 +54,11 @@ const TestTitle = styled.div`
   font-size: x-large;
   font-weight: bold;
 `;
+const TopWapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+`;
 const TestButton = styled.button`
   width: 155px;
   margin: 10px;
@@ -49,16 +66,77 @@ const TestButton = styled.button`
   align-items: center;
   color: white;
   font-size: 1.875rem;
+  font-weight: 900;
   background-color: ${ACTIVE_BUTTON_COLOR};
   cursor: pointer;
-  -webkit-box-align: center;
-  -webkit-box-pack: center;
   border-radius: 8px;
   border: none;
 `;
+
+const MyButton = styled.button`
+  position: relative;
+  display: flex;
+  border: none;
+  background: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  float: left;
+  margin-left: 5px;
+  padding: 15px;
+  cursor: pointer;
+  font-weight: 900;
+  &:hover {
+    background: ${NAV_BUTTON_HOVER_COLOR};
+    border-radius: 8px;
+  }
+`;
+
 const Test = () => {
-  const onClickAuth = async (title) => {
+  const [openAuthMenu, setOpenAuthMenu] = useState(false);
+  const [openMemberMenu, setOpenMemberMenu] = useState(false);
+  const [openCategoryMenu, setOpenCategoryMenu] = useState(false);
+  const [openProjectMenu, setOpenProjectMenu] = useState(false);
+  const [openMessageMenu, setOpenMessageMenu] = useState(false);
+  const handleOpenAuthMenu = () => {
+    setOpenCategoryMenu(true);
+    setOpenMemberMenu(true);
+    setOpenMessageMenu(true);
+    setOpenProjectMenu(true);
+    !openAuthMenu ? setOpenAuthMenu(true) : setOpenAuthMenu(false);
+  };
+  const handleOpenMemberMenu = () => {
+    setOpenCategoryMenu(true);
+    setOpenMessageMenu(true);
+    setOpenProjectMenu(true);
+    setOpenAuthMenu(true);
+    !openMemberMenu ? setOpenMemberMenu(true) : setOpenMemberMenu(false);
+  };
+  const handleOpenCategoryMenu = () => {
+    setOpenMemberMenu(true);
+    setOpenMessageMenu(true);
+    setOpenProjectMenu(true);
+    setOpenAuthMenu(true);
+    !openCategoryMenu ? setOpenCategoryMenu(true) : setOpenCategoryMenu(false);
+  };
+  const handleOpenProjectMenu = () => {
+    setOpenCategoryMenu(true);
+    setOpenMemberMenu(true);
+    setOpenMessageMenu(true);
+    setOpenAuthMenu(true);
+    !openProjectMenu ? setOpenProjectMenu(true) : setOpenProjectMenu(false);
+  };
+  const handleOpenMessageMenu = () => {
+    setOpenCategoryMenu(true);
+    setOpenMemberMenu(true);
+    setOpenProjectMenu(true);
+    setOpenAuthMenu(true);
+    !openMessageMenu ? setOpenMessageMenu(true) : setOpenMessageMenu(false);
+  };
+  const onClickAuth = async (title, path) => {
     console.log(title, "주소");
+    console.log(path, "주소");
     let data = "";
     try {
       const response = await instanceAxios.post(`/auth/${title}`, data);
@@ -70,19 +148,98 @@ const Test = () => {
 
   return (
     <>
-      <TestTitle>TEST PAGE</TestTitle>
-      {AuthList.map(({ title, explain }) => {
-        return (
-          <TestWapper key={explain}>
-            <TestButtonWapper>
-              <TestButton onClick={() => onClickAuth(title)}>Auth</TestButton>
-              <TestFlex>{title}</TestFlex>
-            </TestButtonWapper>
-            <TestFlex>{explain}</TestFlex>
-            <TestExplainFlex>결과</TestExplainFlex>
-          </TestWapper>
-        );
-      })}
+      <TestTitle>
+        TEST PAGE <img height="84px" src={fox}></img>
+      </TestTitle>
+      <TestWapper>
+        <TopWapper>
+          <MyButton onClick={handleOpenAuthMenu}>Auth</MyButton>
+          <MyButton onClick={handleOpenCategoryMenu}>Category</MyButton>
+          <MyButton onClick={handleOpenMemberMenu}>Member</MyButton>
+          <MyButton onClick={handleOpenProjectMenu}>Project</MyButton>
+          <MyButton onClick={handleOpenMessageMenu}>Mesaage</MyButton>
+        </TopWapper>
+        {openAuthMenu
+          ? null
+          : AuthList.map(({ title, explain, path }) => {
+              return (
+                <TestWapper key={explain}>
+                  <TestButtonWapper>
+                    <TestButton onClick={() => onClickAuth(title, path)}>
+                      Auth
+                    </TestButton>
+                    <TestFlex>{title}</TestFlex>
+                  </TestButtonWapper>
+                  <TestFlex>{explain}</TestFlex>
+                  <TestExplainFlex>결과: </TestExplainFlex>
+                </TestWapper>
+              );
+            })}
+        {openMemberMenu
+          ? null
+          : MemberList.map(({ title, explain, path }) => {
+              return (
+                <TestWapper key={explain}>
+                  <TestButtonWapper>
+                    <TestButton onClick={() => onClickAuth(title, path)}>
+                      Member
+                    </TestButton>
+                    <TestFlex>{title}</TestFlex>
+                  </TestButtonWapper>
+                  <TestFlex>{explain}</TestFlex>
+                  <TestExplainFlex>결과: </TestExplainFlex>
+                </TestWapper>
+              );
+            })}
+        {openCategoryMenu
+          ? null
+          : CategoryList.map(({ title, explain, path }) => {
+              return (
+                <TestWapper key={explain}>
+                  <TestButtonWapper>
+                    <TestButton onClick={() => onClickAuth(title, path)}>
+                      Category
+                    </TestButton>
+                    <TestFlex>{title}</TestFlex>
+                  </TestButtonWapper>
+                  <TestFlex>{explain}</TestFlex>
+                  <TestExplainFlex>결과: </TestExplainFlex>
+                </TestWapper>
+              );
+            })}
+        {openMessageMenu
+          ? null
+          : MessageList.map(({ title, explain, path }) => {
+              return (
+                <TestWapper key={explain}>
+                  <TestButtonWapper>
+                    <TestButton onClick={() => onClickAuth(title, path)}>
+                      Message
+                    </TestButton>
+                    <TestFlex>{title}</TestFlex>
+                  </TestButtonWapper>
+                  <TestFlex>{explain}</TestFlex>
+                  <TestExplainFlex>결과: </TestExplainFlex>
+                </TestWapper>
+              );
+            })}
+        {openProjectMenu
+          ? null
+          : ProjectList.map(({ title, explain, path }) => {
+              return (
+                <TestWapper key={explain}>
+                  <TestButtonWapper>
+                    <TestButton onClick={() => onClickAuth(title, path)}>
+                      Project
+                    </TestButton>
+                    <TestFlex>{title}</TestFlex>
+                  </TestButtonWapper>
+                  <TestFlex>{explain}</TestFlex>
+                  <TestExplainFlex>결과: </TestExplainFlex>
+                </TestWapper>
+              );
+            })}
+      </TestWapper>
     </>
   );
 };

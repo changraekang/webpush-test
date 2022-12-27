@@ -15,4 +15,6 @@ export const MAIN_CONTENT_SIZE= '16px';
 export const MAIN_MESSAGE_TITLE_SIZE= '20px';
 export const MAIN_SUBTITLE_SIZE= '24px';
 export const MAIN_TITLE_SIZE= '32px';
- 
+
+// 버튼
+export const BUTTON_SIZE= '24px';
