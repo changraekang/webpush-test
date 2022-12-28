@@ -18,3 +18,9 @@ export const MAIN_TITLE_SIZE= '32px';
 
 // 버튼
 export const BUTTON_SIZE= '24px';
+export const CERTIFICATION_BUTTON_SIZE = '16px';
+
+//input 
+export const SAMLL_INPUT_SIZE = '14px';
+export const NORMAL_INPUT_SIZE = '16px';
+

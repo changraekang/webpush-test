@@ -3,7 +3,7 @@ import AuthBox from "../component/containers/AuthBox";
 import {MAIN_BACKGROUND_COLOR, INACTIVE_INPUT_BORDER_COLOR, INACTIVE_INPUT_FONT_COLOR, INACTIVE_INPUT_COLOR, NORMAL_BUTTON_BORDER_COLOR, NORMAL_BUTTON_COLOR, NORMAL_BUTTON_FONT_COLOR} from '../constants/color';
 import {AUTH_RADIO_SIZE, BUTTON_SIZE} from '../constants/fontSize';
 import logo from '../assets/images/logo.png';
-import {InactiveButton, NormalButton, ActiveButton} from "../component/buttons/AuthButtons";
+import {LoginButton,BeforeLoginButton, GoSignupButton} from "../component/buttons/AuthButtons";
 import activeCheck from '../assets/images/active-check.png';
 import inActiveCheck from '../assets/images/inactive-check.png';
 import { useState } from "react";
@@ -70,8 +70,7 @@ export default function Login() {
 
   const handleGoSignup = () => {
     // e.preventDefault();
-    // navigate('/signup');
-    console.log('hello!');
+    navigate('/signup');
   };
 
   return (
@@ -89,7 +88,7 @@ export default function Login() {
             <div>
               <Input last type="text" placeholder="비밀번호를 입력하세요"/>
             </div>
-            <InactiveButton type="submit">로그인</InactiveButton>
+            <BeforeLoginButton type="submit">로그인</BeforeLoginButton>
           </form>
           <RadioList>
             <RadioLi onClick={handleCheckRadio}>
@@ -100,8 +99,7 @@ export default function Login() {
             <li>아아디 찾기</li>
             <li>비밀번호 찾기</li>
           </RadioList>
-          <NormalButton handleGoSignup={handleGoSignup}>회원가입</NormalButton>
-          {/* <NormalBtn onClick={handleGoSignup}>회원가입</NormalBtn> */}
+          <GoSignupButton handleGoSignup={handleGoSignup}>회원가입</GoSignupButton>
         </WrapContents>
       </AuthBox>  
     </Section>

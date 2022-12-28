@@ -14,28 +14,28 @@ export const AuthList = [
 ];
 export const BoardList = [];
 export const MessageList = [
-  { title: "message/1", path: "GET", explain: "메세지 한건 호출" },
-  { title: "message/1", path: "PUT", explain: "메세지 수정" },
-  { title: "message/1", path: "DELET", explain: "메세지 삭제" },
-  { title: "message/1/add", path: "POST", explain: "메세지 등록" },
-  { title: "message/1/all", path: "GET", explain: "프로젝트별 메시지 목록" },
-  { title: "message/all", path: "GET", explain: "메시지 전체 목록" },
+  { title: "{id}", path: "GET", explain: "메세지 한건 호출" },
+  { title: "{id}", path: "PUT", explain: "메세지 수정" },
+  { title: "{id}", path: "DELET", explain: "메세지 삭제" },
+  { title: "{id}/add", path: "POST", explain: "메세지 등록" },
+  { title: "{id}/all", path: "GET", explain: "프로젝트별 메시지 목록" },
+  { title: "all", path: "GET", explain: "메시지 전체 목록" },
 ];
 export const ProjectList = [
-  { title: "project/1", path: "GET", explain: "카테고리 한건 호출" },
-  { title: "project/1", path: "PUT", explain: "카테고리 수정" },
-  { title: "project/1", path: "DELET", explain: "카테고리 삭제" },
-  { title: "project/add", path: "POST", explain: "카테고리 등록" },
-  { title: "project/all", path: "GET", explain: "카테고리 전체 목록" },
+  { title: "{id}", path: "GET", explain: "카테고리 한건 호출" },
+  { title: "{id}", path: "PUT", explain: "카테고리 수정" },
+  { title: "{id}", path: "DELET", explain: "카테고리 삭제" },
+  { title: "add", path: "POST", explain: "카테고리 등록" },
+  { title: "all", path: "GET", explain: "카테고리 전체 목록" },
 ];
 export const CategoryList = [
-  { title: "category/1", path: "PUT", explain: "카테고리 수정" },
-  { title: "category/1", path: "DELETE", explain: "카테고리 삭제" },
-  { title: "category/add", path: "POST", explain: "카테고리 등록" },
-  { title: "category/all", path: "GET", explain: "카테고리 전체 출력" },
+  { title: "{id}", path: "PUT", explain: "카테고리 수정" },
+  { title: "{id}", path: "DELETE", explain: "카테고리 삭제" },
+  { title: "add", path: "POST", explain: "카테고리 등록" },
+  { title: "all", path: "GET", explain: "카테고리 전체 출력" },
 ];
 export const MemberList = [
-  { title: "member/password/update", path: "PUT", explain: "비밀번호 수정" },
-  { title: "member/password/logout", path: "GET", explain: "로그아웃" },
-  { title: "member/password/me", path: "POST", explain: "로그인유저정보 호출" },
+  { title: "password/update", path: "PUT", explain: "비밀번호 수정" },
+  { title: "password/logout", path: "GET", explain: "로그아웃" },
+  { title: "password/me", path: "POST", explain: "로그인유저정보 호출" },
 ];

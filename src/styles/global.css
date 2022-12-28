@@ -17,6 +17,16 @@ div, button {
   box-sizing: border-box;
 }
 
+button{
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+input {
+  outline: none;
+}
+
 .ir {
   display: block;
   overflow: hidden;
