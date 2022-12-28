@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import {
   ACTIVE_BUTTON_COLOR,
-  NAV_BUTTON_HOVER_COLOR,
+  MAIN_COLOR,
   NAV_MY_MENU_COLOR,
   NAV_MY_MENU_LINE_COLOR,
 } from "../constants/color";
+
 import {
   AuthList,
   CategoryList,
@@ -88,7 +89,7 @@ const MyButton = styled.button`
   cursor: pointer;
   font-weight: 900;
   &:hover {
-    background: ${NAV_BUTTON_HOVER_COLOR};
+    background: ${MAIN_COLOR};
     border-radius: 8px;
   }
 `;
@@ -100,6 +101,7 @@ const Test = () => {
   const [openProjectMenu, setOpenProjectMenu] = useState(true);
   const [openMessageMenu, setOpenMessageMenu] = useState(true);
   const [error, setError] = useState("");
+  const [success, setSucces] = useState([]);
   const [title2, setTitle] = useState("");
   const [path2, setPath] = useState("");
   const handleOpenAuthMenu = () => {
@@ -141,15 +143,34 @@ const Test = () => {
     setTitle(title);
     setPath(path);
     setError("");
-    let data = { email: "stork_kcr@naver.com" };
-    console.log(data);
+    setSucces([]);
+    let data = {
+      company: "필수",
+      confirmPassword: "asd!1234",
+      email: "444@naver.com",
+      name: "강창래3",
+      password: "asd!1234",
+      phone: "010-4911-4073",
+      token: "18073768",
+    };
+    /**
+    let data = {
+      email: "stork_kcr@naver.com",
+      token: "74516212",
+    };
+    */
+
     try {
       if (path === "POST") {
         const response = await instanceAxios.post(`/auth/${title}`, data);
-        console.log(response);
+        console.log(response, "응답");
+        let suc = JSON.stringify(response.data);
+        setSucces(suc);
       } else {
         const response = await instanceAxios.get(`/auth/${title}`, data);
-        console.log(response);
+        console.log(response, "응답");
+        let suc = JSON.stringify(response.data);
+        setSucces(suc);
       }
     } catch (err) {
       console.log(err);
@@ -160,17 +181,24 @@ const Test = () => {
     setTitle(title);
     setPath(path);
     setError("");
+    setSucces([]);
     let data = "";
     try {
       if (path === "POST") {
         const response = await instanceAxios.post(`/member/${title}`, data);
         console.log(response);
+        let suc = JSON.stringify(response.data);
+        setSucces(suc);
       } else if (path === "GET") {
         const response = await instanceAxios.get(`/member/${title}`, data);
         console.log(response);
+        let suc = JSON.stringify(response.data);
+        setSucces(suc);
       } else {
         const response = await instanceAxios.put(`/member/${title}`, data);
         console.log(response);
+        let suc = JSON.stringify(response.data);
+        setSucces(suc);
       }
     } catch (err) {
       setError(err.message);
@@ -181,20 +209,29 @@ const Test = () => {
     setTitle(title);
     setPath(path);
     setError("");
+    setSucces([]);
     let api = title.replace("{id}", "1");
     let data = "";
     try {
       if (path === "POST") {
         const response = await instanceAxios.post(`/category/${api}`, data);
+        let suc = JSON.stringify(response.data);
+        setSucces(suc);
         console.log(response);
       } else if (path === "DELETE") {
         const response = await instanceAxios.delete(`/category/${api}`, data);
         console.log(response);
+        let suc = JSON.stringify(response.data);
+        setSucces(suc);
       } else if (path === "GET") {
         const response = await instanceAxios.get(`/category/${api}`, data);
+        let suc = JSON.stringify(response.data);
+        setSucces(suc);
         console.log(response);
       } else {
         const response = await instanceAxios.put(`/category/${api}`, data);
+        let suc = JSON.stringify(response.data);
+        setSucces(suc);
         console.log(response);
       }
     } catch (err) {
@@ -206,11 +243,14 @@ const Test = () => {
     setTitle(title);
     setPath(path);
     setError("");
+    setSucces([]);
     let api = title.replace("{id}", "1");
     let data = "";
     try {
       const response = await instanceAxios.post(`/project/${api}`, data);
       console.log(response);
+      let suc = JSON.stringify(response.data);
+      setSucces(suc);
     } catch (err) {
       console.log(err);
       setError(err.message);
@@ -220,9 +260,12 @@ const Test = () => {
     setTitle(title);
     setPath(path);
     setError("");
+    setSucces([]);
     let data = "";
     try {
       const response = await instanceAxios.post(`/message/${title}`, data);
+      let suc = JSON.stringify(response.data);
+      setSucces(suc);
       console.log(response);
     } catch (err) {
       console.log(err);
@@ -256,7 +299,9 @@ const Test = () => {
                       <TestFlex>{title}</TestFlex>
                     </TestButtonWapper>
                     <TestFlex>{explain}</TestFlex>
-                    <TestExplainFlex>결과: {error} </TestExplainFlex>
+                    <TestExplainFlex>
+                      결과: {error} {success}{" "}
+                    </TestExplainFlex>
                   </TestWapper>
                 );
               } else {
@@ -287,7 +332,9 @@ const Test = () => {
                       <TestFlex>{title}</TestFlex>
                     </TestButtonWapper>
                     <TestFlex>{explain}</TestFlex>
-                    <TestExplainFlex>결과: {error} </TestExplainFlex>
+                    <TestExplainFlex>
+                      결과: {error} {success}{" "}
+                    </TestExplainFlex>
                   </TestWapper>
                 );
               } else {
@@ -318,7 +365,9 @@ const Test = () => {
                       <TestFlex>{title}</TestFlex>
                     </TestButtonWapper>
                     <TestFlex>{explain}</TestFlex>
-                    <TestExplainFlex>결과: {error}</TestExplainFlex>
+                    <TestExplainFlex>
+                      결과: {error} {success}
+                    </TestExplainFlex>
                   </TestWapper>
                 );
               } else {
@@ -349,7 +398,9 @@ const Test = () => {
                       <TestFlex>{title}</TestFlex>
                     </TestButtonWapper>
                     <TestFlex>{explain}</TestFlex>
-                    <TestExplainFlex>결과: {error} </TestExplainFlex>
+                    <TestExplainFlex>
+                      결과: {error} {success}{" "}
+                    </TestExplainFlex>
                   </TestWapper>
                 );
               } else {
@@ -380,7 +431,9 @@ const Test = () => {
                       <TestFlex>{title}</TestFlex>
                     </TestButtonWapper>
                     <TestFlex>{explain}</TestFlex>
-                    <TestExplainFlex>결과: {error} </TestExplainFlex>
+                    <TestExplainFlex>
+                      결과: {error} {success}{" "}
+                    </TestExplainFlex>
                   </TestWapper>
                 );
               } else {

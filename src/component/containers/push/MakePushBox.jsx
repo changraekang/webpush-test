@@ -1,9 +1,15 @@
-import React from 'react'
+import styled from "styled-components"
 
-export default function MakePushBox() {
+const Box = styled.div`
+  padding: 32px;
+  border: 1px solid #AFAFAF;
+  border-radius: 16px;
+`
+
+export default function MakePushBox({children}) {
   return (
-    <div>
-        <p>make push box</p>
-    </div>
+    <Box>
+        {children}
+    </Box>
   )
 }

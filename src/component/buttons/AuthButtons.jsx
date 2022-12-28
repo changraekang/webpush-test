@@ -17,6 +17,10 @@ const Button = styled.button`
   color: ${(props) => (props.active ? `${ACTIVE_BUTTON_FONT_COLOR}` : null)};
   color: ${(props) => (props.inactive ? `${INACTIVE_BUTTON_FONT_COLOR}` : null)};
   border: 1px solid ${(props)=> (props.normal ? `${NORMAL_BUTTON_BORDER_COLOR}` : "none")};
+
+  &:hover {
+
+  }
 `
 //로그인 유효성 통과 전
 function LoginButton({children}) {
@@ -42,14 +46,14 @@ function GoSignupButton({children, handleGoSignup}) {
 // 회원가입 작성 중
 function SignupButton({children}) {
   return (
-    <Button active>{children}</Button>
+    <Button style={{"marginTop":"55px"}} active>{children}</Button>
   )
 }
 
 // 회원 가입 완료
 function BeforeSignupButton({children}) {
   return (
-    <Button inactive>{children}</Button>
+    <Button style={{"marginTop":"55px"}} inactive>{children}</Button>
   )
 }
 
@@ -64,7 +68,7 @@ function CertificationButton({children}) {
 // 이메일 비인증
 function UnCertificationButton({children}) {
   return (
-    <Button certificate inactive>{children}</Button>
+    <Button certificate inactive style={{"width":"190px" }}>{children}</Button>
   )
 }
 

@@ -14,8 +14,8 @@ const Section = styled.section`
   justify-content: center;
   align-items: center;
   width: 100%;
-  /* height: 100vh; */
-  padding: 100px 0;
+  height: 100vh;
+  padding: 30px 0;
   font-family: 'Pretendard-Regular';
   /* padding: 186px 0; */
   background-color: ${MAIN_BACKGROUND_COLOR};
@@ -33,7 +33,7 @@ const Logo = styled.img`
   `
 
 const WrapContents = styled.div`
-  width: 317px;
+  width: 437px;
 `
 
 const Input = styled.input`
@@ -58,6 +58,10 @@ const RadioLi = styled.li`
   display: flex;
   align-items: center;
   gap: 4px;
+`
+const WrapFindAuth = styled.div`
+  display: flex;
+  gap: 16px;
 `
 
 //--------------로그인 페이지--------------------------
@@ -96,8 +100,10 @@ export default function Login() {
               {isCheck && <img src={activeCheck} alt="아이디저장하기 체크 아이콘"/>}
               아이디 저장
             </RadioLi>
-            <li>아아디 찾기</li>
-            <li>비밀번호 찾기</li>
+            <WrapFindAuth>
+              <li>아아디 찾기</li>
+              <li>비밀번호 찾기</li>
+            </WrapFindAuth>
           </RadioList>
           <GoSignupButton handleGoSignup={handleGoSignup}>회원가입</GoSignupButton>
         </WrapContents>

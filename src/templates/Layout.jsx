@@ -1,7 +1,7 @@
 import logo from '../assets/images/logo.png';
 import mypageLogo from '../assets/images/mypage-logo.png';
 import styled from 'styled-components';
-import {NAV_MY_MENU_LINE_COLOR,NAV_MY_MENU_COLOR, SIDE_NAV_COLOR ,NAV_FONT_HOVER_COLOR,NAV_MAIN_COLOR,NAV_BUTTON_HOVER_COLOR,NAV_FONT_COLOR} from '../constants/color';
+import {NAV_MY_MENU_HOVER_COLOR, NAV_MY_MENU_LINE_COLOR,NAV_MY_MENU_COLOR, SIDE_NAV_COLOR ,NAV_FONT_HOVER_COLOR,NAV_MAIN_COLOR,NAV_BUTTON_HOVER_COLOR,NAV_FONT_COLOR} from '../constants/color';
 import { useEffect, useState } from 'react';
 
 
@@ -69,17 +69,18 @@ position: relative;
   padding: 5px;
   cursor: pointer;
   font-weight: 900;
-
+  color:${NAV_MY_MENU_COLOR};
+  margin-right: 20px;
   &:hover {
-    background: ${NAV_BUTTON_HOVER_COLOR};
+    background: ${NAV_MY_MENU_HOVER_COLOR};
     border-radius: 8px;
   }
 `
 
 const MyMenu = styled.ul`
   position: absolute;
-  right: 16px;
-  top: 70px;
+  right: 20px;
+  top: 55px;
   width: 105px;
   border-radius: 8px;
   box-shadow: 0px 1px 20px rgba(0, 0, 0, 0.16);
@@ -137,7 +138,6 @@ export default function Layout({children}) {
       <WrapRight>
           <TopHeader>
               <MyButton onClick={handleOpenMyMenu}>
-                {<img src={mypageLogo} alt="마이페이지 로고" />}
                 김태희(master)
               </MyButton>
               {openMyMenu && 
