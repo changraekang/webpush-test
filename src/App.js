@@ -11,7 +11,7 @@ import Main from "./pages/Main";
 import Test from "./pages/Test";
 import Layout from "./templates/Layout";
 import Signup from "./pages/Signup";
-import Login from "./pages/Lgoin";
+import Login from "./pages/Login";
 
 function App() {
   return (
