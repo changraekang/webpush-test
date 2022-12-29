@@ -1,7 +1,7 @@
 export const AuthList = [
   { title: "emailToken", path: "POST", explain: "이메일 토큰을 인증" },
   {
-    title: "emailToken/12345@naver.com",
+    title: "emailToken/444@naver.com",
     path: "get",
     explain: "이메일 토큰을 받아옵니다",
   },

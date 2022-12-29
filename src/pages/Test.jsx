@@ -145,14 +145,15 @@ const Test = () => {
     setError("");
     setSucces([]);
     let data = {
-      company: "필수",
-      confirmPassword: "asd!1234",
+      deviceInfo: {
+        deviceId: "1",
+        deviceType: "Android",
+        notificationToken: "asd",
+      },
       email: "444@naver.com",
-      name: "강창래3",
       password: "asd!1234",
-      phone: "010-4911-4073",
-      token: "18073768",
     };
+
     /**
     let data = {
       email: "stork_kcr@naver.com",
