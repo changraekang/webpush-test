@@ -13,7 +13,7 @@ const Nav = styled.nav`
   background: ${SIDE_NAV_COLOR};
   color: ${NAV_FONT_COLOR};
   padding: 40px;
-  height: 100vh
+  /* height: 100vh */
 `
 
 const MainLogo = styled.img`

@@ -3,6 +3,7 @@ import AuthBox from "../../components/containers/auth/AuthBox";
 import {
   MAIN_BACKGROUND_COLOR,
   AUTH_LABEL_COLOR,
+  ACTIVE_INPUT_BORDER_COLOR,
   INACTIVE_INPUT_BORDER_COLOR,
   INACTIVE_INPUT_FONT_COLOR,
   INACTIVE_INPUT_COLOR,

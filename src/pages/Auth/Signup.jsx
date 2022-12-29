@@ -48,7 +48,7 @@ const WrapContents = styled.div`
 const InputAlign = styled.div`
   position: relative;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-between;
   gap: 8px;
   margin-bottom: ${(props) => (props.last ? "32px" : "12px")};
