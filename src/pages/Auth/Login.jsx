@@ -7,7 +7,6 @@ import {
   INACTIVE_INPUT_BORDER_COLOR,
   INACTIVE_INPUT_FONT_COLOR,
   INACTIVE_INPUT_COLOR,
-  ACTIVE_INPUT_BORDER_COLOR,
   NORMAL_BUTTON_BORDER_COLOR,
   NORMAL_BUTTON_COLOR,
   NORMAL_BUTTON_FONT_COLOR,
@@ -21,9 +20,15 @@ import {
 } from "../../components/buttons/AuthButtons";
 import activeCheck from "../../assets/images/active-check.png";
 import inActiveCheck from "../../assets/images/inactive-check.png";
-import { useState } from "react";
-import { useNavigate } from "react-router";
+import { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router";
 import { Link } from "react-router-dom";
+import { deviceDetect, mobileModel, osName } from "react-device-detect";
+import { instanceAxios } from "../../api/axios";
+import {
+  setAccessTokenToCookie,
+  setRefreshTokenToCookie,
+} from "../../cookie/controlCookie";
 
 const Section = styled.section`
   display: flex;
@@ -96,6 +101,22 @@ const LinkStyle = styled(Link)`
 export default function Login() {
   const navigate = useNavigate();
   const [isCheck, setIsCheck] = useState(false);
+  const [inputs, setInputs] = useState({
+    email: "",
+    password: "",
+  });
+
+  const { email, password } = inputs;
+
+  const handleInputValues = (e) => {
+    const { name, value } = e.target;
+    setInputs({
+      ...inputs,
+      [name]: value,
+    });
+    console.log(inputs);
+  };
+
   const handleCheckRadio = () => {
     isCheck ? setIsCheck(false) : setIsCheck(true);
   };
@@ -105,6 +126,47 @@ export default function Login() {
     navigate("/signup");
   };
 
+  // 로그인 data
+  const [browserName, setBrowserName] = useState("");
+  useEffect(() => {
+    if (deviceDetect().isBrowser) {
+      setBrowserName("PC");
+    } else if (deviceDetect().isMobile) {
+      setBrowserName("MOBILE");
+    }
+  }, [browserName]);
+
+  const loginData = {
+    deviceInfo: {
+      deviceId: "Non empty string",
+      deviceType: "DEVICE_TYPE_" + browserName,
+      notificationToken: "Non empty string",
+    },
+    email: email,
+    password: password,
+  };
+
+  // 로그인 요청
+  const requestLogin = async (e) => {
+    e.preventDefault();
+    console.log("login", loginData);
+    try {
+      const response = await instanceAxios.post("/auth/login", loginData);
+      if (response.status === 200) {
+        const refreshToken = response.data.refreshToken;
+        const accessToken = response.data.accessToken;
+        const tokenType = response.data.tokenType;
+        const headersToken = tokenType + accessToken;
+        setAccessTokenToCookie(headersToken);
+        setRefreshTokenToCookie(refreshToken);
+        instanceAxios.defaults.headers.common["Authorization"] = headersToken;
+        navigate("/makepush");
+        console.log(response);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
   return (
     <Section>
       <h1 className="ir">회원가입</h1>
@@ -115,12 +177,30 @@ export default function Login() {
         <WrapContents>
           <form action="post">
             <div>
-              <Input type="text" placeholder="이메일을 입력하세요" />
+              <Input
+                onChange={handleInputValues}
+                name="email"
+                type="text"
+                placeholder="이메일을 입력하세요"
+              />
             </div>
             <div>
-              <Input last type="text" placeholder="비밀번호를 입력하세요" />
+              <Input
+                onChange={handleInputValues}
+                name="password"
+                last
+                type="password"
+                placeholder="비밀번호를 입력하세요"
+              />
             </div>
-            <BeforeLoginButton type="submit">로그인</BeforeLoginButton>
+            {(!email || !password) && (
+              <BeforeLoginButton type="submit">로그인</BeforeLoginButton>
+            )}
+            {email && password && (
+              <LoginButton type="submit" requestLogin={requestLogin}>
+                로그인
+              </LoginButton>
+            )}
           </form>
           <RadioList>
             <RadioLi onClick={handleCheckRadio}>

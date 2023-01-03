@@ -8,7 +8,6 @@ export const instanceAxios = axios.create({
   // }
 });
 
-
 // instanceAxios.interceptors.request.use(
 //   function (config) {
 //     // 요청을 보내기 전에 수행할 일
@@ -16,7 +15,7 @@ export const instanceAxios = axios.create({
 //     const userAccessToken = getCookie('accessToken');
 //     if (userAccessToken) {
 //       config.headers['Authorization'] = userAccessToken;
-//     } 
+//     }
 //     return config;
 //   },
 //   function (error) {
@@ -24,7 +23,6 @@ export const instanceAxios = axios.create({
 //     // ...
 //     return Promise.reject(error);
 //   });
-
 
 // // 응답 인터셉터 추가
 // instanceAxios.interceptors.response.use(
@@ -39,5 +37,4 @@ export const instanceAxios = axios.create({
 //     return Promise.reject(error);
 //   });
 
-
-    //https://velog.io/@ino5/axios-Interceptor-%EC%9D%B4%EC%9A%A9%ED%95%98%EC%97%AC-JWT-%ED%97%A4%EB%8D%94-%EC%84%A4%EC%A0%95%ED%95%98%EA%B8%B0
+//https://velog.io/@ino5/axios-Interceptor-%EC%9D%B4%EC%9A%A9%ED%95%98%EC%97%AC-JWT-%ED%97%A4%EB%8D%94-%EC%84%A4%EC%A0%95%ED%95%98%EA%B8%B0

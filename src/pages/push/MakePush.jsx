@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import PushBox from "../../components/containers/push/PushBox";
 import Layout from "../../templates/Layout";
@@ -12,13 +12,17 @@ import {
   MAIN_SUBCONTENT_SIZE,
   MAIN_TITLE_SIZE,
   MAIN_SUBTITLE_SIZE,
-  MAIN_CONTENT_SIZE
+  MAIN_CONTENT_SIZE,
 } from "../../constants/fontSize";
 import activeCheck from "../../assets/images/active-check.png";
 import Fox from "../../assets/images/fox.png";
 import inActiveCheck from "../../assets/images/inactive-check.png";
 import { DemoBox, DemoWrapBox } from "../../components/containers/push/DemoBox";
-
+import {
+  ActivePushButton,
+  InactivePushButton,
+  RegisterImageButton,
+} from "../../components/buttons/PushButtons";
 const TitleWrapper = styled.div`
   width: 100%;
   display: flex;
@@ -26,7 +30,12 @@ const TitleWrapper = styled.div`
   padding-top: 100px;
   padding-left: 40px;
 `;
-
+const PageWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
 const SectionWrapper = styled.div`
   width: 100%;
   display: flex;
@@ -40,7 +49,7 @@ const Section = styled.section`
   margin-left: 10px;
   width: 877px;
   padding-left: 10px;
-  padding-bottom: 400px;
+  padding-bottom: 100px;
   /* height: 100vh; */
   font-family: "Pretendard-Regular";
   /* padding: 186px 0; */
@@ -48,13 +57,6 @@ const Section = styled.section`
 const DemoSection = styled.section`
   display: flex;
   justify-content: flex-start;
-  align-items: flex-start;
-  flex-direction: column;
-  margin-left: 10px;
-`;
-const DemoShowSection = styled.section`
-  display: flex;
-  justify-content: flex-end;
   align-items: flex-start;
   flex-direction: column;
   margin-left: 10px;
@@ -67,7 +69,7 @@ const PageTitle = styled.h2`
 `;
 
 const Title = styled.h3`
-  font-size: ${ MAIN_SUBTITLE_SIZE};
+  font-size: ${MAIN_SUBTITLE_SIZE};
   font-weight: 600;
   padding-bottom: 12px;
 `;
@@ -109,7 +111,7 @@ const DemoWrapperBox = styled.div`
   height: 383px;
   left: 32px;
   top: 77px;
-
+  padding-right: 50px;
   background: ${MAIN_DEMOBOX_COLOR};
   border-radius: 16px;
 `;
@@ -118,6 +120,23 @@ const Input = styled.input`
   width: 100%;
   padding: 16px;
   margin-top: 8px;
+  box-sizing: border-box;
+  border-radius: 8px;
+  border: 1px solid ${INACTIVE_INPUT_BORDER_COLOR};
+  color: ${MAIN_FONT_COLOR};
+`;
+const InputDate = styled.input`
+  padding: 16px;
+  box-sizing: border-box;
+  border-radius: 8px;
+  border: 1px solid ${INACTIVE_INPUT_BORDER_COLOR};
+  color: ${MAIN_FONT_COLOR};
+`;
+const ImageInput = styled.input`
+  width: 100%;
+  padding: 16px;
+  margin-top: 8px;
+  margin-left: 20px;
   box-sizing: border-box;
   border-radius: 8px;
   border: 1px solid ${INACTIVE_INPUT_BORDER_COLOR};
@@ -151,16 +170,97 @@ const RadioLi = styled.li`
 const SubMessage = styled.p`
   color: ${MAIN_SUBTITLE_FONT_COLOR};
   text-align: center;
+  padding-top: 20px;
+  padding-bottom: 60px;
 `;
-
+const LinkMessage = styled.p`
+  color: ${MAIN_SUBTITLE_FONT_COLOR};
+  text-align: center;
+`;
+const ButtonWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 320px;
+  padding-bottom: 80px;
+`;
+const ReserveWrapper = styled.div`
+  width: 320px;
+  height: 36px;
+  display: flex;
+  justify-content: flex-start;
+`;
 export default function MakePush() {
+  const [thisClock, setThisClock] = useState("");
+  const [thisMonth, setThisMonth] = useState("");
+  const [ReserveMin, setReserveMin] = useState("");
+  const [timer, setTimer] = useState(1);
+  const [submitDate, setSubmitDate] = useState(ReserveMin);
+  const getClock = () => {
+    const offset = 1000 * 60 * 60 * 9;
+    const koreaNow = new Date(new Date().getTime() + offset);
+    setReserveMin(koreaNow.toISOString().slice(0, 16));
+    setThisClock(koreaNow.toISOString().slice(11, 16));
+    setThisMonth(koreaNow.toISOString().slice(0, 10));
+  };
+  useEffect(() => {
+    getClock();
+    setInterval(getClock, 20000);
+  }, []);
+
   const [isWebCheck, setisWebCheck] = useState(false);
   const [isMobileCheck, setisMobileCheck] = useState(false);
   const [isAdsCheck, setIsAdsCheck] = useState(false);
   const [isInfoCheck, setisInfoCheck] = useState(false);
   const [isEtcCheck, setisEtcCheck] = useState(false);
-  const [isDirectCheck, setisDirectCheck] = useState(false);
+  const [isDirectCheck, setIsDirectCheck] = useState(false);
+  const [isReserveCheck, setIsReserveCheck] = useState(false);
+  const [inputs, setInputs] = useState({
+    web: false,
+    mobile: false,
+    ads: false,
+    info: false,
+    etc: false,
+    title: "",
+    content: "",
+    link: "",
+    image: "",
+    date: "",
+  });
 
+  // 이미지 파일 관리
+  const [previewImg, setPreviewImg] = useState(null);
+  const encodeFileBase64 = (file) => {
+    const reader = new FileReader();
+    // reader.readAsDataURL(file);
+    setPreviewImg(file);
+
+    // return new Promise((resolve) => {
+    //   reader.onload = () => {
+    //     setPreviewImg(file.result);
+    //     resolve();
+    //   }
+    // })
+  };
+
+  // 이미지 파일 업로드
+  const imageInputRef = useRef(null);
+  const formData = new FormData();
+  const [demoImg, setDomoImg] = useState("");
+  const handleUploadImage = (e) => {
+    const fileList = e.target.files;
+    encodeFileBase64(fileList[0]);
+    // formData.append('file', previewImg);
+    // for(const keyValues of formData) console.log("for 문: ", keyValues);
+    const url = URL.createObjectURL(fileList[0]);
+    setDomoImg(url);
+  };
+
+  const onImgInputBtnClick = (e) => {
+    e.preventDefault();
+    imageInputRef.current.click();
+  };
+
+  // 라디오 체크
   const handleWebCheckRadio = () => {
     isWebCheck ? setisWebCheck(false) : setisWebCheck(true);
   };
@@ -177,9 +277,74 @@ export default function MakePush() {
     isEtcCheck ? setisEtcCheck(false) : setisEtcCheck(true);
   };
   const handleDirectCheckRadio = () => {
-    isDirectCheck ? setisDirectCheck(false) : setisDirectCheck(true);
+    isDirectCheck ? setIsDirectCheck(false) : setIsDirectCheck(true);
+    setIsReserveCheck(false);
+  };
+  const handleReserveCheckRadio = () => {
+    isReserveCheck ? setIsReserveCheck(false) : setIsReserveCheck(true);
+    setIsDirectCheck(false);
   };
 
+  // 메세지 입력
+  const { web, mobile, ads, info, etc, title, content, link, image, date } =
+    inputs;
+  const handleInputDates = (e) => {
+    if (e.target.value.slice(0, 10) === thisMonth) {
+      if (e.target.value.slice(11, 16) < thisClock) {
+        setSubmitDate(ReserveMin);
+        return alert("현재시간보다 빠르게 설정 할 수 없습니다.");
+      }
+    }
+    setSubmitDate(e.target.value);
+  };
+  const handleInputValues = (e) => {
+    if (isMobileCheck || isWebCheck) {
+      e.preventDefault();
+      const { name, value } = e.target;
+      setInputs({
+        ...inputs,
+        [name]: value,
+        web: isWebCheck,
+        mobile: isMobileCheck,
+        ads: isAdsCheck,
+        info: isInfoCheck,
+        etc: isEtcCheck,
+      });
+    } else {
+      alert("Please select Push Type");
+    }
+  };
+
+  // 제출
+  const onClickSubmit = () => {
+    if (!isMobileCheck && !isWebCheck) {
+      return alert("Please select Push Type");
+    }
+    if (!title || !content || !link) {
+      return alert("Please type DM content");
+    }
+    if (!isDirectCheck && !isReserveCheck) {
+      return alert("Please select publish type");
+    }
+    if (isDirectCheck) {
+      inputs.date = thisMonth + " " + thisClock;
+    }
+    if (isReserveCheck) {
+      if (submitDate.slice(0, 10) === thisMonth) {
+        if (submitDate.slice(11, 16) < thisClock) {
+          setSubmitDate(ReserveMin);
+          return alert("현재시간보다 빠르게 설정 할 수 없습니다.");
+        }
+      }
+    }
+    if (isReserveCheck && submitDate) {
+      inputs.date = submitDate;
+    } else {
+      inputs.date = ReserveMin;
+    }
+    inputs.image = previewImg;
+    console.log(inputs, "제출");
+  };
   return (
     <Layout>
       <TitleWrapper>
@@ -188,136 +353,192 @@ export default function MakePush() {
           고객들에게 날릴 웹푸시를 작성 및 등록할 수 있는 페이지입니다.
         </Message>
       </TitleWrapper>
-      <SectionWrapper>
-        <Section>
-          <PushBox>
-            <Title>01.PUSH 유형</Title>
-            <RadioList>
-              <RadioLi onClick={handleWebCheckRadio}>
-                {!isWebCheck && (
-                  <img src={inActiveCheck} alt="웹푸시 체크 아이콘" />
-                )}
-                {isWebCheck && (
-                  <img src={activeCheck} alt="웹푸시 체크 아이콘" />
-                )}
-                웹 푸시
-              </RadioLi>
-              <RadioLi onClick={handleMobileCheckRadio}>
-                {!isMobileCheck && (
-                  <img src={inActiveCheck} alt="모바일푸시 체크 아이콘" />
-                )}
-                {isMobileCheck && (
-                  <img src={activeCheck} alt="모바일푸시 체크 아이콘" />
-                )}
-                모바일 웹 푸시
-              </RadioLi>
-            </RadioList>
-          </PushBox>
-          <PushBox>
-            <Title>02.메시지 유형</Title>
-            <RadioList>
-              <RadioLi onClick={handleAdsCheckRadio}>
-                {!isAdsCheck && (
-                  <img src={inActiveCheck} alt="광고성 체크 아이콘" />
-                )}
-                {isAdsCheck && (
-                  <img src={activeCheck} alt="웹푸시 체크 아이콘" />
-                )}
-                광고성
-              </RadioLi>
-              <RadioLi onClick={handleInfoCheckRadio}>
-                {!isInfoCheck && (
-                  <img src={inActiveCheck} alt="정보성 체크 아이콘" />
-                )}
-                {isInfoCheck && (
-                  <img src={activeCheck} alt="기타 체크 아이콘" />
-                )}
-                정보성
-              </RadioLi>
-              <RadioLi onClick={handleEtcCheckRadio}>
-                {!isEtcCheck && (
-                  <img src={inActiveCheck} alt="모바일푸시 체크 아이콘" />
-                )}
-                {isEtcCheck && (
-                  <img src={activeCheck} alt="모바일푸시 체크 아이콘" />
-                )}
-                기타
-              </RadioLi>
-            </RadioList>
-          </PushBox>
-          <PushBox>
-            <Title>03.메시지 내용</Title>
-            <WrapMessage>
-              <SubTitle>타이틀</SubTitle>
-              <Input type="text" placeholder="제목을 입력해주세요."></Input>
-            </WrapMessage>
-            <WrapAreaMessage>
-              <SubTitle>내용</SubTitle>
-              <InputArea
-                type="textarea"
-                placeholder="웹푸시에 넣을 내용을 입력해주세요."
-              ></InputArea>
-            </WrapAreaMessage>
-            <WrapMessage>
-              <SubTitle>링크</SubTitle>
-              <Input
-                type="text"
-                placeholder="연결할 주소를 입력해주세요"
-              ></Input>
-            </WrapMessage>
-            <WrapMessage>
-              <SubTitle>이미지</SubTitle>
-              <Input
-                type="text"
-                placeholder="이메일을 입력하세요"
-                readOnly={true}
-              ></Input>
-            </WrapMessage>
-          </PushBox>
-          <PushBox>
-            <Title>04.발송 유형</Title>
-            <RadioList>
-              <RadioLi onClick={handleDirectCheckRadio}>
-                {!isWebCheck && (
-                  <img src={inActiveCheck} alt="웹푸시 체크 아이콘" />
-                )}
-                {isWebCheck && (
-                  <img src={activeCheck} alt="웹푸시 체크 아이콘" />
-                )}
-                즉시발송
-              </RadioLi>
-              <RadioLi onClick={handleMobileCheckRadio}>
-                <img src={inActiveCheck} alt="모바일푸시 체크 아이콘" />
-                예약발송
-              </RadioLi>
-            </RadioList>
-          </PushBox>
-        </Section>
-        <DemoSection>
-          <DemoWrapBox>
-            <Title>웹푸시 미리보기</Title>
-            <DemoWrapperBox>
-              <DemoBox>
-                <>
-                  <img src={Fox} width="192px" height="192px" />
-                </>
-                <DemoSection>
-                  <SubDemoTitle>제목 타이틀</SubDemoTitle>
-                  <SubMessage>
-                    내용이들어가는 부분입니다.내용이들어가는
-                    부분입니다.내용이들어가는 부분입니다.내용이들어가는
-                    부분입니다.내용이들어가는 부분입니다.내용이들어가는
-                    부분입니다.내용이들어가는 부분입니다.내용이들어가는
-                    부분입니다.내용이들어가는 부분입니다.내용이들어가는
-                    부분입니다.내용이들어가는 부분입니다.내용...
-                  </SubMessage>
-                  <SubMessage>제목 타이틀</SubMessage>
-                </DemoSection>
-              </DemoBox>
-            </DemoWrapperBox>
-          </DemoWrapBox>
-        </DemoSection>
-      </SectionWrapper>
+      <PageWrapper>
+        <SectionWrapper>
+          <Section>
+            <PushBox>
+              <Title>01.PUSH 유형</Title>
+              <RadioList>
+                <RadioLi onClick={handleWebCheckRadio}>
+                  {!isWebCheck && (
+                    <img src={inActiveCheck} alt="웹푸시 체크 아이콘" />
+                  )}
+                  {isWebCheck && (
+                    <img src={activeCheck} alt="웹푸시 체크 아이콘" />
+                  )}
+                  웹 푸시
+                </RadioLi>
+                <RadioLi onClick={handleMobileCheckRadio}>
+                  {!isMobileCheck && (
+                    <img src={inActiveCheck} alt="모바일푸시 체크 아이콘" />
+                  )}
+                  {isMobileCheck && (
+                    <img src={activeCheck} alt="모바일푸시 체크 아이콘" />
+                  )}
+                  모바일 웹 푸시
+                </RadioLi>
+              </RadioList>
+            </PushBox>
+            {/**
+            {isMobileCheck || isWebCheck ? (
+              <PushBox>
+                <Title>02.메시지 유형</Title>
+                <RadioList>
+                  <RadioLi onClick={handleAdsCheckRadio}>
+                    {!isAdsCheck && (
+                      <img src={inActiveCheck} alt="광고성 체크 아이콘" />
+                    )}
+                    {isAdsCheck && (
+                      <img src={activeCheck} alt="웹푸시 체크 아이콘" />
+                    )}
+                    광고성
+                  </RadioLi>
+                  <RadioLi onClick={handleInfoCheckRadio}>
+                    {!isInfoCheck && (
+                      <img src={inActiveCheck} alt="정보성 체크 아이콘" />
+                    )}
+                    {isInfoCheck && (
+                      <img src={activeCheck} alt="기타 체크 아이콘" />
+                    )}
+                    정보성
+                  </RadioLi>
+                  <RadioLi onClick={handleEtcCheckRadio}>
+                    {!isEtcCheck && (
+                      <img src={inActiveCheck} alt="모바일푸시 체크 아이콘" />
+                    )}
+                    {isEtcCheck && (
+                      <img src={activeCheck} alt="모바일푸시 체크 아이콘" />
+                    )}
+                    기타
+                  </RadioLi>
+                </RadioList>
+              </PushBox>
+            ) : null}
+            */}
+            <PushBox>
+              <Title>02.메시지 내용</Title>
+              <WrapMessage>
+                <SubTitle>타이틀</SubTitle>
+                <Input
+                  type="text"
+                  placeholder="제목을 입력해주세요."
+                  value={title}
+                  name="title"
+                  onChange={handleInputValues}
+                ></Input>
+              </WrapMessage>
+              <WrapAreaMessage>
+                <SubTitle>내용</SubTitle>
+                <InputArea
+                  type="textarea"
+                  placeholder="웹푸시에 넣을 내용을 입력해주세요."
+                  value={content}
+                  name="content"
+                  onChange={handleInputValues}
+                ></InputArea>
+              </WrapAreaMessage>
+              <WrapMessage>
+                <SubTitle>링크</SubTitle>
+                <Input
+                  type="text"
+                  placeholder="연결할 주소를 입력해주세요 ex.(www.example.com)"
+                  value={link}
+                  name="link"
+                  onChange={handleInputValues}
+                ></Input>
+              </WrapMessage>
+              <WrapMessage>
+                <SubTitle>이미지</SubTitle>
+                <ImageInput
+                  placeholder="이미지를 등록하세요"
+                  value={previewImg ? previewImg.name : ""}
+                  name="image"
+                  readOnly={true}
+                ></ImageInput>
+                <ImageInput
+                  placeholder="이미지를 등록하세요"
+                  style={{ display: "none" }}
+                  type="file"
+                  accept="image/*"
+                  ref={imageInputRef}
+                  onChange={handleUploadImage}
+                ></ImageInput>
+                <RegisterImageButton handleUploadImage={onImgInputBtnClick}>
+                  이미지 등록
+                </RegisterImageButton>
+              </WrapMessage>
+            </PushBox>
+            <PushBox>
+              <Title>03.발송 유형</Title>
+              <RadioList>
+                <RadioLi onClick={handleDirectCheckRadio}>
+                  {!isDirectCheck && (
+                    <img src={inActiveCheck} alt="즉시발송 체크 아이콘" />
+                  )}
+                  {isDirectCheck && (
+                    <img src={activeCheck} alt="즉시발송 체크 아이콘" />
+                  )}
+                  즉시발송
+                </RadioLi>
+                <ReserveWrapper>
+                  <RadioLi onClick={handleReserveCheckRadio}>
+                    {!isReserveCheck && (
+                      <img src={inActiveCheck} alt="예약발송 체크 아이콘" />
+                    )}
+                    {isReserveCheck && (
+                      <img src={activeCheck} alt="예약발송 체크 아이콘" />
+                    )}
+                    예약발송
+                  </RadioLi>
+                  {isReserveCheck && (
+                    <InputDate
+                      type="datetime-local"
+                      value={submitDate ? submitDate : ReserveMin}
+                      onChange={handleInputDates}
+                      min={ReserveMin}
+                    ></InputDate>
+                  )}
+                </ReserveWrapper>
+              </RadioList>
+            </PushBox>
+          </Section>
+          <DemoSection>
+            <DemoWrapBox>
+              <Title>웹푸시 미리보기</Title>
+              <DemoWrapperBox>
+                <DemoBox>
+                  <>
+                    <img src={Fox} width="192px" height="192px" alt="여우" />
+                  </>
+                  <DemoSection>
+                    <SubDemoTitle>{inputs.title}</SubDemoTitle>
+                    <SubMessage>{inputs.content}</SubMessage>
+                    <LinkMessage>{inputs.link}</LinkMessage>
+                  </DemoSection>
+                </DemoBox>
+              </DemoWrapperBox>
+            </DemoWrapBox>
+          </DemoSection>
+        </SectionWrapper>
+        <ButtonWrapper>
+          {content &&
+            title &&
+            link &&
+            (isMobileCheck || isWebCheck) &&
+            (isDirectCheck || isReserveCheck) && (
+              <ActivePushButton handleSubmit={onClickSubmit}>
+                발송
+              </ActivePushButton>
+            )}
+          {(!content ||
+            !title ||
+            !link ||
+            (!isMobileCheck && !isWebCheck) ||
+            (!isDirectCheck && !isReserveCheck)) && (
+            <InactivePushButton>발송</InactivePushButton>
+          )}
+        </ButtonWrapper>
+      </PageWrapper>
     </Layout>
   );
 }

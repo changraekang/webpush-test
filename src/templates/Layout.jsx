@@ -3,7 +3,11 @@ import mypageLogo from '../assets/images/mypage-logo.png';
 import styled from 'styled-components';
 import {NAV_MY_MENU_HOVER_COLOR, NAV_MY_MENU_LINE_COLOR,NAV_MY_MENU_COLOR, SIDE_NAV_COLOR ,NAV_FONT_HOVER_COLOR,NAV_MAIN_COLOR,NAV_BUTTON_HOVER_COLOR,NAV_FONT_COLOR} from '../constants/color';
 import { useEffect, useState } from 'react';
-
+import { Link, useNavigate } from 'react-router-dom';
+import { instanceAxios } from '../api/axios';
+import {deviceDetect} from "react-device-detect";
+import { getCookie, setAccessTokenToCookie, setRefreshTokenToCookie } from '../cookie/controlCookie';
+import { logout } from '../cookie/controlCookie';
 
 const Header = styled.header`
   display: flex;
@@ -100,13 +104,17 @@ const MyMenu = styled.ul`
   }
 `
 const MyMenuLi = styled.li`
+  cursor: pointer;
   margin: ${(props) => (props.first ? "12px 0 26px" : "14px 0")};
 `
 //${(props) => (props.last ? "32px" : "16px")};
 
 export default function Layout({children}) {
+  const navigate = useNavigate();
   const [openNav, setOpenNav] = useState(false);
   const [openMyMenu, setOpenMyMenu] = useState(false);
+  const [minutes, setMinutes] = useState(10);
+  const [seconds, setSeconds] = useState(0);
 
   const handleOpenNav = () => {
     !openNav ? setOpenNav(true) : setOpenNav(false)
@@ -115,6 +123,82 @@ export default function Layout({children}) {
   const handleOpenMyMenu = () => {
     !openMyMenu ? setOpenMyMenu(true) : setOpenMyMenu(false)
   }
+
+  const [browserName, setBrowserName] = useState("");
+  useEffect(()=> {
+    setBrowserName(deviceDetect().browserName.toUpperCase());
+    if(browserName === "CHOROME" || "SAFARI" || "EDGE" || "OPERA" || "FIREFOX" || "INTERNET EXPLORER") {
+     setBrowserName("PC");
+    } 
+    console.log("브라우저 이름 : ", browserName);
+  },[browserName]);
+
+  const handleLogout  = () => {
+    try {
+      const response = instanceAxios.post('/api/member/logout', {
+        "deviceInfo": {
+          "deviceId": "Non empty string",
+          "deviceType": "DEVICE_TYPE_" + browserName,
+          "notificationToken": "Non empty string"
+        }
+      });
+      if(response.status === 200) {
+        navigate('/');
+      }
+      console.log(response)
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  // refreshToken 재발급
+  const accessToken = getCookie('accessToken');
+  const refreshToken = getCookie('refreshToken');
+  const logoutTimer = () => {
+    if(accessToken && refreshToken) {
+      logout();
+      alert('세션이 만료되었습니다.');
+      navigate("/");
+    }
+  }  
+
+  useEffect(() => {
+    const countdown = setInterval(() => {
+      if (parseInt(seconds) > 0) {
+        setSeconds(parseInt(seconds) - 1);
+      }
+      if (parseInt(seconds) === 0) {
+        if (parseInt(minutes) === 0) {
+          logoutTimer();
+          clearInterval(countdown);
+        } else {
+          setMinutes(parseInt(minutes) - 1);
+          setSeconds(59);
+        }
+      }
+    }, 1000);
+    return () => clearInterval(countdown);
+  }, [minutes, seconds]);
+
+  const requestAccessToken = async (token) => {
+    try{
+      const response = await instanceAxios.post('/auth/refresh', {
+        "refreshToken" : token,
+      });
+      const tokenType = response.data.tokenType;
+      const headersToken = tokenType + response.data.accessToken;
+      setAccessTokenToCookie(headersToken);
+      setRefreshTokenToCookie(response.data.refreshToken);
+      instanceAxios.defaults.headers.common['Authorization'] = headersToken;
+      console.log(response,"토큰 초기화"); 
+    } catch (err){
+      console.error(err)
+    }
+  }
+  
+  useEffect(() => {
+    requestAccessToken(refreshToken);
+  }, [])
 
   return (
     <Header>
@@ -126,8 +210,8 @@ export default function Layout({children}) {
               <LI onClick={handleOpenNav}><A href='#'>PUSH 관리</A></LI>
               {openNav && 
                 <SubNav>
-                  <SubLI><A href='#'>push 작성</A></SubLI>
-                  <SubLI><A href='#'>push 리스트</A></SubLI>
+                  <SubLI><Link to="/makePush">push 작성</Link></SubLI>
+                  <SubLI><Link to="/test">push 리스트</Link></SubLI>
                 </SubNav>
               }  
             
@@ -144,7 +228,9 @@ export default function Layout({children}) {
                 <MyMenu>
                   <MyMenuLi first>MASTER</MyMenuLi>
                   <MyMenuLi>비밀변경</MyMenuLi>
-                  <MyMenuLi>로그아웃</MyMenuLi>
+                  <MyMenuLi onClick={handleLogout}>
+                    로그아웃
+                  </MyMenuLi>
                 </MyMenu>
               }
           </TopHeader>
