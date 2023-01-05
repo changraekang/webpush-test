@@ -17,9 +17,9 @@ const Button = styled.button`
   display: block;
   border: none;
   width: 100%;
-  padding: 16px;
+  padding: 12px 16px;
   cursor: pointer;
-  border-radius: 8px;
+  border-radius: 32px;
   font-size: ${(props) =>
     props.certificate ? `${CERTIFICATION_BUTTON_SIZE}` : `${BUTTON_SIZE}`};
   background: ${(props) => (props.normal ? `${NORMAL_BUTTON_COLOR}` : null)};

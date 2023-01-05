@@ -23,7 +23,7 @@ const logoutData = {
   }
 }
 
-export const logout = async (token) => {
+export const logout = async () => {
   try {
     const response = await instanceAxios.post('/member/logout', logoutData);
     console.log(response); 
@@ -36,12 +36,13 @@ export const logout = async (token) => {
 
       instanceAxios.defaults.headers.common['Authorization'] = null;
       window.location.reload();
+      console.log('로그아웃 성공🎉');
     }
   } catch (err) {
-      cookies.remove('refreshToken');
-      cookies.remove('accessToken');
-      instanceAxios.defaults.headers.common['Authorization'] = null;
-      window.location.reload();
-    console.error(err);
+      // cookies.remove('refreshToken');
+      // cookies.remove('accessToken');
+      // instanceAxios.defaults.headers.common['Authorization'] = null;
+      // window.location.reload();
+      console.error(err);
   }
 }

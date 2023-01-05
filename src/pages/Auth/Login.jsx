@@ -10,16 +10,22 @@ import {
   NORMAL_BUTTON_BORDER_COLOR,
   NORMAL_BUTTON_COLOR,
   NORMAL_BUTTON_FONT_COLOR,
+  MAIN_FONT_COLOR,
 } from "../../constants/color";
-import { AUTH_RADIO_SIZE, BUTTON_SIZE } from "../../constants/fontSize";
+import {
+  AUTH_RADIO_SIZE,
+  BUTTON_SIZE,
+  MAIN_TITLE_SIZE,
+} from "../../constants/fontSize";
 import logo from "../../assets/images/logo.png";
+import mainImage from "../../assets/images/mainpage.png";
 import {
   LoginButton,
   BeforeLoginButton,
   GoSignupButton,
 } from "../../components/buttons/AuthButtons";
-import activeCheck from "../../assets/images/active-check.png";
-import inActiveCheck from "../../assets/images/inactive-check.png";
+import activeCheck from "../../assets/images/active-radio.png";
+import inActiveCheck from "../../assets/images/inactive-radio.png";
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { Link } from "react-router-dom";
@@ -36,25 +42,69 @@ const Section = styled.section`
   align-items: center;
   width: 100%;
   height: 100vh;
-  padding: 30px 0;
   font-family: "Pretendard-Regular";
   /* padding: 186px 0; */
-  background-color: ${MAIN_BACKGROUND_COLOR};
+`;
+const ImageSection = styled.section`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+  font-family: "Pretendard-Regular";
+  /* padding: 186px 0; */
+  background-image: ${MAIN_BACKGROUND_COLOR};
+`;
+const InputSection = styled.section`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+  font-family: "Pretendard-Regular";
+  /* padding: 186px 0; */
 `;
 
 const WrapLogo = styled.div`
-  width: 100%;
-  text-align: center;
-  margin-bottom: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0px;
+  gap: 8px;
+  width: 335px;
+  height: 131px;
+  font-weight: 900;
+  line-height: 48px;
+  margin-bottom: 60px;
+  font-size: ${MAIN_TITLE_SIZE};
+  color: ${MAIN_FONT_COLOR};
 `;
 
 const Logo = styled.img`
-  width: 258px;
-  height: 74px;
+  width: 335px;
+  height: 75px;
+`;
+const MainImage = styled.img`
+  width: 712px;
+  height: 654px;
 `;
 
 const WrapContents = styled.div`
-  width: 437px;
+  width: 100%;
+`;
+const ButtonWrap = styled.div`
+  width: 100%;
+  margin-top: 8px;
+`;
+
+const IDInputWrap = styled.div`
+  width: 399px;
+  height: 82px;
+`;
+
+const PwdInputWrap = styled.div`
+  width: 399px;
+  height: 82px;
 `;
 
 const Input = styled.input`
@@ -63,7 +113,6 @@ const Input = styled.input`
   box-sizing: border-box;
   border-radius: 8px;
   border: 1px solid ${INACTIVE_INPUT_BORDER_COLOR};
-  margin-bottom: ${(props) => (props.last ? "32px" : "12px")};
 
   &:focus {
     border: 1px solid ${ACTIVE_INPUT_BORDER_COLOR};
@@ -76,10 +125,19 @@ const Input = styled.input`
 
 const RadioList = styled.ul`
   display: flex;
-  margin: 14px 0 64px;
+  margin: 0 0 32px;
   justify-content: space-between;
   align-items: center;
   font-size: ${AUTH_RADIO_SIZE};
+`;
+
+const SubTitle = styled.div`
+  display: flex;
+  margin-bottom: 8px;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 400;
+  font-size: 18px;
 `;
 
 const RadioLi = styled.li`
@@ -89,7 +147,7 @@ const RadioLi = styled.li`
 `;
 const WrapFindAuth = styled.div`
   display: flex;
-  gap: 16px;
+  gap: 10px;
 `;
 
 const LinkStyle = styled(Link)`
@@ -169,63 +227,76 @@ export default function Login() {
   };
   return (
     <Section>
-      <h1 className="ir">회원가입</h1>
-      <AuthBox>
-        <WrapLogo>
-          <Logo src={logo} alt="메인로고" />
-        </WrapLogo>
-        <WrapContents>
-          <form action="post">
-            <div>
-              <Input
-                onChange={handleInputValues}
-                name="email"
-                type="text"
-                placeholder="이메일을 입력하세요"
-              />
-            </div>
-            <div>
-              <Input
-                onChange={handleInputValues}
-                name="password"
-                last
-                type="password"
-                placeholder="비밀번호를 입력하세요"
-              />
-            </div>
-            {(!email || !password) && (
-              <BeforeLoginButton type="submit">로그인</BeforeLoginButton>
-            )}
-            {email && password && (
-              <LoginButton type="submit" requestLogin={requestLogin}>
-                로그인
-              </LoginButton>
-            )}
-          </form>
-          <RadioList>
-            <RadioLi onClick={handleCheckRadio}>
-              {!isCheck && (
-                <img src={inActiveCheck} alt="아이디저장하기 체크 아이콘" />
+      <ImageSection>
+        <MainImage src={mainImage} alt="메인이미지" />
+      </ImageSection>
+
+      <InputSection>
+        <h1 className="ir">회원가입</h1>
+        <AuthBox>
+          <WrapLogo>
+            <>Welcome to</>
+            <Logo src={logo} alt="메인로고" />
+          </WrapLogo>
+          <WrapContents>
+            <form action="post">
+              <IDInputWrap>
+                <SubTitle>아이디</SubTitle>
+                <Input
+                  onChange={handleInputValues}
+                  name="email"
+                  type="text"
+                  placeholder="이메일을 입력하세요"
+                />
+              </IDInputWrap>
+              <PwdInputWrap>
+                <SubTitle>비밀번호</SubTitle>
+                <Input
+                  onChange={handleInputValues}
+                  name="password"
+                  last
+                  type="password"
+                  placeholder="비밀번호를 입력하세요"
+                />
+              </PwdInputWrap>
+              <RadioList>
+                <RadioLi onClick={handleCheckRadio}>
+                  {!isCheck && (
+                    <img src={inActiveCheck} alt="아이디저장하기 체크 아이콘" />
+                  )}
+                  {isCheck && (
+                    <img src={activeCheck} alt="아이디저장하기 체크 아이콘" />
+                  )}
+                  아이디 저장
+                </RadioLi>
+                <WrapFindAuth>
+                  <li>
+                    <LinkStyle to="/findEmail">아아디 찾기</LinkStyle>
+                  </li>
+                  <li>|</li>
+                  <li>
+                    <LinkStyle to="/findPassword">비밀번호 찾기</LinkStyle>
+                  </li>
+                </WrapFindAuth>
+              </RadioList>
+
+              {(!email || !password) && (
+                <BeforeLoginButton type="submit">로그인</BeforeLoginButton>
               )}
-              {isCheck && (
-                <img src={activeCheck} alt="아이디저장하기 체크 아이콘" />
+              {email && password && (
+                <LoginButton type="submit" requestLogin={requestLogin}>
+                  로그인
+                </LoginButton>
               )}
-              아이디 저장
-            </RadioLi>
-            <WrapFindAuth>
-              <li>
-                <LinkStyle to="/findEmail">아아디 찾기</LinkStyle>
-              </li>
-              <li>
-                <LinkStyle to="/findPassword">비밀번호 찾기</LinkStyle>
-              </li>
-            </WrapFindAuth>
-          </RadioList>
-          <GoSignupButton handleGoSignup={handleGoSignup}>
-            회원가입
-          </GoSignupButton>
-        </WrapContents>
-      </AuthBox>
+            </form>
+            <ButtonWrap>
+              <GoSignupButton handleGoSignup={handleGoSignup}>
+                회원가입
+              </GoSignupButton>
+            </ButtonWrap>
+          </WrapContents>
+        </AuthBox>
+      </InputSection>
     </Section>
   );
 }

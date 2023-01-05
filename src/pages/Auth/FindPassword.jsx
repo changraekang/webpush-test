@@ -3,6 +3,7 @@ import styled from "styled-components";
 import {
   ActiveFindPasswordButton,
   InactiveFindPasswordButton,
+  GoLoginPage
 } from "../../components/buttons/FindMemberButtons";
 import {
   MAIN_BACKGROUND_COLOR,
@@ -15,6 +16,7 @@ import {
 } from "../../constants/color";
 import { useState } from "react";
 import { instanceAxios } from "../../api/axios";
+import { useNavigate } from "react-router";
 
 const Section = styled.section`
   display: flex;
@@ -65,14 +67,17 @@ const InputStyle = styled.input`
 `;
 
 export default function FindPassword() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [emailValidation, setemailValidation] = useState(true);
+  const [isSendLink, setIsSendLink] = useState(false);
 
   const handleInput = (e) => {
     const re =
       /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     let result = re.test(e.target.value);
     setEmail(e.target.value);
+    console.log("email:", email)
     if (result) {
       setemailValidation(true);
     } else {
@@ -81,52 +86,66 @@ export default function FindPassword() {
   };
   const requestFindPassword = async (e) => {
     e.preventDefault();
-    if (!emailValidation) {
-      return alert("Email 형식을 확인하세요");
-    }
     try {
-      const response = await instanceAxios.post("/auth/password/link", email);
+      const response = await instanceAxios.post("/auth/password/link", {
+        email : email,
+      });
       if (response.status === 200) {
-        console.log("email을 발송하였습니다🎉");
+        alert(response.data.data);
+        setIsSendLink(true);
       }
       console.log(response);
     } catch (err) {
       console.error(err);
     }
   };
+  const handleGoLogin = (e) => {
+    e.preventDefault();
+    navigate('/')
+  }
   return (
     <Section>
       <h1 className="ir">비밀번호 찾기</h1>
-      <FindMemberBox>
-        <Title>비밀번호 찾기</Title>
-        <SubMessage>회원가입 시 입력한 이메일을 입력해주세요!</SubMessage>
-        <FormStyle action="post">
-          <LabelStyle htmlFor="email">이메일</LabelStyle>
-          <div>
-            <InputStyle
-              onChange={handleInput}
-              value={email}
-              type="text"
-              id="email"
-              placeholder="이메일을 입력해주세요."
-            />
-          </div>
-          {!emailValidation && (
-            <WarningMessage>
-              회원가입 시 입력한 이메일을 입력해주세요!
-            </WarningMessage>
-          )}
+      {!isSendLink &&
+        <FindMemberBox>
+          <Title>비밀번호 찾기</Title>
+          <SubMessage>회원가입 시 입력한 이메일을 입력해주세요!</SubMessage>
+          <FormStyle action="post">
+            <LabelStyle htmlFor="email">이메일</LabelStyle>
+            <div>
+              <InputStyle
+                onChange={handleInput}
+                value={email}
+                type="text"
+                id="email"
+                placeholder="이메일을 입력해주세요."
+              />
+            </div>
+            {email && !emailValidation && (
+              <WarningMessage>
+                이메일 형식을 확인해주세요.
+              </WarningMessage>
+            )}
 
-          {email && emailValidation && (
-            <ActiveFindPasswordButton requestFind={requestFindPassword}>
-              확인
-            </ActiveFindPasswordButton>
-          )}
-          {(!email || !emailValidation) && (
-            <InactiveFindPasswordButton>확인</InactiveFindPasswordButton>
-          )}
-        </FormStyle>
-      </FindMemberBox>
+            {email && emailValidation && (
+              <ActiveFindPasswordButton requestFind={requestFindPassword}>
+                확인
+              </ActiveFindPasswordButton>
+            )}
+            {(!email || !emailValidation) && (
+              <InactiveFindPasswordButton>확인</InactiveFindPasswordButton>
+            )}
+          </FormStyle>
+        </FindMemberBox>
+      }
+      {isSendLink &&
+        <FindMemberBox>
+          <SubMessage>입력하신 이메일로</SubMessage>
+          <SubMessage>비밀번호 변경메일을 발송했어요!</SubMessage>
+          <GoLoginPage handleGoLogin={handleGoLogin}>로그인 하기</GoLoginPage>
+        </FindMemberBox>
+      }
+
     </Section>
   );
 }

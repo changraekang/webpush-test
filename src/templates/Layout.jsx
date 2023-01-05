@@ -133,24 +133,6 @@ export default function Layout({children}) {
     console.log("브라우저 이름 : ", browserName);
   },[browserName]);
 
-  const handleLogout  = () => {
-    try {
-      const response = instanceAxios.post('/api/member/logout', {
-        "deviceInfo": {
-          "deviceId": "Non empty string",
-          "deviceType": "DEVICE_TYPE_" + browserName,
-          "notificationToken": "Non empty string"
-        }
-      });
-      if(response.status === 200) {
-        navigate('/');
-      }
-      console.log(response)
-    } catch (err) {
-      console.error(err)
-    }
-  }
-
   // refreshToken 재발급
   const accessToken = getCookie('accessToken');
   const refreshToken = getCookie('refreshToken');
@@ -228,7 +210,7 @@ export default function Layout({children}) {
                 <MyMenu>
                   <MyMenuLi first>MASTER</MyMenuLi>
                   <MyMenuLi>비밀변경</MyMenuLi>
-                  <MyMenuLi onClick={handleLogout}>
+                  <MyMenuLi onClick={logout}>
                     로그아웃
                   </MyMenuLi>
                 </MyMenu>

@@ -432,7 +432,7 @@ export default function Signup() {
             token: token,
           },
         });
-        console.log("로그인 성공🎉");
+        console.log("회원가입 성공🎉");
       }
       console.log(response);
     } catch (err) {

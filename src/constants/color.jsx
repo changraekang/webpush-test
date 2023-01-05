@@ -1,8 +1,10 @@
 //메인
 export const MAIN_COLOR = "#68C2F4";
-export const MAIN_BACKGROUND_COLOR = "#E9F1F5";
+//export const MAIN_BACKGROUND_COLOR = "#E9F1F5";
 export const MAIN_SUBTITLE_FONT_COLOR = "#AFAFAF";
-export const MAIN_FONT_COLOR = "#000";
+export const MAIN_FONT_COLOR = "#21004A";
+export const MAIN_BACKGROUND_COLOR =
+  "linear-gradient(133.78deg, #88eaff 8.16%, #98a2ff 74.57%)";
 
 //박스 배경색
 export const MAIN_BOX_COLOR = "#fff";
@@ -21,25 +23,25 @@ export const SIDE_NAV_COLOR = "#0A1B35 ";
 export const SIDE_NAV_SELECT_COLOR = "#E8C7FF";
 
 // 버튼 배경 및 폰트
-export const ACTIVE_BUTTON_COLOR = "#68C2F4";
+export const ACTIVE_BUTTON_COLOR = "#7124D3";
 export const ACTIVE_BUTTON_FONT_COLOR = "#FFF";
-export const INACTIVE_BUTTON_COLOR = "#E4E4E4";
-export const INACTIVE_BUTTON_FONT_COLOR = "#FFFFFF";
+export const INACTIVE_BUTTON_COLOR = "#BFBFBF";
+export const INACTIVE_BUTTON_FONT_COLOR = "#8C8C8C";
 export const NORMAL_BUTTON_COLOR = "#FFFFFF";
-export const NORMAL_BUTTON_FONT_COLOR = "#68C2F4";
-export const NORMAL_BUTTON_BORDER_COLOR = "#68C2F4";
+export const NORMAL_BUTTON_FONT_COLOR = "#7124D3";
+export const NORMAL_BUTTON_BORDER_COLOR = "#7124D3";
 
 // 회원가입, 로그인 , 비밀번호 찾기, 이메일 찾기 INPUT
 export const ACTIVE_INPUT_COLOR = "#FFF";
-export const ACTIVE_INPUT_FONT_COLOR = "#68C2F4";
-export const ACTIVE_INPUT_BORDER_COLOR = "#68C2F4";
+export const ACTIVE_INPUT_FONT_COLOR = "#7124D3";
+export const ACTIVE_INPUT_BORDER_COLOR = "#7124D3";
 export const INACTIVE_INPUT_COLOR = "#FFF";
 export const INACTIVE_INPUT_FONT_COLOR = "#AFAFAF";
 export const INACTIVE_INPUT_BORDER_COLOR = "#AFAFAF";
 export const EMAIL_OPTION_BORDER_COLOR = "#68C2F4";
 
 export const AUTH_TITLE_COLOR = "#000";
-export const AUTH_MESSAGE_COLOR = "#333";
+export const AUTH_MESSAGE_COLOR = "#595959";
 export const AUTH_LABEL_COLOR = "#333";
 export const AUTH_MAIN_COLOR =
   "linear-gradient(133.78deg, #88eaff 8.16%, #98a2ff 74.57%)";

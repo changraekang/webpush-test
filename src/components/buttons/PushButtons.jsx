@@ -62,7 +62,7 @@ function ActivePushButton({ children, handleSubmit }) {
 }
 
 function InactivePushButton({ children }) {
-  return <Button inactive>{children}</Button>;
+  return <Button inactive disabled>{children}</Button>;
 }
 
 // 이미지 등록
