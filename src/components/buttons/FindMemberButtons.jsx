@@ -17,7 +17,7 @@ const Button = styled.button`
   padding: 16px;
   cursor: pointer;
   border-radius: 32px;
-  margin-top: 40px;
+  margin-top: 32px;
   background: ${(props) => (props.normal ? `${NORMAL_BUTTON_COLOR}` : null)};
   background: ${(props) => (props.active ? `${ACTIVE_BUTTON_COLOR}` : null)};
   background: ${(props) =>
@@ -28,7 +28,9 @@ const Button = styled.button`
     props.inactive ? `${INACTIVE_BUTTON_FONT_COLOR}` : null};
   border: 1px solid
     ${(props) => (props.normal ? `${NORMAL_BUTTON_BORDER_COLOR}` : "none")};
-
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 27px;
   &:hover {
   }
 `;

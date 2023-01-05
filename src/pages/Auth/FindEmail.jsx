@@ -48,16 +48,19 @@ const InputSection = styled.section`
 const Title = styled.h2`
   font-size: 32px;
   text-align: center;
+  font-weight: 700;
   margin-bottom: 12px;
 `;
 
 const SubMessage = styled.p`
   color: ${AUTH_MESSAGE_COLOR};
+  font-weight: 400;
+  line-height: 27px;
   text-align: center;
 `;
 
 const FormStyle = styled.form`
-  margin-top: 43px;
+  margin-top: 32px;
   width: 437px;
 `;
 

@@ -281,7 +281,7 @@ export default function Login() {
               </RadioList>
 
               {(!email || !password) && (
-                <BeforeLoginButton type="submit">로그인</BeforeLoginButton>
+                <BeforeLoginButton>로그인</BeforeLoginButton>
               )}
               {email && password && (
                 <LoginButton type="submit" requestLogin={requestLogin}>

@@ -19,6 +19,7 @@ export const MAIN_TITLE_SIZE = "40px";
 // 버튼
 export const BUTTON_SIZE = "24px";
 export const CERTIFICATION_BUTTON_SIZE = "16px";
+export const TOKEN_BUTTON_SIZE = "14px";
 
 //input
 export const SAMLL_INPUT_SIZE = "14px";
