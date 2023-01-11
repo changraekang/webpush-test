@@ -52,7 +52,6 @@ function App() {
             {/* 홈페이지 관리 */}
             <Route path="/homepage" element={<Homepage />} />
             {/* 에러페이지 */}
-            <Route path="/test" element={<Test />} />
           </Routes>
         </BrowserRouter>
       </RecoilRoot>
