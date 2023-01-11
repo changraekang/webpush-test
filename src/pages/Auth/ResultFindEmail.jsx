@@ -7,9 +7,8 @@ import {
 } from "../../components/buttons/FindMemberButtons";
 import {
   MAIN_BACKGROUND_COLOR,
-  AUTH_MESSAGE_COLOR,
-  AUTH_LABEL_COLOR,
-  MAIN_FONT_COLOR,
+  grey11,
+  grey10,
 } from "../../constants/color";
 import mainImage from "../../assets/images/mainpage.png";
 import checkImg from "../../assets/images/Check.png";
@@ -86,10 +85,10 @@ const Check = styled.img`
   height: 40px;
 `;
 const Message = styled.label`
-  color: ${AUTH_LABEL_COLOR};
+  color: ${grey11};
 `;
 const Email = styled.label`
-  color: ${MAIN_FONT_COLOR};
+  color: ${grey10};
   font-weight: bold;
 `;
 const MainImage = styled.img`
@@ -114,7 +113,7 @@ export default function ResultFindEmail() {
           <BoxWrap>
             <Check src={checkImg} alt="체크표시"></Check>
             <Message>귀하의 이메일은</Message>
-            <Email>{params.id}@aigis.co.kr</Email>
+            <Email>{params.id}</Email>
             <Message>입니다!</Message>
           </BoxWrap>
           <ButtonWrap>

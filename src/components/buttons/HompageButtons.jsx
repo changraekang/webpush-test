@@ -1,11 +1,11 @@
-import styled from "styled-components";
+import styled from "styled-components"; 
 import { primary4, grey1, grey3, grey5 } from "../../constants/color";
 
 const Button = styled.button`
   display: block;
   border: none;
   width: 100%;
-  padding: 12px 16px;
+  padding: ${(props) => (props.homepage ?  "6px 10px " : "12px 16px")};
   cursor: pointer;
   border-radius: 32px;
   font-size: ${(props) => (props.certificate ? `14px` : `16px`)};
@@ -20,31 +20,23 @@ const Button = styled.button`
   &:hover {
   }
 `;
-//로그인 유효성 통과 전
-function LoginButton({ children, requestLogin }) {
+
+const HomepageBtn = styled.button`
+  display: block;
+  border-radius: 30px;
+  background-color: ${primary4};
+  color: ${grey1};
+  padding: 6px 8px;
+`
+
+export function SelectHomepage({children, setValue}) {
   return (
-    <Button active onClick={requestLogin}>
-      {children}
-    </Button>
-  );
+      <Button homepage normal onClick={setValue}>{children}</Button>
+    )
 }
 
-// 로그인 유효성 검사 통과 후
-function BeforeLoginButton({ children }) {
+export function UpdateHomepage({children, updateHomePage}) {
   return (
-    <Button disabled inactive>
-      {children}
-    </Button>
-  );
+      <Button active onClick={updateHomePage}>{children}</Button>
+    )
 }
-
-// 로그인 -> 회원가입
-function GoSignupButton({ children, handleGoSignup }) {
-  return (
-    <Button normal onClick={handleGoSignup}>
-      {children}
-    </Button>
-  );
-}
-
-export { LoginButton, BeforeLoginButton, GoSignupButton };

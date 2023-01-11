@@ -1,8 +1,8 @@
 import styled from "styled-components";
-import { MAIN_BOX_COLOR } from "../../../constants/color";
+import { grey1 } from "../../../constants/color";
 
 const Box = styled.div`
-  background: ${MAIN_BOX_COLOR};
+  background: ${grey1};
   padding: 40px 58px;
   display: flex;
   margin-top: 80px;

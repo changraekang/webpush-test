@@ -1,18 +1,15 @@
 import styled from "styled-components";
-import AuthBox from "../../components/containers/auth/AuthBox";
+import { SignupBox } from "../../components/containers/auth/AuthBox";
 import {
-  ACTIVE_INPUT_BORDER_COLOR,
-  AUTH_TITLE_COLOR,
-  AUTH_MESSAGE_COLOR,
-  AUTH_LABEL_COLOR,
+  grey11,
+  grey9,
+  grey1,
   MAIN_BACKGROUND_COLOR,
-  INACTIVE_INPUT_BORDER_COLOR,
-  INACTIVE_INPUT_FONT_COLOR,
-  ACTIVE_INPUT_COLOR,
-  EMAIL_OPTION_BORDER_COLOR,
-  AUTH_WARNING_COLOR,
+  grey5,
+  grey6,
+  primary4,
+  error3,
 } from "../../constants/color";
-import { SAMLL_INPUT_SIZE } from "../../constants/fontSize";
 import logo from "../../assets/images/logo.png";
 import {
   CertificationButton,
@@ -22,11 +19,15 @@ import {
   ActiveTokenButton,
   InactiveTokenButton,
 } from "../../components/buttons/SignupButtons";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router";
 import SignupAgreement from "../../components/agreement/SignupAgreement";
 import { instanceAxios } from "../../api/axios";
 import warning from "../../assets/images/warning.png";
+import {
+  InputGroup,
+  InputValidateGroup,
+} from "../../components/inputs/InputGroups";
 
 const Section = styled.section`
   display: flex;
@@ -56,14 +57,14 @@ const WrapTitle = styled.div`
 `;
 
 const Title = styled.h2`
-  color: ${AUTH_TITLE_COLOR};
+  color: ${grey11};
   font-size: 32px;
   font-weight: 600;
   padding-bottom: 12px;
 `;
 
 const Message = styled.p`
-  color: ${AUTH_MESSAGE_COLOR};
+  color: ${grey9};
 `;
 
 const WrapContents = styled.div`
@@ -92,43 +93,26 @@ const Input = styled.input`
   padding: 10px 12px;
   box-sizing: border-box;
   border-radius: 4px;
-  border: 1px solid ${INACTIVE_INPUT_BORDER_COLOR};
+  border: 1px solid ${grey5};
 
   &::placeholder {
-    color: ${INACTIVE_INPUT_FONT_COLOR};
+    color: ${grey6};
   }
 `;
 
-// const InputWriteEmail = styled.input`
-//   width: 100%;
-//   width: ${(props) => (props.first ? "300px" : "100%")};
-//   padding: 16px;
-//   margin-top: 8px;
-//   box-sizing: border-box;
-//   border-radius: 8px;
-//   border: 1px solid ${INACTIVE_INPUT_BORDER_COLOR};
-
-//   &:focus {
-//     border: 1px solid ${ACTIVE_INPUT_BORDER_COLOR};
-//   }
-
-//   &::placeholder {
-//     color: ${INACTIVE_INPUT_FONT_COLOR};
-//   }
-// `;
-
 const Label = styled.label`
   /* width: 140px; */
-  color: ${AUTH_LABEL_COLOR};
+  color: ${grey11};
   display: inline-block;
   width: 140px;
 `;
 
 const LabelWarning = styled.span`
   display: block;
-  color: ${AUTH_WARNING_COLOR};
+  color: ${error3};
   font-size: 14px;
   margin-top: 8px;
+  margin-bottom: ${(props) => (props.email ? "8px" : "0")};
 `;
 
 const EmailInput = styled.input`
@@ -136,7 +120,7 @@ const EmailInput = styled.input`
   padding: 10px 12px;
   box-sizing: border-box;
   border-radius: 4px;
-  border: 1px solid ${INACTIVE_INPUT_BORDER_COLOR};
+  border: 1px solid ${grey5};
   cursor: pointer;
 `;
 
@@ -144,23 +128,22 @@ const EmailList = styled.ul`
   display: flex;
   flex-direction: column;
   position: absolute;
-  width: 218px;
+  width: 229px;
   right: 0;
   top: 42px;
-  font-size: ${SAMLL_INPUT_SIZE};
-  background-color: ${ACTIVE_INPUT_COLOR};
+  background-color: ${grey1};
+  font-size: 14px;
   box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.16);
   border-radius: 8px;
-  border: 1px solid ${EMAIL_OPTION_BORDER_COLOR};
+  border: 1px solid ${grey5};
   text-align: center;
   z-index: 5;
 `;
 
 const EmailOptions = styled.li`
   padding: 12px 0;
-  border-bottom: 1px solid ${EMAIL_OPTION_BORDER_COLOR};
-  border-bottom: ${(props) =>
-    props.last ? "none" : `1px solid ${EMAIL_OPTION_BORDER_COLOR}`};
+  border-bottom: 1px solid ${grey5};
+  border-bottom: ${(props) => (props.last ? "none" : `1px solid ${grey5}`)};
 `;
 
 const WrapRightItems = styled.div`
@@ -188,10 +171,19 @@ const ResendBtn = styled.button`
   color: #434343;
 `;
 
+const TimeSpan = styled.span`
+  color: ${error3};
+  position: absolute;
+  display: block;
+  right: 100px;
+  top: 12px;
+  font-size: 14px;
+`
+
 //--------------회원가입 페이지--------------------------
 export default function Signup() {
   const navigate = useNavigate();
-  const emailList = ["naver.com", "hanmail.net", "kakao.com", "gmail.com"];
+  const emailList = ['test.com', "naver.com", "hanmail.net", "kakao.com", "gmail.com",];
   const [isOpenEmail, setIsOpenEmail] = useState(false);
   const [isOpenTokenBox, setIsOpenTokenBox] = useState(false);
   const [email, setEmail] = useState("");
@@ -202,6 +194,27 @@ export default function Signup() {
   const [conPasswdVaildation, setConPasswdVaildation] = useState(true);
   const [phoneVaildation, setPhoneVaildation] = useState(true);
   const [agreement, setAgreement] = useState(false);
+  const [minutes, setMinutes] = useState(parseInt(3));
+  const [seconds, setSeconds] = useState(parseInt(0));
+
+  useEffect(() => {
+    if (isOpenTokenBox) {
+      const countdown = setInterval(() => {
+        if (parseInt(seconds) > 0) {
+          setSeconds(parseInt(seconds) - 1);
+        }
+        if (parseInt(seconds) === 0) {
+          if (parseInt(minutes) === 0) {
+            clearInterval(countdown);
+          } else {
+            setMinutes(parseInt(minutes) - 1);
+            setSeconds(59);
+          }
+        }
+      }, 1000);
+      return () => clearInterval(countdown);
+    }
+  }, [minutes, seconds, isOpenTokenBox]);
 
   const handleOpenEmail = () => {
     !isOpenEmail ? setIsOpenEmail(true) : setIsOpenEmail(false);
@@ -216,7 +229,6 @@ export default function Signup() {
     company: "",
     token: "",
   });
-
   const { id, token, password, confirmPassword, name, phone, company } = inputs;
 
   useEffect(() => {
@@ -230,7 +242,6 @@ export default function Signup() {
           .replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3")
       );
     }
-    console.log("하이픈", phoneWrite);
   }, [phoneWrite]);
 
   const handleInputValues = (e) => {
@@ -239,7 +250,7 @@ export default function Signup() {
     if (e.target.name === "password") {
       // 영문 숫자 특수문자 1개씩 +  8-25글자 정규식
       let re = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,25}$/;
-      console.log(re.test(e.target.value));
+      // setPassword(e.target.value)
       setPasswordVaildation(re.test(e.target.value));
       if (conPasswdVaildation) {
         setConPasswdVaildation(false);
@@ -252,9 +263,7 @@ export default function Signup() {
       }
     } else if (e.target.name === "phone") {
       const regex = /^[0-9\b -]{0,13}$/;
-      console.log(e.target.value);
       if (regex.test(e.target.value)) {
-        console.log(e.target.value, "통과");
         setPhoneWrite(e.target.value);
         setPhoneVaildation(true);
       } else {
@@ -277,13 +286,13 @@ export default function Signup() {
   };
   // 이메일 직접 쓰기
   const handleWriteEmail = (e) => {
+    console.log(e.target.value);
     e.preventDefault();
     // ***.com 정규식
     const re =
       /((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     let result = re.test(e.target.value);
     setEmailVaildation(result);
-    console.log(emailVaildation);
     setEmail(e.target.value);
   };
 
@@ -330,7 +339,7 @@ export default function Signup() {
             이메일{" "}
           </Label>
           <SubInputAlign>
-            <Input
+            <InputValidateGroup
               first
               type="text"
               placeholder="아이디"
@@ -338,7 +347,7 @@ export default function Signup() {
               value={id}
               name="id"
               maxLength={40}
-              onChange={handleInputValues}
+              setValue={handleInputValues}
             />
             <span>@</span>
 
@@ -380,8 +389,12 @@ export default function Signup() {
             </EmailList>
           )}
         </InputAlign>
-
         <WrapRightItems first>
+          {!emailVaildation && (
+            <LabelWarning email htmlFor="email">
+              이메일 형식을 맞춰주세요
+            </LabelWarning>
+          )}
           {(!id || !email || !emailVaildation) && (
             <UnCertificationButton>이메일 인증하기</UnCertificationButton>
           )}
@@ -394,14 +407,15 @@ export default function Signup() {
           {isOpenTokenBox && (
             <WrapWriteToken>
               <TokenMsg>이메일로 전송된 인증번호를 입력해주세요.</TokenMsg>
-              <InputAlign style={{ gap: "8px" }}>
-                <Input
+              <InputAlign style={{gap: "8px"}}>
+                <InputValidateGroup
                   type="text"
                   placeholder="인증번호를 적어주세요."
                   name="token"
-                  onChange={handleInputValues}
+                  setValue={handleInputValues}
                   value={token}
-                />
+                  />
+                <TimeSpan>{minutes} : {seconds < 10 ? '0' + seconds : seconds}</TimeSpan>
                 <ActiveTokenButton requestCompleteToken={requestCompleteToken}>
                   인증하기
                 </ActiveTokenButton>
@@ -433,7 +447,6 @@ export default function Signup() {
   // 로그인 요청
   const requestRegister = async (e) => {
     e.preventDefault();
-    console.log(registerData);
     try {
       const response = await instanceAxios.post("/auth/register", registerData);
       if (response.status === 200) {
@@ -449,11 +462,12 @@ export default function Signup() {
       console.error(err);
     }
   };
-  // 컴포넌트 시작
+
+  //------------ 컴포넌트 시작--------------
   return (
     <Section>
       <h1 className="ir">회원가입</h1>
-      <AuthBox>
+      <SignupBox>
         <WrapTitle>
           <Title>회원 가입</Title>
           <Message>DMPUSH와 함께 마케팅에 날개를 달아보세요!</Message>
@@ -462,25 +476,18 @@ export default function Signup() {
           <form action="post">
             {/* 이메일 종류 선택하기 */}
             {renderSelectEmail()}
-            {!emailVaildation && (
-              <LabelWarning htmlFor="email">
-                이메일 형식을 맞춰주세요
-              </LabelWarning>
-            )}
             <InputAlign>
               <Label htmlFor="password">비밀번호 </Label>
               <WrapRightItems>
-                <Input
+                <InputValidateGroup
                   type="password"
                   id="password"
                   placeholder="한글, 영문, 특수문자를 포함한 8자 이상"
                   value={password}
                   name="password"
-                  onChange={handleInputValues}
+                  setValue={handleInputValues}
                   style={{
-                    border: !passwordVaildation
-                      ? `1px solid ${AUTH_WARNING_COLOR}`
-                      : null,
+                    border: !passwordVaildation ? `1px solid ${error3}` : null,
                   }}
                 />
                 {!passwordVaildation && (
@@ -494,17 +501,15 @@ export default function Signup() {
             <InputAlign>
               <Label htmlFor="confirmPassword">비밀번호 확인</Label>
               <WrapRightItems>
-                <Input
+                <InputValidateGroup
                   type="password"
                   id="confirmPassword"
                   placeholder="비밀번호를 확인"
                   value={confirmPassword}
                   name="confirmPassword"
-                  onChange={handleInputValues}
+                  setValue={handleInputValues}
                   style={{
-                    border: !conPasswdVaildation
-                      ? `1px solid ${AUTH_WARNING_COLOR}`
-                      : null,
+                    border: !conPasswdVaildation ? `1px solid ${error3}` : null,
                   }}
                 />
                 {!conPasswdVaildation && (
@@ -518,27 +523,27 @@ export default function Signup() {
             <InputAlign>
               <Label htmlFor="name">이름</Label>
               <WrapRightItems>
-                <Input
+                <InputValidateGroup
                   type="text"
                   id="name"
                   placeholder="본인 성명을 입력해주세요."
                   value={name}
                   name="name"
                   maxLength={20}
-                  onChange={handleInputValues}
+                  setValue={handleInputValues}
                 />
               </WrapRightItems>
             </InputAlign>
             <InputAlign>
               <Label htmlFor="phone">휴대폰 번호</Label>
               <WrapRightItems>
-                <Input
+                <InputValidateGroup
                   type="text"
                   id="phone"
                   placeholder="휴대폰 번호를 입력하세요."
                   value={phoneWrite}
                   name="phone"
-                  onChange={handleInputValues}
+                  setValue={handleInputValues}
                 />
               </WrapRightItems>
             </InputAlign>
@@ -546,13 +551,13 @@ export default function Signup() {
             <InputAlign last>
               <Label htmlFor="company">회사명</Label>
               <WrapRightItems>
-                <Input
+                <InputValidateGroup
                   type="text"
                   id="company"
                   placeholder="재직중인 회사명을 입력하세요"
                   value={company}
                   name="company"
-                  onChange={handleInputValues}
+                  setValue={handleInputValues}
                 />
               </WrapRightItems>
             </InputAlign>
@@ -587,7 +592,7 @@ export default function Signup() {
               )}
           </form>
         </WrapContents>
-      </AuthBox>
+      </SignupBox>
     </Section>
   );
 }

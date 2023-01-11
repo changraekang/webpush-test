@@ -1,22 +1,13 @@
 import styled from "styled-components";
-import AuthBox from "../../components/containers/auth/AuthBox";
+import { LoginBox } from "../../components/containers/auth/AuthBox";
 import {
   MAIN_BACKGROUND_COLOR,
-  AUTH_LABEL_COLOR,
-  ACTIVE_INPUT_BORDER_COLOR,
-  INACTIVE_INPUT_BORDER_COLOR,
-  INACTIVE_INPUT_FONT_COLOR,
-  INACTIVE_INPUT_COLOR,
-  NORMAL_BUTTON_BORDER_COLOR,
-  NORMAL_BUTTON_COLOR,
-  NORMAL_BUTTON_FONT_COLOR,
-  MAIN_FONT_COLOR,
+  grey11,
+  primary4,
+  grey5,
+  grey6,
+  grey10,
 } from "../../constants/color";
-import {
-  AUTH_RADIO_SIZE,
-  BUTTON_SIZE,
-  MAIN_TITLE_SIZE,
-} from "../../constants/fontSize";
 import logo from "../../assets/images/logo.png";
 import mainImage from "../../assets/images/mainpage.png";
 import {
@@ -35,6 +26,9 @@ import {
   setAccessTokenToCookie,
   setRefreshTokenToCookie,
 } from "../../cookie/controlCookie";
+import { InputGroup } from "../../components/inputs/InputGroups";
+import { useRecoilState } from "recoil";
+import { MyProfile } from "../../atom/Atom";
 
 const Section = styled.section`
   display: flex;
@@ -55,6 +49,7 @@ const ImageSection = styled.section`
   /* padding: 186px 0; */
   background-image: ${MAIN_BACKGROUND_COLOR};
 `;
+
 const InputSection = styled.section`
   display: flex;
   justify-content: center;
@@ -76,8 +71,8 @@ const WrapLogo = styled.div`
   font-weight: 900;
   line-height: 48px;
   margin-bottom: 60px;
-  font-size: ${MAIN_TITLE_SIZE};
-  color: ${MAIN_FONT_COLOR};
+  color: ${grey10};
+  font-size: 40px;
 `;
 
 const Logo = styled.img`
@@ -94,41 +89,24 @@ const WrapContents = styled.div`
 `;
 const ButtonWrap = styled.div`
   width: 100%;
-  margin-top: 8px;
+  margin-top: 12px;
 `;
 
 const IDInputWrap = styled.div`
   width: 399px;
-  height: 82px;
 `;
 
 const PwdInputWrap = styled.div`
   width: 399px;
-  height: 82px;
-`;
-
-const Input = styled.input`
-  width: 100%;
-  padding: 16px;
-  box-sizing: border-box;
-  border-radius: 8px;
-  border: 1px solid ${INACTIVE_INPUT_BORDER_COLOR};
-
-  &:focus {
-    border: 1px solid ${ACTIVE_INPUT_BORDER_COLOR};
-  }
-
-  &::placeholder {
-    color: ${INACTIVE_INPUT_FONT_COLOR};
-  }
+  margin-top: 20px;
 `;
 
 const RadioList = styled.ul`
   display: flex;
-  margin: 0 0 32px;
+  margin: 24px 0 36px 0;
   justify-content: space-between;
   align-items: center;
-  font-size: ${AUTH_RADIO_SIZE};
+  font-size: 14px;
 `;
 
 const SubTitle = styled.div`
@@ -152,29 +130,16 @@ const WrapFindAuth = styled.div`
 
 const LinkStyle = styled(Link)`
   text-decoration: none;
-  color: ${AUTH_LABEL_COLOR};
+  color: ${grey11};
 `;
 
 //--------------로그인 페이지--------------------------
 export default function Login() {
   const navigate = useNavigate();
   const [isCheck, setIsCheck] = useState(false);
-  const [inputs, setInputs] = useState({
-    email: "",
-    password: "",
-  });
-
-  const { email, password } = inputs;
-
-  const handleInputValues = (e) => {
-    const { name, value } = e.target;
-    setInputs({
-      ...inputs,
-      [name]: value,
-    });
-    console.log(inputs);
-  };
-
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [myProfile, setMyProfile] = useRecoilState(MyProfile);
   const handleCheckRadio = () => {
     isCheck ? setIsCheck(false) : setIsCheck(true);
   };
@@ -218,11 +183,25 @@ export default function Login() {
         setAccessTokenToCookie(headersToken);
         setRefreshTokenToCookie(refreshToken);
         instanceAxios.defaults.headers.common["Authorization"] = headersToken;
-        navigate("/makepush");
+        const checkAccount = async () => {
+          try {
+            const response = await instanceAxios.post("/member/me");
+            if (response.status === 200) {
+              setMyProfile(response.data);
+            }
+          } catch (err) {
+            // login yet
+            navigate("/");
+            console.error(err);
+          }
+        };
+        checkAccount();
+        navigate("/dashboard");
         console.log(response);
       }
     } catch (err) {
       console.error(err);
+      console.error("실패");
     }
   };
   return (
@@ -233,7 +212,7 @@ export default function Login() {
 
       <InputSection>
         <h1 className="ir">회원가입</h1>
-        <AuthBox>
+        <LoginBox>
           <WrapLogo>
             <>Welcome to</>
             <Logo src={logo} alt="메인로고" />
@@ -242,18 +221,18 @@ export default function Login() {
             <form action="post">
               <IDInputWrap>
                 <SubTitle>아이디</SubTitle>
-                <Input
-                  onChange={handleInputValues}
-                  name="email"
+                <InputGroup
+                  setValue={setEmail}
+                  value={email}
                   type="text"
                   placeholder="이메일을 입력하세요"
                 />
               </IDInputWrap>
               <PwdInputWrap>
                 <SubTitle>비밀번호</SubTitle>
-                <Input
-                  onChange={handleInputValues}
-                  name="password"
+                <InputGroup
+                  setValue={setPassword}
+                  value={password}
                   last
                   type="password"
                   placeholder="비밀번호를 입력하세요"
@@ -295,7 +274,7 @@ export default function Login() {
               </GoSignupButton>
             </ButtonWrap>
           </WrapContents>
-        </AuthBox>
+        </LoginBox>
       </InputSection>
     </Section>
   );

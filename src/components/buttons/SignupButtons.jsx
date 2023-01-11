@@ -1,19 +1,5 @@
 import styled from "styled-components";
-import {
-  ACTIVE_BUTTON_COLOR,
-  ACTIVE_BUTTON_FONT_COLOR,
-  INACTIVE_BUTTON_COLOR,
-  INACTIVE_BUTTON_FONT_COLOR,
-  NORMAL_BUTTON_COLOR,
-  NORMAL_BUTTON_FONT_COLOR,
-  NORMAL_BUTTON_BORDER_COLOR,
-  INACTIVE_BUTTON_BORDER_COLOR,
-} from "../../constants/color";
-import {
-  BUTTON_SIZE,
-  CERTIFICATION_BUTTON_SIZE,
-  TOKEN_BUTTON_SIZE,
-} from "../../constants/fontSize";
+import { primary4, grey1, grey3, grey5 } from "../../constants/color";
 
 const Button = styled.button`
   display: block;
@@ -22,21 +8,16 @@ const Button = styled.button`
   padding: ${(props) => (props.certificate ? "10px" : " 12px")};
   cursor: pointer;
   border-radius: 32px;
-  font-size: ${(props) =>
-    props.certificate ? `${CERTIFICATION_BUTTON_SIZE}` : null};
-  font-size: ${(props) => (props.token ? `${TOKEN_BUTTON_SIZE}` : null)};
-  background: ${(props) => (props.normal ? `${NORMAL_BUTTON_COLOR}` : null)};
-  background: ${(props) => (props.active ? `${ACTIVE_BUTTON_COLOR}` : null)};
-  background: ${(props) =>
-    props.inactive ? `${INACTIVE_BUTTON_COLOR}` : null};
-  color: ${(props) => (props.normal ? `${NORMAL_BUTTON_FONT_COLOR}` : null)};
-  color: ${(props) => (props.active ? `${ACTIVE_BUTTON_FONT_COLOR}` : null)};
-  color: ${(props) =>
-    props.inactive ? `${INACTIVE_BUTTON_FONT_COLOR}` : null};
-  border: 1px solid
-    ${(props) => (props.normal ? `${NORMAL_BUTTON_BORDER_COLOR}` : "none")};
-  border: 1px solid
-    ${(props) => (props.inactive ? `${INACTIVE_BUTTON_BORDER_COLOR}` : "none")};
+  font-size: ${(props) => (props.certificate ? `16px` : null)};
+  font-size: ${(props) => (props.token ? `14px` : null)};
+  background: ${(props) => (props.normal ? `${grey1}` : null)};
+  background: ${(props) => (props.active ? `${primary4}` : null)};
+  background: ${(props) => (props.inactive ? `${grey3}` : null)};
+  color: ${(props) => (props.normal ? `${primary4}` : null)};
+  color: ${(props) => (props.active ? `${grey1}` : null)};
+  color: ${(props) => (props.inactive ? `${grey5}` : null)};
+  border: 1px solid ${(props) => (props.normal ? `${primary4}` : "none")};
+  border: 1px solid ${(props) => (props.inactive ? `${grey5}` : "none")};
   cursor: ${(props) => (props.inactive ? `default` : null)};
   &:hover {
   }
@@ -45,7 +26,11 @@ const Button = styled.button`
 // 회원가입 작성 중
 function SignupButton({ children, requestRegister }) {
   return (
-    <Button style={{ marginTop: "55px" }} active onClick={requestRegister}>
+    <Button
+      style={{ marginTop: "55px", width: "200px", margin: "44px auto 0" }}
+      active
+      onClick={requestRegister}
+    >
       {children}
     </Button>
   );
@@ -54,7 +39,11 @@ function SignupButton({ children, requestRegister }) {
 // 회원 가입 완료
 function BeforeSignupButton({ children }) {
   return (
-    <Button style={{ marginTop: "55px" }} disabled inactive>
+    <Button
+      style={{ marginTop: "55px", width: "200px", margin: "44px auto 0" }}
+      disabled
+      inactive
+    >
       {children}
     </Button>
   );

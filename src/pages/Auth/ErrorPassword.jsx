@@ -1,18 +1,10 @@
 import styled from "styled-components";
-import FindMemberBox from "../../components/containers/auth/FindMemberBox";
 import {
+  grey9,
   MAIN_BACKGROUND_COLOR,
-  AUTH_MESSAGE_COLOR,
-  AUTH_MAIN_COLOR,
 } from "../../constants/color";
-import { useEffect, useState } from "react";
-import {
-  ActiveFindPasswordButton,
-  ActiveSetNewasswordButton,
-  InactiveSetNewPasswordButton,
-} from "../../components/buttons/FindMemberButtons";
 import { instanceAxios } from "../../api/axios";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import exclamationImg from "../../assets/images/Exclamation.png";
 import SetPasswordBox from "../../components/containers/auth/SetPasswordBox";
 
@@ -23,7 +15,7 @@ const Section = styled.section`
   width: 100%;
   height: 100vh;
   font-family: "Pretendard-Regular";
-  background: ${AUTH_MAIN_COLOR};
+  background: ${MAIN_BACKGROUND_COLOR};
 `;
 
 const Title = styled.h2`
@@ -35,7 +27,7 @@ const Title = styled.h2`
 `;
 
 const SubMessage = styled.p`
-  color: ${AUTH_MESSAGE_COLOR};
+  color: ${grey9};
   text-align: center;
   font-size: 18px;
   font-weight: 600;

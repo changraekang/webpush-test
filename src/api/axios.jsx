@@ -1,28 +1,30 @@
 import axios from "axios";
+import { getCookie } from "../cookie/controlCookie";
+const userAccessToken = getCookie('accessToken'); //null
 
 export const instanceAxios = axios.create({
-  baseURL: "https://52.78.170.177:8080/api/",
-  //baseURL: "http://localhost:8080/api/", // 로컬
-  // headers : {
-  //   Authorization : `${userAccessToken}`
-  // }
+  baseURL: "http://dev2023.dmpush.kr:8080/api/",
+  // baseURL: "http://localhost:8080/api/", // 로컬
+  headers : {
+    Authorization : `${userAccessToken}`
+  }
 });
 
-// instanceAxios.interceptors.request.use(
-//   function (config) {
-//     // 요청을 보내기 전에 수행할 일
-//     // ...
-//     const userAccessToken = getCookie('accessToken');
-//     if (userAccessToken) {
-//       config.headers['Authorization'] = userAccessToken;
-//     }
-//     return config;
-//   },
-//   function (error) {
-//     // 오류 요청을 보내기전 수행할 일
-//     // ...
-//     return Promise.reject(error);
-//   });
+instanceAxios.interceptors.request.use(
+  function (config) {
+    // 요청을 보내기 전에 수행할 일
+    // ...
+    const userAccessToken = getCookie('accessToken');
+    if (userAccessToken) {
+      config.headers['Authorization'] = userAccessToken;
+    }
+    return config;
+  },
+  function (error) {
+    // 오류 요청을 보내기전 수행할 일
+    // ...
+    return Promise.reject(error);
+  });
 
 // // 응답 인터셉터 추가
 // instanceAxios.interceptors.response.use(

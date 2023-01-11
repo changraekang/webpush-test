@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import inActiveCheck from "../../assets/images/inactive-radio.png";
 import activeCheck from "../../assets/images/active-radio.png";
-import { MAIN_FONT_COLOR } from "../../constants/color";
+import { grey9 } from "../../constants/color";
+import SignupArgeeModal from "../modals/SignupArgeeModal";
 
 const DesingLine = styled.div`
   width: 100%;
@@ -16,7 +17,6 @@ const Wrapper = styled.div`
   justify-content: space-between;
 `;
 const InputAlign = styled.div`
-  position: relative;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
@@ -26,8 +26,9 @@ const InputAlign = styled.div`
 const PaperButton = styled.button`
   width: 60px;
   height: 30px;
-  color: ${MAIN_FONT_COLOR};
+  color: ${grey9};
   display: flex;
+  cursor: pointer;
   align-items: flex-start;
 `;
 export default function SignupAgreement(props) {
@@ -36,6 +37,8 @@ export default function SignupAgreement(props) {
   const [personalagreement, setPersonalagreement] = useState(false);
   const [marketing, setMarketing] = useState(false);
   const [allAgreement, setAllAgreement] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+  const [modalContent, setModalContent] = useState("");
   const handleOver14age = () => {
     !over14age ? setOver14age(true) : setOver14age(false);
   };
@@ -49,6 +52,19 @@ export default function SignupAgreement(props) {
   };
   const handleMarket = () => {
     !marketing ? setMarketing(true) : setMarketing(false);
+  };
+  const openPersonal = (e) => {
+    e.preventDefault();
+    setOpenModal(true);
+    setModalContent("personal");
+  };
+  const openAgree = () => {
+    setOpenModal(true);
+    setModalContent("agreement");
+  };
+  const openMarketing = () => {
+    setOpenModal(true);
+    setModalContent("marketing");
   };
   const handleAllMarket = () => {
     if (allAgreement === false) {
@@ -66,6 +82,10 @@ export default function SignupAgreement(props) {
         setPersonalagreement(true);
       }
     } else {
+      setAgreement(false);
+      setMarketing(false);
+      setOver14age(false);
+      setPersonalagreement(false);
       setAllAgreement(false);
     }
   };
@@ -108,7 +128,7 @@ export default function SignupAgreement(props) {
           {personalagreement && <img src={activeCheck} alt="전체동의" />}
           <label htmlFor="agreement2">DMPUSH 개인정보동의.(필수)</label>
         </InputAlign>
-        <PaperButton disabled>전문보기</PaperButton>
+        <PaperButton onClick={openPersonal}>전문보기</PaperButton>
       </Wrapper>
       <Wrapper agreement>
         <InputAlign onClick={handleAgreement}>
@@ -116,7 +136,7 @@ export default function SignupAgreement(props) {
           {agreement && <img src={activeCheck} alt="전체동의" />}
           <label htmlFor="agreement3">DMPUSH 이용약관.(필수)</label>
         </InputAlign>
-        <PaperButton disabled>전문보기</PaperButton>
+        <PaperButton onClick={openAgree}>전문보기</PaperButton>
       </Wrapper>
       <Wrapper agreement>
         <InputAlign onClick={handleMarket}>
@@ -124,7 +144,10 @@ export default function SignupAgreement(props) {
           {marketing && <img src={activeCheck} alt="전체동의" />}
           <label htmlFor="agreement4">DMPUSH 마케팅동의.(선택)</label>
         </InputAlign>
-        <PaperButton disabled>전문보기</PaperButton>
+        <PaperButton onClick={openMarketing}>전문보기</PaperButton>
+        {openModal && (
+          <SignupArgeeModal setClose={setOpenModal} content={modalContent} />
+        )}
       </Wrapper>
     </>
   );

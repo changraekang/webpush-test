@@ -2,18 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import PushBox from "../../components/containers/push/PushBox";
 import Layout from "../../templates/Layout";
-import {
-  MAIN_SUBTITLE_FONT_COLOR,
-  INACTIVE_INPUT_BORDER_COLOR,
-  MAIN_FONT_COLOR,
-  MAIN_DEMOBOX_COLOR,
-} from "../../constants/color";
-import {
-  MAIN_SUBCONTENT_SIZE,
-  MAIN_TITLE_SIZE,
-  MAIN_SUBTITLE_SIZE,
-  MAIN_CONTENT_SIZE,
-} from "../../constants/fontSize";
+import { grey5, grey10, grey2 } from "../../constants/color";
 import activeCheck from "../../assets/images/active-check.png";
 import Fox from "../../assets/images/fox.png";
 import inActiveCheck from "../../assets/images/inactive-check.png";
@@ -23,6 +12,9 @@ import {
   InactivePushButton,
   RegisterImageButton,
 } from "../../components/buttons/PushButtons";
+import ProjectModal from "../../components/modals/ProjectModal";
+import { instanceAxios } from "../../api/axios";
+import { getCookie } from "../../cookie/controlCookie";
 const TitleWrapper = styled.div`
   width: 100%;
   display: flex;
@@ -63,31 +55,31 @@ const DemoSection = styled.section`
 `;
 
 const PageTitle = styled.h2`
-  font-size: ${MAIN_TITLE_SIZE};
+  font-size: 40px;
   font-weight: 600;
   padding-bottom: 12px;
 `;
 
 const Title = styled.h3`
-  font-size: ${MAIN_SUBTITLE_SIZE};
+  font-size: 24px;
   font-weight: 600;
   padding-bottom: 12px;
 `;
 const SubTitle = styled.h4`
   width: 100px;
-  font-size: ${MAIN_SUBTITLE_SIZE};
+  font-size: 24px;
   font-weight: 500;
   padding: 6px;
 `;
 const SubDemoTitle = styled.h4`
   width: 100%;
-  font-size: ${MAIN_SUBTITLE_SIZE};
+  font-size: 24px;
   font-weight: 500;
 `;
 
 const Message = styled.p`
-  font-size: ${MAIN_SUBCONTENT_SIZE};
-  color: ${MAIN_SUBTITLE_FONT_COLOR};
+  color: ${grey5};
+  font-size: 14px;
 `;
 
 const WrapMessage = styled.div`
@@ -112,7 +104,7 @@ const DemoWrapperBox = styled.div`
   left: 32px;
   top: 77px;
   padding-right: 50px;
-  background: ${MAIN_DEMOBOX_COLOR};
+  background: ${grey2};
   border-radius: 16px;
 `;
 
@@ -122,15 +114,15 @@ const Input = styled.input`
   margin-top: 8px;
   box-sizing: border-box;
   border-radius: 8px;
-  border: 1px solid ${INACTIVE_INPUT_BORDER_COLOR};
-  color: ${MAIN_FONT_COLOR};
+  border: 1px solid ${grey5};
+  color: ${grey10};
 `;
 const InputDate = styled.input`
   padding: 16px;
   box-sizing: border-box;
   border-radius: 8px;
-  border: 1px solid ${INACTIVE_INPUT_BORDER_COLOR};
-  color: ${MAIN_FONT_COLOR};
+  border: 1px solid ${grey5};
+  color: ${grey10};
 `;
 const ImageInput = styled.input`
   width: 100%;
@@ -139,8 +131,8 @@ const ImageInput = styled.input`
   margin-left: 20px;
   box-sizing: border-box;
   border-radius: 8px;
-  border: 1px solid ${INACTIVE_INPUT_BORDER_COLOR};
-  color: ${MAIN_FONT_COLOR};
+  border: 1px solid ${grey5};
+  color: ${grey10};
 `;
 const InputArea = styled.input`
   width: 100%;
@@ -149,8 +141,8 @@ const InputArea = styled.input`
   margin-top: 8px;
   box-sizing: border-box;
   border-radius: 8px;
-  border: 1px solid ${INACTIVE_INPUT_BORDER_COLOR};
-  color: ${MAIN_FONT_COLOR};
+  border: 1px solid ${grey5};
+  color: ${grey10};
 `;
 
 const RadioList = styled.ul`
@@ -158,7 +150,7 @@ const RadioList = styled.ul`
   margin: 14px 0;
   justify-content: flex-start;
   align-items: center;
-  font-size: ${MAIN_CONTENT_SIZE};
+  font-size: 14px;
 `;
 
 const RadioLi = styled.li`
@@ -168,13 +160,13 @@ const RadioLi = styled.li`
   gap: 4px;
 `;
 const SubMessage = styled.p`
-  color: ${MAIN_SUBTITLE_FONT_COLOR};
+  color: ${grey5};
   text-align: center;
   padding-top: 20px;
   padding-bottom: 60px;
 `;
 const LinkMessage = styled.p`
-  color: ${MAIN_SUBTITLE_FONT_COLOR};
+  color: ${grey5};
   text-align: center;
 `;
 const ButtonWrapper = styled.div`
@@ -195,6 +187,7 @@ export default function MakePush() {
   const [ReserveMin, setReserveMin] = useState("");
   const [timer, setTimer] = useState(1);
   const [submitDate, setSubmitDate] = useState(ReserveMin);
+  const accessToken = getCookie("accessToken");
   const getClock = () => {
     const offset = 1000 * 60 * 60 * 9;
     const koreaNow = new Date(new Date().getTime() + offset);
@@ -203,12 +196,27 @@ export default function MakePush() {
     setThisMonth(koreaNow.toISOString().slice(0, 10));
   };
   useEffect(() => {
+    const checkProject = async () => {
+      try {
+        const response = await instanceAxios.get("/project/all");
+        if (response.status === 200) {
+          if (response.data.length > 0) {
+            setisModalOpen(false);
+          }
+        }
+      } catch (err) {
+        // login yet
+        console.error(err);
+      }
+    };
+    checkProject();
     getClock();
     setInterval(getClock, 20000);
   }, []);
 
   const [isWebCheck, setisWebCheck] = useState(false);
   const [isMobileCheck, setisMobileCheck] = useState(false);
+  const [isModalOpen, setisModalOpen] = useState(true);
   const [isAdsCheck, setIsAdsCheck] = useState(false);
   const [isInfoCheck, setisInfoCheck] = useState(false);
   const [isEtcCheck, setisEtcCheck] = useState(false);
@@ -539,6 +547,7 @@ export default function MakePush() {
           )}
         </ButtonWrapper>
       </PageWrapper>
+      {isModalOpen && <ProjectModal setClose={setisModalOpen} />}
     </Layout>
   );
 }

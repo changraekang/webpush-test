@@ -1,13 +1,11 @@
 import styled from "styled-components";
 import FindMemberBox from "../../components/containers/auth/FindMemberBox";
 import {
+  grey9,
+  grey5,
+  primary4,
+  error3,
   MAIN_BACKGROUND_COLOR,
-  AUTH_MESSAGE_COLOR,
-  AUTH_LABEL_COLOR,
-  INACTIVE_INPUT_BORDER_COLOR,
-  ACTIVE_INPUT_BORDER_COLOR,
-  AUTH_WARNING_COLOR,
-  AUTH_MAIN_COLOR,
 } from "../../constants/color";
 import { useEffect, useState } from "react";
 import {
@@ -25,7 +23,7 @@ const Section = styled.section`
   width: 100%;
   height: 100vh;
   font-family: "Pretendard-Regular";
-  background: ${AUTH_MAIN_COLOR};
+  background: ${MAIN_BACKGROUND_COLOR};
 `;
 
 const Title = styled.h2`
@@ -35,12 +33,12 @@ const Title = styled.h2`
 `;
 
 const WarningMessage = styled.p`
-  color: ${AUTH_WARNING_COLOR};
+  color: ${error3};
   padding-top: 15px;
   text-align: start;
 `;
 const SubMessage = styled.p`
-  color: ${AUTH_MESSAGE_COLOR};
+  color: ${grey9};
   text-align: center;
 `;
 
@@ -49,11 +47,8 @@ const FormStyle = styled.form`
   width: 437px;
 `;
 
-const LabelStyle = styled.label`
-  color: ${AUTH_LABEL_COLOR};
-`;
 const LabelWarning = styled.p`
-  color: ${AUTH_WARNING_COLOR};
+  color: ${error3};
   margin-top: 5px;
 `;
 const InputStyle = styled.input`
@@ -62,10 +57,10 @@ const InputStyle = styled.input`
   width: 100%;
   margin-top: 8px;
   box-sizing: border-box;
-  border: 1px solid ${INACTIVE_INPUT_BORDER_COLOR};
+  border: 1px solid ${grey5};
 
   &:focus {
-    border: 1px solid ${ACTIVE_INPUT_BORDER_COLOR};
+    border: 1px solid ${primary4};
   }
 `;
 

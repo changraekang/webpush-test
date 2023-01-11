@@ -5,16 +5,17 @@ import {
   InactiveFindEmailButton,
 } from "../../components/buttons/FindMemberButtons";
 import {
-  MAIN_BACKGROUND_COLOR,
-  AUTH_MESSAGE_COLOR,
-  AUTH_LABEL_COLOR,
-  INACTIVE_INPUT_BORDER_COLOR,
-  ACTIVE_INPUT_BORDER_COLOR,
+  MAIN_BACKGROUND_COLOR, 
+  grey9,
+  grey11,
+  grey5,
+  primary4,
 } from "../../constants/color";
 import mainImage from "../../assets/images/mainpage.png";
 
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { instanceAxios } from "../../api/axios";
 
 const Section = styled.section`
   display: flex;
@@ -53,7 +54,7 @@ const Title = styled.h2`
 `;
 
 const SubMessage = styled.p`
-  color: ${AUTH_MESSAGE_COLOR};
+  color: ${grey9};
   font-weight: 400;
   line-height: 27px;
   text-align: center;
@@ -65,7 +66,7 @@ const FormStyle = styled.form`
 `;
 
 const LabelStyle = styled.label`
-  color: ${AUTH_LABEL_COLOR};
+  color: ${grey11};
 `;
 const MainImage = styled.img`
   width: 712px;
@@ -77,16 +78,22 @@ const InputStyle = styled.input`
   width: 100%;
   margin-top: 8px;
   box-sizing: border-box;
-  border: 1px solid ${INACTIVE_INPUT_BORDER_COLOR};
+  border: 1px solid ${grey5};
 
   &:focus {
-    border: 1px solid ${ACTIVE_INPUT_BORDER_COLOR};
+    border: 1px solid ${primary4};
   }
 `;
 
 export default function FindPassword() {
-  const [phone, setPhone] = useState("");
   const navigate = useNavigate();
+  const [phone, setPhone] = useState("");
+  const [name, setName] = useState("");
+  
+  const handleNameInput = (e) => {
+    setName(e.target.value);
+  }
+
   useEffect(() => {
     if (phone.length === 10) {
       setPhone(phone.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3"));
@@ -97,20 +104,30 @@ export default function FindPassword() {
       );
     }
   }, [phone]);
-  const handleInput = (e) => {
+
+  const handleNumberInput = (e) => {
     const regex = /^[0-9\b -]{0,13}$/;
     if (regex.test(e.target.value)) {
       setPhone(e.target.value);
     }
   };
-  const SubmitPhone = () => {
-    if (phone === "1234") {
-      navigate("/resultEmail/test***");
-    } else {
+
+  const requsetFindEmail = async(e) => {
+    e.preventDefault();
+    try {
+      const response = await instanceAxios.post('/auth/email', {
+        name : name,
+        phone : phone
+      });
+      console.log(response);
+      if(response.status === 200) {
+        navigate(`/resultEmail/${response.data.data}`);
+      } 
+    } catch (err) {
+      console.log(err)
       navigate("/notFoundemail");
     }
-    console.log(phone);
-  };
+  }
   return (
     <Section>
       <ImageSection>
@@ -121,10 +138,19 @@ export default function FindPassword() {
         <FindMemberBox>
           <Title>이메일 찾기</Title>
           <SubMessage>회원가입 시 입력한 전화번호를 입력해주세요!</SubMessage>
-          <FormStyle>
+          <FormStyle onSubmit={requsetFindEmail}>
+            <div>
             <div>
               <InputStyle
-                onChange={handleInput}
+                onChange={handleNameInput}
+                value={name}
+                type="text"
+                id="name"
+                placeholder="성함을 입력해주세요."
+              />
+            </div>
+              <InputStyle
+                onChange={handleNumberInput}
                 value={phone}
                 type="text"
                 id="phone"
@@ -132,7 +158,7 @@ export default function FindPassword() {
               />
             </div>
             {phone && (
-              <ActiveFindEmailButton phoneSubmit={SubmitPhone}>
+              <ActiveFindEmailButton>
                 확인
               </ActiveFindEmailButton>
             )}

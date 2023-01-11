@@ -7,9 +7,8 @@ import {
 } from "../../components/buttons/FindMemberButtons";
 import {
   MAIN_BACKGROUND_COLOR,
-  AUTH_MESSAGE_COLOR,
-  AUTH_LABEL_COLOR,
-  MAIN_FONT_COLOR,
+  grey11,
+  grey10,
 } from "../../constants/color";
 import mainImage from "../../assets/images/mainpage.png";
 import exclamationImg from "../../assets/images/Exclamation.png";
@@ -86,12 +85,12 @@ const Check = styled.img`
   height: 40px;
 `;
 const Message = styled.label`
-  color: ${AUTH_LABEL_COLOR};
+  color: ${grey11};
 `;
 const Warning = styled.label`
   padding-top: 5px;
   line-height: 32px;
-  color: ${MAIN_FONT_COLOR};
+  color: ${grey10};
 `;
 const MainImage = styled.img`
   width: 712px;

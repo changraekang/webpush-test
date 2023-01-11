@@ -20,31 +20,9 @@ const Button = styled.button`
   &:hover {
   }
 `;
-//로그인 유효성 통과 전
-function LoginButton({ children, requestLogin }) {
-  return (
-    <Button active onClick={requestLogin}>
-      {children}
-    </Button>
-  );
-}
 
-// 로그인 유효성 검사 통과 후
-function BeforeLoginButton({ children }) {
+export default function UpdateProfile({children, updateMyInfo}) {
   return (
-    <Button disabled inactive>
-      {children}
-    </Button>
-  );
+    <Button active onClick={updateMyInfo}>{children}</Button>
+  )
 }
-
-// 로그인 -> 회원가입
-function GoSignupButton({ children, handleGoSignup }) {
-  return (
-    <Button normal onClick={handleGoSignup}>
-      {children}
-    </Button>
-  );
-}
-
-export { LoginButton, BeforeLoginButton, GoSignupButton };

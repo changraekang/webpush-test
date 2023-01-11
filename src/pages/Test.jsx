@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import {
-  ACTIVE_BUTTON_COLOR,
-  INACTIVE_INPUT_BORDER_COLOR,
-  MAIN_COLOR,
-  MAIN_FONT_COLOR,
+  primary4,
+  grey5,
+  // MAIN_COLOR,
+  grey10,
   NAV_MY_MENU_COLOR,
   NAV_MY_MENU_LINE_COLOR,
 } from "../constants/color";
@@ -80,7 +80,7 @@ const TestButton = styled.button`
   color: white;
   font-size: 1.875rem;
   font-weight: 900;
-  background-color: ${ACTIVE_BUTTON_COLOR};
+  background-color: ${primary4};
   cursor: pointer;
   border-radius: 8px;
   border: none;
@@ -101,7 +101,7 @@ const MyButton = styled.button`
   cursor: pointer;
   font-weight: 900;
   &:hover {
-    background: ${MAIN_COLOR};
+    background: ${primary4};
     border-radius: 8px;
   }
 `;
@@ -112,8 +112,8 @@ const Input = styled.input`
   margin-top: 8px;
   box-sizing: border-box;
   border-radius: 8px;
-  border: 1px solid ${INACTIVE_INPUT_BORDER_COLOR};
-  color: ${MAIN_FONT_COLOR};
+  border: 1px solid ${grey5};
+  color: ${grey10};
 `;
 const Test = () => {
   const [openAuthMenu, setOpenAuthMenu] = useState(true);
