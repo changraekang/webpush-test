@@ -78,8 +78,10 @@ export default function SetNewPassword() {
 
   useEffect(() => {
     const location = window.location;
-    setToken(location.search.split("=")[1].split("&")[0]);
-    setEmail(location.search.split("=")[2]);
+    if(location.search) {
+      setToken(location.search.split("=")[1].split("&")[0]);
+      setEmail(location.search.split("=")[2]);
+    }
   }, []);
 
   const { newPassword, confirmPassword } = inputs;

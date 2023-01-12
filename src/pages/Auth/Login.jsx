@@ -28,7 +28,9 @@ import {
 } from "../../cookie/controlCookie";
 import { InputGroup } from "../../components/inputs/InputGroups";
 import { useRecoilState } from "recoil";
-import { MyProfile } from "../../atom/Atom";
+import { MyProfile, MyProject, MyPushProject } from "../../atom/Atom";
+import "../../allowDemo.js";
+import Cookies from "universal-cookie";
 
 const Section = styled.section`
   display: flex;
@@ -140,6 +142,14 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [myProfile, setMyProfile] = useRecoilState(MyProfile);
+  const [myProject, setMyProject] = useRecoilState(MyProject);
+  const [myPushProject, setMyPushProject] = useRecoilState(MyPushProject);
+  // useEffect(()=> {
+  //   const script = document.createElement("script");
+  //   script.src = "../../allowDemo.js";
+  //   document.body.appendChild(script);
+  // }, [])
+
   const handleCheckRadio = () => {
     isCheck ? setIsCheck(false) : setIsCheck(true);
   };
@@ -170,9 +180,9 @@ export default function Login() {
   };
 
   // 로그인 요청
+  // 로그인 > me > project
   const requestLogin = async (e) => {
     e.preventDefault();
-    console.log("login", loginData);
     try {
       const response = await instanceAxios.post("/auth/login", loginData);
       if (response.status === 200) {
@@ -182,12 +192,28 @@ export default function Login() {
         const headersToken = tokenType + accessToken;
         setAccessTokenToCookie(headersToken);
         setRefreshTokenToCookie(refreshToken);
+        window.localStorage.removeItem("recoil-persist");
         instanceAxios.defaults.headers.common["Authorization"] = headersToken;
         const checkAccount = async () => {
           try {
             const response = await instanceAxios.post("/member/me");
             if (response.status === 200) {
               setMyProfile(response.data);
+              const checkProject = async () => {
+                try {
+                  const response = await instanceAxios.get("/project/all");
+                  if (response.status === 200) {
+                    setMyProject(response.data);
+                    if (response.data.length === 1) {
+                      setMyPushProject(response.data[0]);
+                    }
+                  }
+                } catch (err) {
+                  // login yet
+                  console.error(err);
+                }
+              };
+              checkProject();
             }
           } catch (err) {
             // login yet
@@ -200,6 +226,10 @@ export default function Login() {
         console.log(response);
       }
     } catch (err) {
+      const cookies = new Cookies();
+      cookies.remove("refreshToken");
+      cookies.remove("accessToken");
+      window.location.reload();
       console.error(err);
       console.error("실패");
     }

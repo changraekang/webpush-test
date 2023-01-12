@@ -34,6 +34,11 @@ export function SelectHomepage({children, setValue}) {
       <Button homepage normal onClick={setValue}>{children}</Button>
     )
 }
+export function SelectedHomepage({children, setValue}) {
+  return (
+      <Button homepage active onClick={setValue}>{children}</Button>
+    )
+}
 
 export function UpdateHomepage({children, updateHomePage}) {
   return (

@@ -5,8 +5,6 @@ const Section = styled.section`
   background: ${grey3};
   display: flex;
   justify-content: center;
-  /* align-items: center; */
-  width: 100%;
   height: 100vh;
   padding: 20px;
   font-family: "Pretendard-Regular";
@@ -31,13 +29,27 @@ const Title = styled.h2`
   padding-bottom: 32px;
 `
 
-export default function ProfileBox({children}) {
+export function ProfileBox({children}) {
   return (
     <Section>
         <h1 className='ir'>나의 정보 페이지</h1>
         <WrapBox>
           <Box>
             <Title>나의 정보</Title>
+              {children}
+          </Box>
+        </WrapBox>
+    </Section>
+  )
+}
+
+export function PasswordBox({children}) {
+  return (
+    <Section>
+        <h1 className='ir'>비밀번호 변경 페이지</h1>
+        <WrapBox>
+          <Box>
+            <Title>새 비밀번호 설정</Title>
               {children}
           </Box>
         </WrapBox>

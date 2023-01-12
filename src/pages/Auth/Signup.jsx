@@ -88,18 +88,6 @@ const SubInputAlign = styled.div`
   gap: 8px;
 `;
 
-const Input = styled.input`
-  width: ${(props) => (props.first ? "130px" : "100%")};
-  padding: 10px 12px;
-  box-sizing: border-box;
-  border-radius: 4px;
-  border: 1px solid ${grey5};
-
-  &::placeholder {
-    color: ${grey6};
-  }
-`;
-
 const Label = styled.label`
   /* width: 140px; */
   color: ${grey11};
@@ -110,7 +98,7 @@ const Label = styled.label`
 const LabelWarning = styled.span`
   display: block;
   color: ${error3};
-  font-size: 14px;
+  font-size: 12px;
   margin-top: 8px;
   margin-bottom: ${(props) => (props.email ? "8px" : "0")};
 `;
@@ -128,7 +116,7 @@ const EmailList = styled.ul`
   display: flex;
   flex-direction: column;
   position: absolute;
-  width: 229px;
+  width: 173px;
   right: 0;
   top: 42px;
   background-color: ${grey1};
@@ -346,7 +334,7 @@ export default function Signup() {
               id="email"
               value={id}
               name="id"
-              maxLength={40}
+              maxLength={25}
               setValue={handleInputValues}
             />
             <span>@</span>
@@ -490,7 +478,7 @@ export default function Signup() {
                     border: !passwordVaildation ? `1px solid ${error3}` : null,
                   }}
                 />
-                {!passwordVaildation && (
+                {!passwordVaildation && password &&(
                   <LabelWarning htmlFor="email">
                     비밀번호는 영문/숫자/특문을 포함한 8자이상 입력해주세요.
                   </LabelWarning>
@@ -512,7 +500,7 @@ export default function Signup() {
                     border: !conPasswdVaildation ? `1px solid ${error3}` : null,
                   }}
                 />
-                {!conPasswdVaildation && (
+                {!conPasswdVaildation && confirmPassword && (
                   <LabelWarning htmlFor="email">
                     비밀번호가 일치하지 않습니다.
                   </LabelWarning>

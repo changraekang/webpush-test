@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { instanceAxios } from "../../api/axios";
+import { MyProject } from "../../atom/Atom";
 import {
   grey11,
   grey1,
@@ -16,6 +18,7 @@ import { InputGroup } from "../inputs/InputGroups";
 
 const Wrapper = styled.div`
   position: fixed;
+  z-index: 10;
   background: linear-gradient(0deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));
   display: flex;
   flex-direction: column;
@@ -133,20 +136,20 @@ const ProjectModal = (props) => {
   const [cat, setCat] = useState("");
   const [url, setUrl] = useState("");
   const [catArray, setCatArray] = useState([]);
-
+  const [myProject, setMyProject] = useRecoilState(MyProject);
   useEffect(() => {
-  const checkCategory = async () => {
-    try {
-      const response = await instanceAxios.get("/category/all");
-      if (response.status === 200) {
-        const data = response.data;
-        setCatArray(data);
+    const checkCategory = async () => {
+      try {
+        const response = await instanceAxios.get("/category/all");
+        if (response.status === 200) {
+          const data = response.data;
+          setCatArray(data);
+        }
+      } catch (err) {
+        // login yet
+        console.error(err);
       }
-    } catch (err) {
-      // login yet
-      console.error(err);
-    }
-  };
+    };
     checkCategory();
   }, []);
 
@@ -159,7 +162,18 @@ const ProjectModal = (props) => {
     try {
       const response = await instanceAxios.post("/project/add", body);
       if (response.status === 200) {
-        console.log(response);
+        const checkProject = async () => {
+          try {
+            const response = await instanceAxios.get("/project/all");
+            if (response.status === 200) {
+              setMyProject(response.data);
+            }
+          } catch (err) {
+            // login yet
+            console.error(err);
+          }
+        };
+        checkProject();
         props.setClose(false);
       }
     } catch (err) {

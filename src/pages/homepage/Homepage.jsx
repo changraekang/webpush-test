@@ -12,7 +12,6 @@ const WrapInputs = styled.div`
   display: flex;
   flex-wrap: wrap;
   width: 380px;
-  /* gap: 180px; */
   justify-content: space-between;
   align-items: center;
   margin-bottom: 12px;

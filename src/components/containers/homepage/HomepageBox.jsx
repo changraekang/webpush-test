@@ -5,8 +5,6 @@ const Section = styled.section`
   background: ${grey3};
   display: flex;
   justify-content: center;
-  /* align-items: center; */
-  width: 100%;
   height: 100vh;
   padding: 20px;
   font-family: "Pretendard-Regular";

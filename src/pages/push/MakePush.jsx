@@ -2,11 +2,15 @@ import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import PushBox from "../../components/containers/push/PushBox";
 import Layout from "../../templates/Layout";
-import { grey5, grey10, grey2 } from "../../constants/color";
+import { grey5, grey10, grey2, grey4 } from "../../constants/color";
 import activeCheck from "../../assets/images/active-check.png";
-import Fox from "../../assets/images/fox.png";
+import Rectangle from "../../assets/images/demoBox.png";
 import inActiveCheck from "../../assets/images/inactive-check.png";
 import { DemoBox, DemoWrapBox } from "../../components/containers/push/DemoBox";
+import {
+  SelectHomepage,
+  UpdateHomepage,
+} from "../../components/buttons/HompageButtons";
 import {
   ActivePushButton,
   InactivePushButton,
@@ -15,6 +19,8 @@ import {
 import ProjectModal from "../../components/modals/ProjectModal";
 import { instanceAxios } from "../../api/axios";
 import { getCookie } from "../../cookie/controlCookie";
+import { MyProject, MyPushProject } from "../../atom/Atom";
+import { useRecoilState } from "recoil";
 const TitleWrapper = styled.div`
   width: 100%;
   display: flex;
@@ -27,6 +33,12 @@ const PageWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+`;
+const WrapHomepages = styled.ul`
+  display: flex;
+  font-weight: 600;
+  margin-bottom: 40px;
+  border-bottom: 3px solid black;
 `;
 const SectionWrapper = styled.div`
   width: 100%;
@@ -181,13 +193,20 @@ const ReserveWrapper = styled.div`
   display: flex;
   justify-content: flex-start;
 `;
+
+const DemoImg = styled.img`
+  width: 192px;
+  height: 192px;
+  object-fit: cover;
+`;
 export default function MakePush() {
   const [thisClock, setThisClock] = useState("");
   const [thisMonth, setThisMonth] = useState("");
   const [ReserveMin, setReserveMin] = useState("");
-  const [timer, setTimer] = useState(1);
   const [submitDate, setSubmitDate] = useState(ReserveMin);
-  const accessToken = getCookie("accessToken");
+  const [myProject, setMyProject] = useRecoilState(MyProject);
+  const [myPushProject, setMyPushProject] = useRecoilState(MyPushProject);
+
   const getClock = () => {
     const offset = 1000 * 60 * 60 * 9;
     const koreaNow = new Date(new Date().getTime() + offset);
@@ -196,20 +215,11 @@ export default function MakePush() {
     setThisMonth(koreaNow.toISOString().slice(0, 10));
   };
   useEffect(() => {
-    const checkProject = async () => {
-      try {
-        const response = await instanceAxios.get("/project/all");
-        if (response.status === 200) {
-          if (response.data.length > 0) {
-            setisModalOpen(false);
-          }
-        }
-      } catch (err) {
-        // login yet
-        console.error(err);
-      }
-    };
-    checkProject();
+    if (myProject.length > 0) {
+      setisModalOpen(false);
+    }
+    console.log(myProject);
+
     getClock();
     setInterval(getClock, 20000);
   }, []);
@@ -225,14 +235,12 @@ export default function MakePush() {
   const [inputs, setInputs] = useState({
     web: false,
     mobile: false,
-    ads: false,
-    info: false,
-    etc: false,
     title: "",
     content: "",
     link: "",
     image: "",
     date: "",
+    pid: myPushProject.pid,
   });
 
   // 이미지 파일 관리
@@ -324,7 +332,8 @@ export default function MakePush() {
   };
 
   // 제출
-  const onClickSubmit = () => {
+  const onClickSubmit = async (e) => {
+    e.preventDefault();
     if (!isMobileCheck && !isWebCheck) {
       return alert("Please select Push Type");
     }
@@ -351,12 +360,26 @@ export default function MakePush() {
       inputs.date = ReserveMin;
     }
     inputs.image = previewImg;
-    console.log(inputs, "제출");
+    try {
+      const response = await instanceAxios.post(
+        `/message/${myPushProject.pid}/add`,
+        inputs
+      );
+      if (response.status === 200) {
+        console.log("메세지 등록 성공🎉");
+      }
+      console.log(response);
+    } catch (err) {
+      console.error(err);
+    }
   };
   return (
     <Layout>
       <TitleWrapper>
-        <PageTitle>PUSH 작성</PageTitle>
+        <WrapHomepages>
+          {myPushProject.name ? myPushProject.name : "프로젝트를 선택해주세요"}
+        </WrapHomepages>
+        <PageTitle>PUSH 작성 </PageTitle>
         <Message>
           고객들에게 날릴 웹푸시를 작성 및 등록할 수 있는 페이지입니다.
         </Message>
@@ -515,9 +538,10 @@ export default function MakePush() {
               <Title>웹푸시 미리보기</Title>
               <DemoWrapperBox>
                 <DemoBox>
-                  <>
-                    <img src={Fox} width="192px" height="192px" alt="여우" />
-                  </>
+                  <DemoImg
+                    src={demoImg ? demoImg : Rectangle}
+                    alt="데모이미지"
+                  />
                   <DemoSection>
                     <SubDemoTitle>{inputs.title}</SubDemoTitle>
                     <SubMessage>{inputs.content}</SubMessage>
@@ -532,6 +556,7 @@ export default function MakePush() {
           {content &&
             title &&
             link &&
+            myPushProject.pid &&
             (isMobileCheck || isWebCheck) &&
             (isDirectCheck || isReserveCheck) && (
               <ActivePushButton handleSubmit={onClickSubmit}>
@@ -541,6 +566,7 @@ export default function MakePush() {
           {(!content ||
             !title ||
             !link ||
+            !myPushProject.pid ||
             (!isMobileCheck && !isWebCheck) ||
             (!isDirectCheck && !isReserveCheck)) && (
             <InactivePushButton>발송</InactivePushButton>

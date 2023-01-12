@@ -1,11 +1,13 @@
 import styled from 'styled-components'
-import ProfileBox from '../../components/containers/profile/ProfileBox'
-import { grey3 } from '../../constants/color'
+import {ProfileBox} from '../../components/containers/profile/ProfileBox'
+import { error3 } from '../../constants/color'
 import Layout from '../../templates/Layout';
-import { InputGroup } from '../../components/inputs/InputGroups'
-import UpdateProfile from '../../components/buttons/ProfileButtons';
+import { InputGroup, InputValidateGroup } from '../../components/inputs/InputGroups'
+import {UpdateInactiveProfileBtn, UpdateProfileBtn} from '../../components/buttons/ProfileButtons';
 import { instanceAxios } from '../../api/axios';
 import { useEffect, useState } from 'react';
+import { useRecoilState } from 'recoil';
+import { MyProfile } from '../../atom/Atom';
 
 const WrapInputs = styled.div`
   display: flex;
@@ -19,60 +21,102 @@ const WrapInputs = styled.div`
 
 const LabelStyle = styled.label`
   display: flex;
-  /* width: 180px; */
 `
 const WrapButton = styled.div`
   width: 180px;
   margin: 40px auto 0;
 `
+const LabelWarning = styled.span`
+  display: block;
+  color: ${error3};
+  font-size: 12px;
+  margin: 8px 0 0;
+`;
 
 export default function MyPage() {
-  const [email, setEmail] = useState('');
-  const [company, setCompany] = useState('');
-  const [phone, setPhone] = useState('');
-
-  const getMemberInfo = async() => {
-    try{
-      const response = await instanceAxios.post('/member/me',{})
-      console.log(response);
-      const data = response.data; 
-      if(response.status === 200) {
-        setEmail(data.email);
-        setPhone(data.phone);
-        setCompany(data.company);
-      }
-    } catch (err) {
-        console.error(err);
-    }
-  }
-  
+  const [myProfile, setMyProfile] = useRecoilState(MyProfile);
+  const [email, setEmail] = useState(myProfile.email);
+  const [company, setCompany] = useState(myProfile.company);
+  const [phone, setPhone] = useState(myProfile.phone);
+  const [isValidEmail, setIsValidEmail] = useState(true);
+  console.log(myProfile, '⭐ 마이프로필'); 
   useEffect(() => {
-    getMemberInfo();
-  }, [])
+    if(phone) {
+      if (phone.length === 10) {
+        setPhone(phone.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3"));
+      }
+      if (phone.length === 13) {
+        setPhone(
+          phone
+            .replace(/-/g, "")
+            .replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3")
+        );
+      }
+    }
+  }, [phone]);
+
+  const handlePhone = (e) => {
+    if (e.target.name === "phone") {
+      const regex = /^[0-9\b -]{0,13}$/;
+      if (regex.test(e.target.value)) {
+        setPhone(e.target.value);
+      } 
+  }}
+
+  const handleEmail = (e) => {
+    setEmail(e.target.value)
+    if (e.target.name === "email") {
+      const regex = /^[a-zA-Z0-9]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/gm;
+      if (regex.test(e.target.value)) {
+        setEmail(e.target.value);
+        setIsValidEmail(true);
+      } else {
+        setIsValidEmail(false)
+      }
+   }
+  }
+
+  // const getMemberInfo = async() => {
+  //   try{
+  //     const response = await instanceAxios.post('/member/me',{})
+  //     console.log(response);
+  //     if(response.status === 200) {
+  //       setMyProfile(response.data)
+  //       setEmail(myProfile.email);
+  //       setPhone(myProfile.phone);
+  //       setCompany(myProfile.company);
+
+  //     }
+  //   } catch (err) {
+  //       console.error(err);
+  //   }
+  // }
+  
+  // useEffect(() => {
+  //   getMemberInfo();
+  // }, [])
 
 
   const updateData = {
+    "name" : myProfile.name,
     "company": company,
     "email": email,
     "phone": phone
   }
-
+  console.log(updateData, "updateData🐰");
+  console.log(!!myProfile === !!updateData)
   const updateMyInfo = async(e) => {
     e.preventDefault();
     if(window.confirm('개인정보를 수정하시겠습니까?')) {
       try{
-        const response = await instanceAxios.put('/member/update', updateData)
-        console.log(response);
-        const data = response.data; 
+        const response = await instanceAxios.put('/member/update', updateData);
         if(response.status === 200) {
-          setEmail(data.email);
-          setPhone(data.phone);
-          setCompany(data.company);
           alert('성공적으로 정보를 수정하였습니다.🎉');
-          window.location.reload();
+          setMyProfile(updateData);
+          // console.log(myProfile, '⚠️수정 누르고');
         }
       } catch (err) {
-          console.error(err);
+        console.error(err);
       }
     }
   }
@@ -84,22 +128,27 @@ export default function MyPage() {
           <WrapInputs>
             <LabelStyle htmlFor="email">이메일</LabelStyle>
             <div>
-              <InputGroup 
+              <InputValidateGroup 
               type="text" 
               id='email' 
+              name='email'
               value={email === undefined ? '' : email} 
-              setValue={setEmail}
+              setValue={handleEmail}
               />
+              {!isValidEmail && email && 
+               <LabelWarning>올바른 이메일 형식이 아닙니다.</LabelWarning>
+              }
             </div>
           </WrapInputs>
           <WrapInputs>
             <LabelStyle htmlFor="phone">휴대폰 번호</LabelStyle>
             <div>
-              <InputGroup 
+              <InputValidateGroup 
               type="text" 
               id='phone' 
+              name='phone'
               value={phone === undefined ? '' : phone} 
-              setValue={setPhone}
+              setValue={handlePhone}
               />
             </div>
           </WrapInputs>
@@ -115,7 +164,12 @@ export default function MyPage() {
             </div>
           </WrapInputs>
             <WrapButton>
-              <UpdateProfile updateMyInfo={updateMyInfo}>수정</UpdateProfile>
+            {(Object.values(myProfile).toString() != Object.values(updateData).toString()) && 
+              <UpdateProfileBtn updateMyInfo={updateMyInfo}>수정</UpdateProfileBtn>
+            }
+            {(Object.values(myProfile).toString() === Object.values(updateData).toString()) && 
+              <UpdateInactiveProfileBtn updateMyInfo={updateMyInfo}>수정</UpdateInactiveProfileBtn>
+            }
             </WrapButton>
         </form>
       </ProfileBox>

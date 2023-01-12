@@ -1,6 +1,7 @@
 import logo from "../assets/images/logo.png";
 import mypageLogo from "../assets/images/mypage-logo.png";
 import alarm from "../assets/images/alarm.png";
+import plus from "../assets/images/plus.png";
 import styled from "styled-components";
 import {
   grey3,
@@ -22,27 +23,33 @@ import {
 } from "../cookie/controlCookie";
 import { logout } from "../cookie/controlCookie";
 import { useRecoilState } from "recoil";
-import { MyProfile } from "../atom/Atom";
+import { MyProfile, MyProject, MyPushProject } from "../atom/Atom";
+import ProjectModal from "../components/modals/ProjectModal";
+import settingHomepage from "../assets/images/homepageSetting.png";
 
 const Header = styled.header`
   display: flex;
   font-family: "Pretendard-Regular";
 `;
+
 const Nav = styled.nav`
   padding: 40px;
-  box-shadow: 0px 2px 20px rgba(0, 0, 0, 0.1);
-  /* height: 100vh */
+  box-shadow: 0px 0px 50px rgba(0, 0, 0, 0.05);
+  z-index: 5;
 `;
 
 const MainLogo = styled.img`
   width: 152px;
-  height: 44px;
 `;
 
 const NavLi = styled.ul`
   margin-top: 61px;
 `;
-const ProLi = styled.ul``;
+const ProLi = styled.ul`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`;
 
 const WrapRight = styled.div`
   display: flex;
@@ -56,9 +63,10 @@ const TopHeader = styled.div`
   display: flex;
   align-items: start;
   justify-content: space-between;
-  background: ${grey3};
-
+  background: ${grey1};
+  box-shadow: 0px 0px 50px rgba(0, 0, 0, 0.05);
   padding: 21px;
+  z-index: 4;
 `;
 
 const LI = styled.li`
@@ -124,72 +132,99 @@ const MyMenu = styled.ul`
     top: 55px;
   }
 `;
-const MyProject = styled.ul`
-  position: absolute;
-  left: 220px;
-  top: 55px;
-  width: 105px;
-  border-radius: 8px;
-  box-shadow: 0px 1px 20px rgba(0, 0, 0, 0.16);
-  background-color: ${grey1};
-  text-align: center;
-  padding: 16px;
-`;
-const Logo = styled.img`
+
+const Bell = styled.img`
   width: 15px;
   height: 15px;
+  margin-top: 8px;
+  cursor: pointer;
 `;
+
+const Icon = styled.img`
+  width: 20px;
+  height: 20px;
+  padding-right: 8px;
+  cursor: pointer;
+`;
+
 const MyMenuLi = styled.li`
   cursor: pointer;
   margin: ${(props) => (props.first ? "12px 0 26px" : "14px 0")};
 `;
-const MyProLi = styled.li`
+
+const ProjectOptions = styled.li`
+  width: 80px;
+  padding: 6px 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: ${primary4};
+  border-bottom: 3px solid ${grey1};
   cursor: pointer;
-  padding-bottom: 3px;
-  border-bottom: 1px solid ${grey11};
-  margin: ${(props) => (props.first ? "12px 0 26px" : "14px 0")};
+  &:hover {
+    border-bottom: 3px solid ${primary4};
+  }
 `;
-//${(props) => (props.last ? "32px" : "16px")};
+const ProjectSelectOptions = styled.li`
+  width: 80px;
+  padding: 6px 0;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 10px;
+  color: ${grey1};
+  background-color: ${primary4};
+  cursor: pointer;
+`;
 
 export default function Layout({ children }) {
   const navigate = useNavigate();
-  const [openNav, setOpenNav] = useState(false);
-  const [openProject, setOpenProject] = useState(false);
-  const [openMyMenu, setOpenMyMenu] = useState(false);
-  const [minutes, setMinutes] = useState(9);
+  const [isOpenNav, setIsOpenNav] = useState(false);
+  const [isOpenMyMenu, setIsOpenMyMenu] = useState(false);
+  const [isOpenMobal, setIsOpenModal] = useState(false);
+  const [isProjectOpen, setIsProjectOpen] = useState(false);
+  const [minutes, setMinutes] = useState(5);
   const [seconds, setSeconds] = useState(0);
   const [refreshToken, setRefreshToken] = useState(getCookie("refreshToken"));
   const [myProfile, setMyProfile] = useRecoilState(MyProfile);
+  const [myProject, setMyProject] = useRecoilState(MyProject);
+  const [myPushProject, setMyPushProject] = useRecoilState(MyPushProject);
   const [project, setProject] = useState([]);
+  // console.log(myProfile)
   useEffect(() => {
     if (!refreshToken) {
       // login yet
       navigate("/");
     } else {
-      const checkProject = async () => {
-        try {
-          const response = await instanceAxios.get("/project/all");
-          if (response.status === 200) {
-            setProject(response.data);
-          }
-        } catch (err) {
-          // login yet
-          console.error(err);
-        }
-      };
-      checkProject();
+    }
+    if (myProject.length === 1) {
+      setMyPushProject(myProject[0]);
     }
     requestAccessToken(refreshToken);
   }, []);
   const handleOpenNav = () => {
-    !openNav ? setOpenNav(true) : setOpenNav(false);
+    !isOpenNav ? setIsOpenNav(true) : setIsOpenNav(false);
   };
-  const handleOpenProject = () => {
-    !openProject ? setOpenProject(true) : setOpenProject(false);
+  const handleOpenPushProject = () => {
+    !isProjectOpen ? setIsProjectOpen(true) : setIsProjectOpen(false);
   };
 
   const handleOpenMyMenu = () => {
-    !openMyMenu ? setOpenMyMenu(true) : setOpenMyMenu(false);
+    !isOpenMyMenu ? setIsOpenMyMenu(true) : setIsOpenMyMenu(false);
+  };
+  const handlePushProject = (pid, name) => {
+    handleOpenPushProject();
+    let body = {
+      pid: pid,
+      name: name,
+    };
+    setMyPushProject(body);
+  };
+  const handleAddProject = () => {
+    console.log(myProject, "플젝");
+    if (myProject.length > 2) {
+      alert("프로젝트는 3개까지 가능합니다.");
+    } else {
+      setIsOpenModal(true);
+    }
   };
 
   // refreshToken 재발급
@@ -227,7 +262,7 @@ export default function Layout({ children }) {
       const headersToken = tokenType + response.data.accessToken;
       setAccessTokenToCookie(headersToken);
       setRefreshTokenToCookie(response.data.refreshToken);
-      setMinutes(8);
+      setMinutes(4);
       setSeconds(59);
       instanceAxios.defaults.headers.common["Authorization"] = headersToken;
       console.log(response, "토큰 초기화");
@@ -235,28 +270,29 @@ export default function Layout({ children }) {
       console.error(err);
     }
   };
-
   return (
     <Header>
       {/* 왼쪽 */}
       <Nav>
-        <MainLogo src={logo} alt="메인 로고" />
+        {isOpenMobal && <ProjectModal setClose={setIsOpenModal} />}
+        <Link to="/dashboard">
+          <MainLogo src={logo} alt="메인 로고" />
+        </Link>
         <NavLi>
           <LI>
             {minutes} : {seconds < 10 ? "0" + seconds : seconds}{" "}
-            <div onClick={requestAccessToken}>
-              <Logo src={alarm} alt="alarm"></Logo>
+            <div onClick={requestAccessToken} style={{ cursor: "pointer" }}>
+              <Bell src={alarm} alt="alarm" />
               로그인 연장하기
             </div>
           </LI>
-
           <LI>
             <LinkStyle to="/dashboard">대시보드</LinkStyle>
           </LI>
           <LI onClick={handleOpenNav}>
             <A href="#">PUSH 관리</A>
           </LI>
-          {openNav && (
+          {isOpenNav && (
             <SubNav>
               <SubLI>
                 <LinkStyle to="/makePush">push 작성</LinkStyle>
@@ -273,25 +309,44 @@ export default function Layout({ children }) {
       <WrapRight>
         <TopHeader>
           <ProLi>
-            <MyButton onClick={handleOpenProject}>홈페이지 관리</MyButton>
-            {openProject ? (
-              <MyProject>
-                {project.map(({ name, pid }) => {
-                  return <MyProLi key={pid}>{name}</MyProLi>;
-                })}
-              </MyProject>
-            ) : null}
+            {myProject.map(({ pid, name }) => {
+              if (pid !== myPushProject.pid) {
+                return (
+                  <button onClick={() => handlePushProject(pid, name)}>
+                    <ProjectOptions key={pid}>{name}</ProjectOptions>
+                  </button>
+                );
+              } else {
+                return (
+                  <button onClick={() => handlePushProject(pid, name)}>
+                    <ProjectSelectOptions key={pid}>
+                      {name}
+                    </ProjectSelectOptions>
+                  </button>
+                );
+              }
+            })}
+            <Icon src={plus} alt="plus" onClick={handleAddProject} />
+            <Icon
+              src={settingHomepage}
+              alt="홈페이지 관리하기"
+              onClick={() => {
+                navigate("/homepage");
+              }}
+            />
           </ProLi>
           <MyButton onClick={handleOpenMyMenu}>
             {myProfile.name}(master)
           </MyButton>
-          {openMyMenu && (
+          {isOpenMyMenu && (
             <MyMenu>
               <MyMenuLi first>MASTER</MyMenuLi>
               <MyMenuLi>
                 <LinkStyle to="/myPage">마이프로필</LinkStyle>
               </MyMenuLi>
-              <MyMenuLi>비밀변경</MyMenuLi>
+              <MyMenuLi>
+                <LinkStyle to="/myPage/newPassword">비밀번호 변경</LinkStyle>
+              </MyMenuLi>
               <MyMenuLi onClick={logout}>로그아웃</MyMenuLi>
             </MyMenu>
           )}
