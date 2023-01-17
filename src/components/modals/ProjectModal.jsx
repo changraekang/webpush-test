@@ -107,7 +107,7 @@ const CloseModal = styled.p`
   width: 24px;
   height: 14px;
   cursor: pointer;
-`
+`;
 const ModalContent = styled.div`
   display: flex;
   flex-direction: row;
@@ -146,7 +146,7 @@ const ProjectModal = (props) => {
   const [step, setStep] = useState(1);
   const [homepage, setHomepage] = useState("");
   const [cat, setCat] = useState("");
-  const [url, setUrl] = useState("");
+  const [url, setUrl] = useState("https://");
   const [myProject, setMyProject] = useRecoilState(MyProject);
   const [myCategory, setMyCategoy] = useRecoilState(MyCategory);
 
@@ -185,19 +185,26 @@ const ProjectModal = (props) => {
 
   const handleGoBack = () => {
     setStep(1);
-  }
+  };
 
   const onClickCat = (cat) => {
     setCat(cat);
     console.log(cat);
   };
-  
 
   const renderCloseModal = () => {
-    if(myProject.length > 0) {
-      return <CloseModal onClick={() =>{props.setClose(false)}}>X</CloseModal>
+    if (myProject.length > 0) {
+      return (
+        <CloseModal
+          onClick={() => {
+            props.setClose(false);
+          }}
+        >
+          X
+        </CloseModal>
+      );
     }
-  }
+  };
 
   const renderWriteCatModal = () => {
     return (
@@ -275,7 +282,7 @@ const ProjectModal = (props) => {
         {step === 1 ? renderWriteCatModal() : renderWriteUrlModal()}
         <ButtonWrapper>
           {step === 2 ? (
-            <div style={{display:"flex", gap:"12px"}}>
+            <div style={{ display: "flex", gap: "12px" }}>
               <Button onClick={handleGoBack}>뒤로가기</Button>
               <Button onClick={handleClose}> 시작하기</Button>
             </div>
