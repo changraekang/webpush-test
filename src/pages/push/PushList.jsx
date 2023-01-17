@@ -169,8 +169,6 @@ const PushList = () => {
       // a must be equal to b
       return 0;
     });
-  {
-    /**
   console.log(
     currentPosts.sort(function (a, b) {
       if (a.create_time > b.create_time) {
@@ -183,9 +181,7 @@ const PushList = () => {
       return 0;
     }),
     "currentPosts역순"
-    );
-  */
-  }
+  );
 
   useEffect(() => {
     if (isReserve && isProceed && isComplete) {

@@ -31,11 +31,4 @@ const MyCategory = atom({
   default: [], // default value (aka initial value)
   effects_UNSTABLE: [persistAtom],
 });
-
-export {
-  MyProfile,
-  MyProject,
-  MyPushProject,
-  MyCategory,
-  IsOpenModal,
-};
+export { MyProfile, MyProject, MyPushProject, MyCategory, IsOpenModal };

@@ -2,7 +2,15 @@ import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { PushBox } from "../../components/containers/push/PushBox";
 import Layout from "../../templates/Layout";
-import { grey5, grey10, grey2, grey4, grey3 } from "../../constants/color";
+import {
+  grey5,
+  grey10,
+  grey2,
+  grey4,
+  grey3,
+  primary4,
+  grey1,
+} from "../../constants/color";
 import activeCheck from "../../assets/images/active-check.png";
 import Rectangle from "../../assets/images/demoBox.png";
 import inActiveCheck from "../../assets/images/inactive-check.png";
@@ -14,6 +22,7 @@ import {
   InactivePushButton,
   RegisterImageButton,
   RegisterIconButton,
+  ActiveEditPushButton,
 } from "../../components/buttons/PushButtons";
 import ProjectModal from "../../components/modals/ProjectModal";
 import { instanceAxios } from "../../api/axios";
@@ -25,73 +34,66 @@ const TitleWrapper = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  padding-top: 100px;
-  padding-left: 40px;
+  padding-left: 20px;
 `;
 const PageWrapper = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 20px;
 `;
-const WrapHomepages = styled.ul`
+const WrapTitle = styled.div`
   display: flex;
-  font-weight: 600;
-  margin-bottom: 40px;
-  border-bottom: 3px solid black;
+  width: 600px;
+  flex-direction: row;
+  align-items: center;
 `;
 const SectionWrapper = styled.div`
   width: 100%;
   display: flex;
-  flex-direction: row;
+  gap: 25px;
+  justify-content: center;
+  margin-bottom: 40px;
 `;
 const Section = styled.section`
   display: flex;
-  justify-content: flex-start;
-  align-items: flex-start;
   flex-direction: column;
-  margin-left: 10px;
-  width: 877px;
-  padding-left: 10px;
-  padding-bottom: 100px;
-  /* height: 100vh; */
+  width: 100%;
   font-family: "Pretendard-Regular";
-  /* padding: 186px 0; */
 `;
 const DemoSection = styled.section`
   display: flex;
-  justify-content: flex-start;
-  align-items: flex-start;
   flex-direction: column;
-  margin-left: 10px;
+  justify-content: flex-start;
 `;
 
 const PageTitle = styled.h2`
-  font-size: 40px;
+  font-size: 25px;
   font-weight: 600;
-  padding-bottom: 12px;
 `;
 
 const Title = styled.h3`
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 600;
   padding-bottom: 12px;
 `;
 const SubTitle = styled.h4`
-  width: 100px;
-  font-size: 24px;
+  width: 150px;
+  font-size: 18px;
   font-weight: 500;
   padding: 6px;
 `;
 const SubDemoTitle = styled.h4`
-  width: 100%;
-  font-size: 24px;
+  width: 300px;
+  font-size: 16px;
   font-weight: 500;
 `;
 
 const Message = styled.p`
-  color: ${grey5};
-  font-size: 14px;
+  color: ${grey10};
+  padding-bottom: 40px;
+  font-size: 18px;
 `;
 
 const WrapMessage = styled.div`
@@ -112,20 +114,7 @@ const DemoWrapperBox = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  width: 550px;
-  height: 383px;
-  left: 32px;
-  top: 77px;
-  padding-right: 50px;
-  background: ${grey2};
-  border-radius: 16px;
-`;
-const ButtonWrapperBox = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
   width: 500px;
-  padding-right: 50px;
   background: ${grey2};
   border-radius: 16px;
 `;
@@ -183,13 +172,11 @@ const RadioLi = styled.li`
 `;
 const SubMessage = styled.p`
   color: ${grey5};
-  text-align: center;
   padding-top: 20px;
   padding-bottom: 60px;
 `;
 const LinkMessage = styled.p`
   color: ${grey5};
-  text-align: center;
 `;
 const ButtonWrapper = styled.div`
   display: flex;
@@ -205,17 +192,24 @@ const ReserveWrapper = styled.div`
 `;
 
 const DemoImg = styled.img`
-  width: 192px;
-  height: 192px;
+  width: 130px;
+  height: 130px;
   object-fit: cover;
+`;
+
+const SelectIconDiv = styled.div`
+  padding: 2px;
+  border: 3px solid ${primary4};
+  border-radius: 4px;
+  margin-top: -5px;
 `;
 
 const IconBox = styled.div`
   position: relative;
-  width: 100px;
-  height: 100px;
+  width: 80px;
+  height: 80px;
   background-color: ${grey5};
-  margin-top: 20px;
+  padding: 5px;
 `;
 
 const Icon = styled.img`
@@ -241,7 +235,7 @@ const AlignIcon = styled.div`
   display: flex;
   width: 100%;
   gap: 16px;
-  margin-left: 29px;
+  margin: 20px 0 0 29px;
 `;
 export default function PushDetail() {
   const navigate = useNavigate();
@@ -523,14 +517,13 @@ export default function PushDetail() {
   return (
     <Layout>
       <TitleWrapper>
-        <WrapHomepages></WrapHomepages>
-        <PageTitle>PUSH 상세 </PageTitle>
-        <ButtonWrapperBox>
-          <Message>고객들에게 날릴 웹푸시를 수정하는 페이지입니다.</Message>
-          <ActivePushButton handleSubmit={onClickChange}>
+        <Message>고객들에게 날릴 웹푸시를 수정하는 페이지입니다.</Message>
+        <WrapTitle>
+          <PageTitle>PUSH 상세 </PageTitle>
+          <ActiveEditPushButton handleSubmit={onClickChange}>
             수정하기
-          </ActivePushButton>
-        </ButtonWrapperBox>
+          </ActiveEditPushButton>
+        </WrapTitle>
       </TitleWrapper>
       <PageWrapper>
         <SectionWrapper>
@@ -545,6 +538,7 @@ export default function PushDetail() {
                   name="title"
                   readOnly={isChange}
                   onChange={handleInputValues}
+                  style={{ backgroundColor: isChange ? "#e2e2e2" : null }}
                 ></Input>
               </WrapMessage>
               <WrapAreaMessage>
@@ -556,6 +550,7 @@ export default function PushDetail() {
                   name="content"
                   readOnly={isChange}
                   onChange={handleInputValues}
+                  style={{ backgroundColor: isChange ? "#e2e2e2" : null }}
                 ></InputArea>
               </WrapAreaMessage>
               <WrapMessage>
@@ -567,6 +562,7 @@ export default function PushDetail() {
                   readOnly={isChange}
                   name="link"
                   onChange={handleInputValues}
+                  style={{ backgroundColor: isChange ? "#e2e2e2" : null }}
                 ></Input>
               </WrapMessage>
               <WrapMessage>

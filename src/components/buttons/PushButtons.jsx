@@ -24,7 +24,7 @@ const Button = styled.button`
 const DeleteButton = styled.button`
   display: block;
   border: none;
-  width: 60px;
+  width: 40px;
   cursor: pointer;
   font-size: 12px;
   border-radius: 8px;
@@ -37,6 +37,24 @@ const DeleteButton = styled.button`
   border: 1px solid ${(props) => (props.normal ? `${primary4}` : "none")};
 
   &:hover {
+  }
+`;
+const EditButton = styled.button`
+  display: block;
+  border: none;
+  width: 80px;
+  height: 30px;
+  margin-left: 15px;
+  cursor: pointer;
+  font-size: 12px;
+  border-radius: 8px;
+  background: ${grey1};
+  color: ${primary4};
+  border: 1px solid ${primary4};
+
+  &:hover {
+    background: ${primary4};
+    color: ${grey1};
   }
 `;
 const ImageButton = styled.button`
@@ -64,6 +82,13 @@ function ActivePushButton({ children, handleSubmit }) {
     <Button onClick={handleSubmit} active>
       {children}
     </Button>
+  );
+}
+function ActiveEditPushButton({ children, handleSubmit }) {
+  return (
+    <EditButton onClick={handleSubmit} active>
+      {children}
+    </EditButton>
   );
 }
 function ActiveDeletePushButton({ children, handleSubmit }) {
@@ -101,4 +126,5 @@ export {
   RegisterImageButton,
   RegisterIconButton,
   ActiveDeletePushButton,
+  ActiveEditPushButton,
 };
