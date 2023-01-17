@@ -166,14 +166,21 @@ const TimeSpan = styled.span`
   right: 100px;
   top: 12px;
   font-size: 14px;
-`
+`;
 
 //--------------회원가입 페이지--------------------------
 export default function Signup() {
   const navigate = useNavigate();
-  const emailList = ['test.com', "naver.com", "hanmail.net", "kakao.com", "gmail.com",];
+  const emailList = [
+    "test.com",
+    "naver.com",
+    "hanmail.net",
+    "kakao.com",
+    "gmail.com",
+  ];
   const [isOpenEmail, setIsOpenEmail] = useState(false);
   const [isOpenTokenBox, setIsOpenTokenBox] = useState(false);
+  const [isTokenVerification, setIsTokenVerification] = useState(false);
   const [email, setEmail] = useState("");
   const [phoneWrite, setPhoneWrite] = useState("");
   const [isWriteEmail, setIsWriteEmail] = useState(false);
@@ -294,6 +301,7 @@ export default function Signup() {
       if (response.status === 200) {
         alert(response.data.data);
         setIsOpenTokenBox(true);
+        setIsTokenVerification(false);
       }
       console.log(response);
     } catch (err) {
@@ -310,6 +318,7 @@ export default function Signup() {
         token: token,
       });
       if (response.status === 200) {
+        setIsTokenVerification(true);
         alert(response.data.data);
       }
       console.log(response);
@@ -383,10 +392,10 @@ export default function Signup() {
               이메일 형식을 맞춰주세요
             </LabelWarning>
           )}
-          {(!id || !email || !emailVaildation) && (
+          {(!id || !email || !emailVaildation || isTokenVerification) && (
             <UnCertificationButton>이메일 인증하기</UnCertificationButton>
           )}
-          {id && email && emailVaildation && (
+          {id && email && emailVaildation && !isTokenVerification && (
             <CertificationButton requestToken={requestToken}>
               이메일 인증하기
             </CertificationButton>
@@ -395,18 +404,32 @@ export default function Signup() {
           {isOpenTokenBox && (
             <WrapWriteToken>
               <TokenMsg>이메일로 전송된 인증번호를 입력해주세요.</TokenMsg>
-              <InputAlign style={{gap: "8px"}}>
+              <InputAlign style={{ gap: "8px" }}>
                 <InputValidateGroup
                   type="text"
                   placeholder="인증번호를 적어주세요."
                   name="token"
                   setValue={handleInputValues}
                   value={token}
-                  />
-                <TimeSpan>{minutes} : {seconds < 10 ? '0' + seconds : seconds}</TimeSpan>
-                <ActiveTokenButton requestCompleteToken={requestCompleteToken}>
-                  인증하기
-                </ActiveTokenButton>
+                  readonly={isTokenVerification ? true : false}
+                />
+                <TimeSpan>
+                  {minutes} : {seconds < 10 ? "0" + seconds : seconds}
+                </TimeSpan>
+                {isTokenVerification ? (
+                  <ActiveTokenButton
+                    requestCompleteToken={requestCompleteToken}
+                  >
+                    인증하기
+                  </ActiveTokenButton>
+                ) : (
+                  //차후 변경 인증하기 버튼 비활성화 <InactiveTokenButton>인증하기</InactiveTokenButton>
+                  <ActiveTokenButton
+                    requestCompleteToken={requestCompleteToken}
+                  >
+                    인증하기
+                  </ActiveTokenButton>
+                )}
               </InputAlign>
               <WrapReSendLink>
                 <img src={warning} alt="" />
@@ -478,7 +501,7 @@ export default function Signup() {
                     border: !passwordVaildation ? `1px solid ${error3}` : null,
                   }}
                 />
-                {!passwordVaildation && password &&(
+                {!passwordVaildation && password && (
                   <LabelWarning htmlFor="email">
                     비밀번호는 영문/숫자/특문을 포함한 8자이상 입력해주세요.
                   </LabelWarning>

@@ -1,8 +1,4 @@
-import {
-  BrowserRouter,
-  Route,
-  Routes,
-} from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import {
   RecoilRoot,
   atom,
@@ -27,6 +23,7 @@ import PushList from "./pages/push/PushList";
 import DashBoard from "./pages/DashBoard";
 import NotFound from "./pages/NotFound";
 import NewPassword from "./pages/profile/NewPassword";
+import PushDetail from "./pages/push/PushDetail";
 
 function App() {
   return (
@@ -45,6 +42,7 @@ function App() {
             <Route path="/dashboard" element={<DashBoard />} />
             <Route path="/makePush" element={<MakePush />} />
             <Route path="/pushList" element={<PushList />} />
+            <Route path="/pushdetail/:id" element={<PushDetail />} />
 
             {/* 나의 정보 수정 */}
             <Route path="/myPage" element={<MyPage />} />

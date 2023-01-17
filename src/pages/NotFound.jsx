@@ -1,9 +1,8 @@
 import styled from "styled-components"
-import { grey1, grey3 } from "../constants/color";
+import { grey1, grey3, grey6, grey8 } from "../constants/color";
 import errorImg from '../assets/images/404.png'
 
 const Section = styled.section`
-  background: ${grey3};
   display: flex;
   justify-content: center;
   /* align-items: center; */
@@ -22,19 +21,24 @@ const Box = styled.div`
   padding: 40px 32px 32px;
   width: 100%;
   border-radius: 16px;
-  box-shadow: 0px 1px 20px rgba(0, 0, 0, 0.16);
-  background-color: ${grey1};
   text-align: center;
 `;
 
 const Text = styled.p`
-  font-size: 28px;
+  font-size: 36px;
+  margin-top: 20px;
+  color: ${grey8};
+  font-weight: 700;
+`;
+
+const Text2 = styled.p`
+  font-size: 24px;
+  margin-top: 16px;
+  color: ${grey6};
 `;
 
 const Img = styled.img`
-  width: 350px;
-  margin-top: 60px;
-  transform: rotate(30deg);
+  width: 300px;
 `;
 
 export default function NotFound() {
@@ -43,10 +47,11 @@ export default function NotFound() {
         <h1 className='ir'>에러페이지</h1>
         <WrapBox>
           <Box>
-            <Text>
-                ⚠️ 죄송합니다. 찾을 수 없는 페이지 입니다.
-            </Text>
             <Img src={errorImg} alt="" />
+            <Text>404 NOT FOUND</Text>
+            <Text2>
+                죄송합니다. 찾을 수 없는 페이지 입니다.
+            </Text2>
           </Box>
         </WrapBox>
     </Section>

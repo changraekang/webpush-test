@@ -1,29 +1,40 @@
 import styled from "styled-components";
-import {
-  primary4,
-  grey1,
-  grey3,
-  grey5,
-} from "../../constants/color";
+import { primary4, grey1, grey3, grey5 } from "../../constants/color";
 
 const Button = styled.button`
   display: block;
   border: none;
   width: 100%;
+  width: ${(props) => (props.delete ? `35px` : null)};
   padding: 16px;
   cursor: pointer;
   font-size: 24px;
   border-radius: 8px;
   background: ${(props) => (props.normal ? `${grey1}` : null)};
   background: ${(props) => (props.active ? `${primary4}` : null)};
-  background: ${(props) =>
-    props.inactive ? `${grey3}` : null};
+  background: ${(props) => (props.inactive ? `${grey3}` : null)};
   color: ${(props) => (props.normal ? `${primary4}` : null)};
   color: ${(props) => (props.active ? `${grey1}` : null)};
-  color: ${(props) =>
-    props.inactive ? `${grey1}` : null};
-  border: 1px solid
-    ${(props) => (props.normal ? `${primary4}` : "none")};
+  color: ${(props) => (props.inactive ? `${grey1}` : null)};
+  border: 1px solid ${(props) => (props.normal ? `${primary4}` : "none")};
+
+  &:hover {
+  }
+`;
+const DeleteButton = styled.button`
+  display: block;
+  border: none;
+  width: 40px;
+  cursor: pointer;
+  font-size: 12px;
+  border-radius: 8px;
+  background: ${(props) => (props.normal ? `${grey1}` : null)};
+  background: ${(props) => (props.active ? `${primary4}` : null)};
+  background: ${(props) => (props.inactive ? `${grey3}` : null)};
+  color: ${(props) => (props.normal ? `${primary4}` : null)};
+  color: ${(props) => (props.active ? `${grey1}` : null)};
+  color: ${(props) => (props.inactive ? `${grey1}` : null)};
+  border: 1px solid ${(props) => (props.normal ? `${primary4}` : "none")};
 
   &:hover {
   }
@@ -31,13 +42,12 @@ const Button = styled.button`
 const ImageButton = styled.button`
   display: block;
   border: none;
-  width: 225px;
+  width: 140px;
+  /* width: ${(props) => (props.icon ? "100px" : "225px")}; */
   padding: 10px;
-  margin-left: 15px;
-  margin-top: 15px;
-  margin-bottom: 8px;
+  margin: 15px 0 8px 15px;
   cursor: pointer;
-  font-size: 24px;
+  font-size: 16px;
   border-radius: 8px;
   color: ${primary4};
   border: 1px solid ${primary4};
@@ -56,6 +66,13 @@ function ActivePushButton({ children, handleSubmit }) {
     </Button>
   );
 }
+function ActiveDeletePushButton({ children, handleSubmit }) {
+  return (
+    <DeleteButton onClick={handleSubmit} active delete>
+      {children}
+    </DeleteButton>
+  );
+}
 
 function InactivePushButton({ children }) {
   return (
@@ -70,4 +87,18 @@ function RegisterImageButton({ children, handleUploadImage }) {
   return <ImageButton onClick={handleUploadImage}>{children}</ImageButton>;
 }
 
-export { ActivePushButton, InactivePushButton, RegisterImageButton };
+function RegisterIconButton({ children, handleUploadIcon }) {
+  return (
+    <ImageButton icon onClick={handleUploadIcon}>
+      {children}
+    </ImageButton>
+  );
+}
+
+export {
+  ActivePushButton,
+  InactivePushButton,
+  RegisterImageButton,
+  RegisterIconButton,
+  ActiveDeletePushButton,
+};

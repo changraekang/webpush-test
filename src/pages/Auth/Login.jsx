@@ -28,8 +28,12 @@ import {
 } from "../../cookie/controlCookie";
 import { InputGroup } from "../../components/inputs/InputGroups";
 import { useRecoilState } from "recoil";
-import { MyProfile, MyProject, MyPushProject } from "../../atom/Atom";
-import "../../allowDemo.js";
+import {
+  MyProfile,
+  MyProject,
+  MyPushProject,
+  IsOpenModal,
+} from "../../atom/Atom";
 import Cookies from "universal-cookie";
 
 const Section = styled.section`
@@ -144,12 +148,7 @@ export default function Login() {
   const [myProfile, setMyProfile] = useRecoilState(MyProfile);
   const [myProject, setMyProject] = useRecoilState(MyProject);
   const [myPushProject, setMyPushProject] = useRecoilState(MyPushProject);
-  // useEffect(()=> {
-  //   const script = document.createElement("script");
-  //   script.src = "../../allowDemo.js";
-  //   document.body.appendChild(script);
-  // }, [])
-
+  const [isOpenMobal, setIsOpenModal] = useRecoilState(IsOpenModal);
   const handleCheckRadio = () => {
     isCheck ? setIsCheck(false) : setIsCheck(true);
   };
@@ -168,6 +167,9 @@ export default function Login() {
       setBrowserName("MOBILE");
     }
   }, [browserName]);
+  useEffect(() => {
+    window.localStorage.removeItem("recoil-persist");
+  }, []);
 
   const loginData = {
     deviceInfo: {
@@ -192,7 +194,7 @@ export default function Login() {
         const headersToken = tokenType + accessToken;
         setAccessTokenToCookie(headersToken);
         setRefreshTokenToCookie(refreshToken);
-        window.localStorage.removeItem("recoil-persist");
+
         instanceAxios.defaults.headers.common["Authorization"] = headersToken;
         const checkAccount = async () => {
           try {
@@ -204,8 +206,9 @@ export default function Login() {
                   const response = await instanceAxios.get("/project/all");
                   if (response.status === 200) {
                     setMyProject(response.data);
-                    if (response.data.length === 1) {
-                      setMyPushProject(response.data[0]);
+                    setMyPushProject(response.data[0]);
+                    if (response.data.length > 0) {
+                      setIsOpenModal(false);
                     }
                   }
                 } catch (err) {
@@ -239,7 +242,6 @@ export default function Login() {
       <ImageSection>
         <MainImage src={mainImage} alt="메인이미지" />
       </ImageSection>
-
       <InputSection>
         <h1 className="ir">회원가입</h1>
         <LoginBox>

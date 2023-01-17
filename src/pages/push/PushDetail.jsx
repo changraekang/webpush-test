@@ -20,19 +20,19 @@ import { instanceAxios } from "../../api/axios";
 import { getCookie } from "../../cookie/controlCookie";
 import { MyIcons, MyProject, MyPushProject } from "../../atom/Atom";
 import { useRecoilState } from "recoil";
-import Loading from "../../components/loading/Loading";
+import { useNavigate, useParams } from "react-router-dom";
 const TitleWrapper = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  padding-top: 100px;
+  padding-left: 40px;
 `;
 const PageWrapper = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
 `;
 const WrapHomepages = styled.ul`
   display: flex;
@@ -43,42 +43,49 @@ const WrapHomepages = styled.ul`
 const SectionWrapper = styled.div`
   width: 100%;
   display: flex;
-  gap: 25px;
-  justify-content: center;
-  margin-bottom: 40px;
+  flex-direction: row;
 `;
 const Section = styled.section`
   display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
   flex-direction: column;
-  width: 100%;
+  margin-left: 10px;
+  width: 877px;
+  padding-left: 10px;
+  padding-bottom: 100px;
+  /* height: 100vh; */
   font-family: "Pretendard-Regular";
+  /* padding: 186px 0; */
 `;
 const DemoSection = styled.section`
   display: flex;
-  flex-direction: column;
   justify-content: flex-start;
+  align-items: flex-start;
+  flex-direction: column;
+  margin-left: 10px;
 `;
 
 const PageTitle = styled.h2`
-  font-size: 16px;
+  font-size: 40px;
   font-weight: 600;
   padding-bottom: 12px;
 `;
 
 const Title = styled.h3`
-  font-size: 20px;
+  font-size: 24px;
   font-weight: 600;
   padding-bottom: 12px;
 `;
 const SubTitle = styled.h4`
-  width: 78px;
-  font-size: 18px;
+  width: 100px;
+  font-size: 24px;
   font-weight: 500;
   padding: 6px;
 `;
 const SubDemoTitle = styled.h4`
-  width: 300px;
-  font-size: 16px;
+  width: 100%;
+  font-size: 24px;
   font-weight: 500;
 `;
 
@@ -105,7 +112,20 @@ const DemoWrapperBox = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
+  width: 550px;
+  height: 383px;
+  left: 32px;
+  top: 77px;
+  padding-right: 50px;
+  background: ${grey2};
+  border-radius: 16px;
+`;
+const ButtonWrapperBox = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
   width: 500px;
+  padding-right: 50px;
   background: ${grey2};
   border-radius: 16px;
 `;
@@ -163,11 +183,13 @@ const RadioLi = styled.li`
 `;
 const SubMessage = styled.p`
   color: ${grey5};
+  text-align: center;
   padding-top: 20px;
   padding-bottom: 60px;
 `;
 const LinkMessage = styled.p`
   color: ${grey5};
+  text-align: center;
 `;
 const ButtonWrapper = styled.div`
   display: flex;
@@ -183,8 +205,8 @@ const ReserveWrapper = styled.div`
 `;
 
 const DemoImg = styled.img`
-  width: 130px;
-  height: 130px;
+  width: 192px;
+  height: 192px;
   object-fit: cover;
 `;
 
@@ -221,7 +243,11 @@ const AlignIcon = styled.div`
   gap: 16px;
   margin-left: 29px;
 `;
-export default function MakePush() {
+export default function PushDetail() {
+  const navigate = useNavigate();
+  const params = useParams();
+  const [pushDetail, setPushDetail] = useState([]);
+
   const [thisClock, setThisClock] = useState("");
   const [thisMonth, setThisMonth] = useState("");
   const [ReserveMin, setReserveMin] = useState("");
@@ -231,7 +257,24 @@ export default function MakePush() {
   const [pid, setPid] = useState("");
   const [myProject, setMyProject] = useRecoilState(MyProject);
   const [myPushProject, setMyPushProject] = useRecoilState(MyPushProject);
-
+  const getPushDetail = async () => {
+    try {
+      const response = await instanceAxios.get(`/message/${params.id}`, {});
+      if (response.status === 200) {
+        setPushDetail(response.data);
+        setInputs({
+          title: response.data.title,
+          content: response.data.content,
+          link: response.data.link,
+          image: "",
+          date: response.data.date,
+          pid: response.data.pid,
+        });
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
   const getClock = () => {
     const offset = 1000 * 60 * 60 * 9;
     const koreaNow = new Date(new Date().getTime() + offset);
@@ -240,29 +283,26 @@ export default function MakePush() {
     setThisMonth(koreaNow.toISOString().slice(0, 10));
   };
   useEffect(() => {
-    console.log(myProject);
-
+    console.log(pushDetail, "디테일");
+    getPushDetail();
     getClock();
     setInterval(getClock, 20000);
   }, []);
 
   const [isWebCheck, setisWebCheck] = useState(false);
   const [isMobileCheck, setisMobileCheck] = useState(false);
-  const [isModalOpen, setisModalOpen] = useState(false);
   const [isAdsCheck, setIsAdsCheck] = useState(false);
   const [isInfoCheck, setisInfoCheck] = useState(false);
   const [isEtcCheck, setisEtcCheck] = useState(false);
   const [isDirectCheck, setIsDirectCheck] = useState(false);
   const [isReserveCheck, setIsReserveCheck] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isChange, setIsChange] = useState(true);
   const [inputs, setInputs] = useState({
-    web: false,
-    mobile: false,
-    title: "",
-    content: "",
-    link: "",
+    title: pushDetail.title,
+    content: pushDetail.content,
+    link: pushDetail.link,
     image: "",
-    date: "",
+    date: pushDetail.date,
     pid: myPushProject.pid,
   });
   useEffect(() => {
@@ -313,35 +353,25 @@ export default function MakePush() {
     setSubmitDate(e.target.value);
   };
   const handleInputValues = (e) => {
-    if (isMobileCheck || isWebCheck) {
-      e.preventDefault();
-      const { name, value } = e.target;
-      setInputs({
-        ...inputs,
-        [name]: value,
-        web: isWebCheck,
-        mobile: isMobileCheck,
-        ads: isAdsCheck,
-        info: isInfoCheck,
-        etc: isEtcCheck,
-      });
-    } else {
-      alert("Please select Push Type");
-    }
+    e.preventDefault();
+    const { name, value } = e.target;
+    setInputs({
+      ...inputs,
+      [name]: value,
+      web: isWebCheck,
+      mobile: isMobileCheck,
+      ads: isAdsCheck,
+      info: isInfoCheck,
+      etc: isEtcCheck,
+    });
   };
-
+  // 수정
+  const onClickChange = () => {
+    setIsChange(false);
+  };
   // 제출
   const onClickSubmit = async (e) => {
     e.preventDefault();
-    if (!isMobileCheck && !isWebCheck) {
-      return alert("Please select Push Type");
-    }
-    if (!title || !content || !link) {
-      return alert("Please type DM content");
-    }
-    if (!isDirectCheck && !isReserveCheck) {
-      return alert("Please select publish type");
-    }
     if (isDirectCheck) {
       inputs.date = thisMonth + " " + thisClock;
     }
@@ -353,7 +383,6 @@ export default function MakePush() {
         }
       }
     }
-    setIsLoading(true);
     if (isReserveCheck && submitDate) {
       inputs.date = submitDate.replace("T", " ");
     } else {
@@ -388,12 +417,9 @@ export default function MakePush() {
       );
       if (response.status === 200) {
         alert("메세지 등록 성공🎉");
-        setIsLoading(false);
-        window.location.reload();
       }
       console.log(response);
     } catch (err) {
-      setIsLoading(false);
       console.error(err);
     }
   };
@@ -453,7 +479,6 @@ export default function MakePush() {
       if (response.status === 200) {
         console.log("🚩아이콘 등록 성공", response);
       }
-      console.log(response, "아이콘 리스트🔥");
     } catch (err) {
       console.error(err);
     }
@@ -497,88 +522,28 @@ export default function MakePush() {
 
   return (
     <Layout>
-      {/* 로딩창 */}
-      {isLoading && <Loading></Loading>}
       <TitleWrapper>
-        <WrapHomepages>
-          {myPushProject.name ? myPushProject.name : "프로젝트를 선택해주세요"}
-        </WrapHomepages>
-        <PageTitle>PUSH 작성 </PageTitle>
-        <Message>
-          고객들에게 날릴 웹푸시를 작성 및 등록할 수 있는 페이지입니다.
-        </Message>
+        <WrapHomepages></WrapHomepages>
+        <PageTitle>PUSH 상세 </PageTitle>
+        <ButtonWrapperBox>
+          <Message>고객들에게 날릴 웹푸시를 수정하는 페이지입니다.</Message>
+          <ActivePushButton handleSubmit={onClickChange}>
+            수정하기
+          </ActivePushButton>
+        </ButtonWrapperBox>
       </TitleWrapper>
       <PageWrapper>
         <SectionWrapper>
           <Section>
-            <PushBox>
-              <Title>01.PUSH 유형</Title>
-              <RadioList>
-                <RadioLi onClick={handleWebCheckRadio}>
-                  {!isWebCheck && (
-                    <img src={inActiveCheck} alt="웹푸시 체크 아이콘" />
-                  )}
-                  {isWebCheck && (
-                    <img src={activeCheck} alt="웹푸시 체크 아이콘" />
-                  )}
-                  웹 푸시
-                </RadioLi>
-                <RadioLi>
-                  {!isMobileCheck && (
-                    <img src={inActiveCheck} alt="모바일푸시 체크 아이콘" />
-                  )}
-                  {isMobileCheck && (
-                    <img src={activeCheck} alt="모바일푸시 체크 아이콘" />
-                  )}
-                  모바일 웹 푸시
-                </RadioLi>
-              </RadioList>
-            </PushBox>
-            {/**
-            {isMobileCheck || isWebCheck ? (
-              <PushBox>
-                <Title>02.메시지 유형</Title>
-                <RadioList>
-                  <RadioLi onClick={handleAdsCheckRadio}>
-                    {!isAdsCheck && (
-                      <img src={inActiveCheck} alt="광고성 체크 아이콘" />
-                    )}
-                    {isAdsCheck && (
-                      <img src={activeCheck} alt="웹푸시 체크 아이콘" />
-                    )}
-                    광고성
-                  </RadioLi>
-                  <RadioLi onClick={handleInfoCheckRadio}>
-                    {!isInfoCheck && (
-                      <img src={inActiveCheck} alt="정보성 체크 아이콘" />
-                    )}
-                    {isInfoCheck && (
-                      <img src={activeCheck} alt="기타 체크 아이콘" />
-                    )}
-                    정보성
-                  </RadioLi>
-                  <RadioLi onClick={handleEtcCheckRadio}>
-                    {!isEtcCheck && (
-                      <img src={inActiveCheck} alt="모바일푸시 체크 아이콘" />
-                    )}
-                    {isEtcCheck && (
-                      <img src={activeCheck} alt="모바일푸시 체크 아이콘" />
-                    )}
-                    기타
-                  </RadioLi>
-                </RadioList>
-              </PushBox>
-            ) : null}
-            */}
             <PushBox>
               <Title>02.메시지 내용</Title>
               <WrapMessage>
                 <SubTitle>타이틀</SubTitle>
                 <Input
                   type="text"
-                  placeholder="제목을 입력해주세요."
                   value={title}
                   name="title"
+                  readOnly={isChange}
                   onChange={handleInputValues}
                 ></Input>
               </WrapMessage>
@@ -589,6 +554,7 @@ export default function MakePush() {
                   placeholder="웹푸시에 넣을 내용을 입력해주세요."
                   value={content}
                   name="content"
+                  readOnly={isChange}
                   onChange={handleInputValues}
                 ></InputArea>
               </WrapAreaMessage>
@@ -598,6 +564,7 @@ export default function MakePush() {
                   type="text"
                   placeholder="연결할 주소를 입력해주세요 ex.(www.example.com)"
                   value={link}
+                  readOnly={isChange}
                   name="link"
                   onChange={handleInputValues}
                 ></Input>
@@ -627,21 +594,14 @@ export default function MakePush() {
                 <SubTitle>아이콘</SubTitle>
                 <AlignIcon>
                   {/* map 돌릴 예정 */}
-                  {/* {iconArr.map(({url}, index) => {
-                    return (
-                      <IconBox key={index}>
-                        <MinusIconBtn>
-                          <DeleteIconImg
-                            src={minusIcon}
-                            alt="아이콘 삭제하기"
-                          />
-                        </MinusIconBtn>
-                        <Icon src={url} alt={url} />
-                        //{" "}
-                      </IconBox>
-                      // <p>{url}</p>
-                    )
-                  })} */}
+                  {iconArr.map((iid, name, url) => {
+                    <IconBox key={iid}>
+                      <MinusIconBtn>
+                        <DeleteIconImg src={minusIcon} alt="아이콘 삭제하기" />
+                      </MinusIconBtn>
+                      <Icon src={url} alt={name} />
+                    </IconBox>;
+                  })}
                 </AlignIcon>
                 <ImageInput
                   style={{ display: "none" }}

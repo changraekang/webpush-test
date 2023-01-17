@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import { grey1, grey3} from "../../../constants/color";
+import { error3, grey1, grey3} from "../../../constants/color";
 
 const Section = styled.section`
   background: ${grey3};
@@ -23,10 +23,21 @@ const Box = styled.div`
   background-color: ${grey1};
 `;
 
+const AlignTop = styled.div`
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+`
+
 const Title = styled.h2`
   font-size: 20px;
   font-weight: 600;
   padding-bottom: 32px;
+`
+
+const Withdrawal = styled.button`
+  display: block;
+  color : ${error3}
 `
 
 export function ProfileBox({children}) {
@@ -35,7 +46,10 @@ export function ProfileBox({children}) {
         <h1 className='ir'>나의 정보 페이지</h1>
         <WrapBox>
           <Box>
-            <Title>나의 정보</Title>
+            <AlignTop style={{display:"flex"}}>
+              <Title>나의 정보</Title>
+              <Withdrawal>탈퇴하기</Withdrawal>
+            </AlignTop>
               {children}
           </Box>
         </WrapBox>

@@ -40,7 +40,12 @@ export function SelectedHomepage({children, setValue}) {
     )
 }
 
-export function UpdateHomepage({children, updateHomePage}) {
+export function BeforeUpdateHomepage({children}) {
+  return (
+      <Button inactive disabled>{children}</Button>
+    )
+}
+export function AfterUpdateHomepage({children, updateHomePage}) {
   return (
       <Button active onClick={updateHomePage}>{children}</Button>
     )

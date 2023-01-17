@@ -48,3 +48,24 @@ export const logout = async () => {
     console.error(err);
   }
 };
+export const logoutSession = async () => {
+  window.localStorage.removeItem("recoil-persist");
+  try {
+    const response = await instanceAxios.post(`/member/logout`, logoutData);
+    cookies.remove({ path: "/" });
+    console.log(response);
+    console.log("로그아웃");
+    if (response.status === 200) {
+      // dispatch({type: 'logout'})
+      instanceAxios.defaults.headers.common["Authorization"] = null;
+      window.location.reload();
+      console.log("로그아웃 성공🎉");
+    }
+  } catch (err) {
+    cookies.remove({ path: "/" });
+    instanceAxios.defaults.headers.common["Authorization"] = null;
+    window.location.reload();
+    console.log("로그아웃 세션만료🎉");
+    console.error(err);
+  }
+};

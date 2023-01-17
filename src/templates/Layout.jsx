@@ -8,9 +8,10 @@ import {
   grey1,
   primary4,
   primary5,
-  grey5,
+  grey7,
   grey10,
   grey11,
+  grey4,
 } from "../constants/color";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -18,12 +19,19 @@ import { instanceAxios } from "../api/axios";
 import { deviceDetect } from "react-device-detect";
 import {
   getCookie,
+  logoutSession,
   setAccessTokenToCookie,
   setRefreshTokenToCookie,
 } from "../cookie/controlCookie";
 import { logout } from "../cookie/controlCookie";
 import { useRecoilState } from "recoil";
-import { MyProfile, MyProject, MyPushProject } from "../atom/Atom";
+import {
+  MyCategory,
+  MyProfile,
+  MyProject,
+  MyPushProject,
+  IsOpenModal,
+} from "../atom/Atom";
 import ProjectModal from "../components/modals/ProjectModal";
 import settingHomepage from "../assets/images/homepageSetting.png";
 
@@ -70,7 +78,7 @@ const TopHeader = styled.div`
 `;
 
 const LI = styled.li`
-  margin-bottom: 32px;
+  margin-bottom: 16px;
 `;
 
 const A = styled.a`
@@ -83,7 +91,7 @@ const SubNav = styled.ul`
 
 const SubLI = styled.li`
   color: ${grey10};
-  margin-bottom: 20px;
+  margin-bottom: 12px;
 `;
 const LinkStyle = styled(Link)`
   color: ${grey10};
@@ -99,13 +107,13 @@ const MyButton = styled.button`
   align-items: center;
   gap: 12px;
   float: right;
-  padding: 5px;
+  padding: 6px 8px;
   cursor: pointer;
   font-weight: 900;
   color: ${grey10};
   margin-right: 20px;
   &:hover {
-    background: ${grey3};
+    background: ${grey4};
     border-radius: 8px;
   }
 `;
@@ -133,17 +141,24 @@ const MyMenu = styled.ul`
   }
 `;
 
+const WrapBell = styled.div`
+  cursor: pointer;
+  margin-bottom: 45px;
+  font-size: 14px;
+  color: ${grey7};
+`;
+
 const Bell = styled.img`
-  width: 15px;
-  height: 15px;
-  margin-top: 8px;
+  width: 10px;
+  height: 11px;
+  margin: 8px 8px 0 0;
   cursor: pointer;
 `;
 
 const Icon = styled.img`
   width: 20px;
   height: 20px;
-  padding-right: 8px;
+  padding: 0 8px;
   cursor: pointer;
 `;
 
@@ -153,7 +168,6 @@ const MyMenuLi = styled.li`
 `;
 
 const ProjectOptions = styled.li`
-  width: 80px;
   padding: 6px 0;
   font-size: 14px;
   font-weight: 500;
@@ -163,24 +177,25 @@ const ProjectOptions = styled.li`
   &:hover {
     border-bottom: 3px solid ${primary4};
   }
-`;
-const ProjectSelectOptions = styled.li`
-  width: 80px;
-  padding: 6px 0;
+  `;
+const ProjectSelectOptions = styled.button`
+  padding: 6px 8px;
   font-size: 14px;
   font-weight: 500;
-  border-radius: 10px;
+  border-radius: 6px;
   color: ${grey1};
   background-color: ${primary4};
   cursor: pointer;
 `;
 
 export default function Layout({ children }) {
+  const [myCategory, setMyCategory] = useRecoilState(MyCategory);
   const navigate = useNavigate();
   const [isOpenNav, setIsOpenNav] = useState(false);
   const [isOpenMyMenu, setIsOpenMyMenu] = useState(false);
-  const [isOpenMobal, setIsOpenModal] = useState(false);
   const [isProjectOpen, setIsProjectOpen] = useState(false);
+  const [isOpenMobal, setIsOpenModal] = useState(false);
+  //const [isOpenMobal, setIsOpenModal] = useRecoilState(IsOpenModal); recoil 나중에 다시 한번 시도
   const [minutes, setMinutes] = useState(5);
   const [seconds, setSeconds] = useState(0);
   const [refreshToken, setRefreshToken] = useState(getCookie("refreshToken"));
@@ -188,16 +203,67 @@ export default function Layout({ children }) {
   const [myProject, setMyProject] = useRecoilState(MyProject);
   const [myPushProject, setMyPushProject] = useRecoilState(MyPushProject);
   const [project, setProject] = useState([]);
-  // console.log(myProfile)
+  const requestAccessToken = async () => {
+    try {
+      const response = await instanceAxios.post("/auth/refresh", {
+        refreshToken: refreshToken,
+      });
+
+      const tokenType = response.data.tokenType;
+      const headersToken = tokenType + response.data.accessToken;
+      setAccessTokenToCookie(headersToken);
+      setRefreshTokenToCookie(response.data.refreshToken);
+      instanceAxios.defaults.headers.common["Authorization"] = headersToken;
+      console.log(response, "토큰 초기화");
+    } catch (err) {
+      console.error(err);
+    }
+  };
   useEffect(() => {
+    const checkAccount = async () => {
+      try {
+        const response = await instanceAxios.post("/member/me");
+        if (response.status === 200) {
+          console.log(response, "회원확인");
+        }
+      } catch (err) {
+        // login yet
+        navigate("/");
+        console.error(err);
+      }
+    };
+    const getCategory = async () => {
+      try {
+        const response = await instanceAxios.get("/category/all");
+        setMyCategory(response.data);
+        // console.log(myCategory, "🍓");
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    const checkProject = async () => {
+      try {
+        const response = await instanceAxios.get("/project/all");
+        if (response.status === 200) {
+          setMyProject(response.data);
+          setMyPushProject(response.data[0]);
+          if (response.data.length === 0) {
+            setIsOpenModal(true);
+          }
+        }
+      } catch (err) {
+        // login yet
+        console.error(err);
+      }
+    };
+    checkProject();
     if (!refreshToken) {
       // login yet
       navigate("/");
     } else {
+      checkAccount();
     }
-    if (myProject.length === 1) {
-      setMyPushProject(myProject[0]);
-    }
+    getCategory();
     requestAccessToken(refreshToken);
   }, []);
   const handleOpenNav = () => {
@@ -210,16 +276,18 @@ export default function Layout({ children }) {
   const handleOpenMyMenu = () => {
     !isOpenMyMenu ? setIsOpenMyMenu(true) : setIsOpenMyMenu(false);
   };
-  const handlePushProject = (pid, name) => {
+  const handlePushProject = (categoryCode, pid, name, projectUrl) => {
     handleOpenPushProject();
     let body = {
+      categoryCode: categoryCode,
+      projectUrl: projectUrl,
       pid: pid,
       name: name,
     };
     setMyPushProject(body);
   };
+  
   const handleAddProject = () => {
-    console.log(myProject, "플젝");
     if (myProject.length > 2) {
       alert("프로젝트는 3개까지 가능합니다.");
     } else {
@@ -229,7 +297,7 @@ export default function Layout({ children }) {
 
   // refreshToken 재발급
   const logoutTimer = () => {
-    logout();
+    logoutSession();
     alert("세션이 만료되었습니다.");
     navigate("/");
   };
@@ -249,27 +317,10 @@ export default function Layout({ children }) {
         }
       }
     }, 1000);
+
     return () => clearInterval(countdown);
   }, [minutes, seconds]);
 
-  const requestAccessToken = async () => {
-    try {
-      const response = await instanceAxios.post("/auth/refresh", {
-        refreshToken: refreshToken,
-      });
-
-      const tokenType = response.data.tokenType;
-      const headersToken = tokenType + response.data.accessToken;
-      setAccessTokenToCookie(headersToken);
-      setRefreshTokenToCookie(response.data.refreshToken);
-      setMinutes(4);
-      setSeconds(59);
-      instanceAxios.defaults.headers.common["Authorization"] = headersToken;
-      console.log(response, "토큰 초기화");
-    } catch (err) {
-      console.error(err);
-    }
-  };
   return (
     <Header>
       {/* 왼쪽 */}
@@ -280,11 +331,13 @@ export default function Layout({ children }) {
         </Link>
         <NavLi>
           <LI>
-            {minutes} : {seconds < 10 ? "0" + seconds : seconds}{" "}
-            <div onClick={requestAccessToken} style={{ cursor: "pointer" }}>
+            <WrapBell onClick={requestAccessToken}>
+              <p>
+                {minutes} : {seconds < 10 ? "0" + seconds : seconds}
+              </p>
               <Bell src={alarm} alt="alarm" />
               로그인 연장하기
-            </div>
+            </WrapBell>
           </LI>
           <LI>
             <LinkStyle to="/dashboard">대시보드</LinkStyle>
@@ -309,20 +362,25 @@ export default function Layout({ children }) {
       <WrapRight>
         <TopHeader>
           <ProLi>
-            {myProject.map(({ pid, name }) => {
+            {myProject.map(({ categoryCode, pid, name, projectUrl }) => {
               if (pid !== myPushProject.pid) {
                 return (
-                  <button onClick={() => handlePushProject(pid, name)}>
-                    <ProjectOptions key={pid}>{name}</ProjectOptions>
-                  </button>
+                  <li
+                    key={pid}
+                    onClick={() =>
+                      handlePushProject(categoryCode, pid, name, projectUrl)
+                    }
+                  >
+                    <button>
+                      <ProjectOptions>{name}</ProjectOptions>
+                    </button>
+                  </li>
                 );
               } else {
                 return (
-                  <button onClick={() => handlePushProject(pid, name)}>
-                    <ProjectSelectOptions key={pid}>
-                      {name}
-                    </ProjectSelectOptions>
-                  </button>
+                  <li key={pid}>
+                    <ProjectSelectOptions onClick={() => handlePushProject(pid, name)}>{name}</ProjectSelectOptions>
+                  </li>
                 );
               }
             })}

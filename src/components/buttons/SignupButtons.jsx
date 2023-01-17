@@ -85,7 +85,7 @@ function ActiveTokenButton({ children, requestCompleteToken }) {
 // 토큰 넣기 전
 function InactiveTokenButton({ children }) {
   return (
-    <Button disabled token inactive style={{ width: "80px" }}>
+    <Button disabled token inactive style={{ width: "100px" }}>
       {children}
     </Button>
   );

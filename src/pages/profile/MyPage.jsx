@@ -7,7 +7,7 @@ import {UpdateInactiveProfileBtn, UpdateProfileBtn} from '../../components/butto
 import { instanceAxios } from '../../api/axios';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
-import { MyProfile } from '../../atom/Atom';
+import { MyCategory, MyProfile } from '../../atom/Atom';
 
 const WrapInputs = styled.div`
   display: flex;
@@ -35,11 +35,12 @@ const LabelWarning = styled.span`
 
 export default function MyPage() {
   const [myProfile, setMyProfile] = useRecoilState(MyProfile);
+  const [myCategory, setMyCategory] = useRecoilState(MyCategory);
   const [email, setEmail] = useState(myProfile.email);
   const [company, setCompany] = useState(myProfile.company);
   const [phone, setPhone] = useState(myProfile.phone);
   const [isValidEmail, setIsValidEmail] = useState(true);
-  console.log(myProfile, '⭐ 마이프로필'); 
+
   useEffect(() => {
     if(phone) {
       if (phone.length === 10) {
@@ -76,35 +77,13 @@ export default function MyPage() {
    }
   }
 
-  // const getMemberInfo = async() => {
-  //   try{
-  //     const response = await instanceAxios.post('/member/me',{})
-  //     console.log(response);
-  //     if(response.status === 200) {
-  //       setMyProfile(response.data)
-  //       setEmail(myProfile.email);
-  //       setPhone(myProfile.phone);
-  //       setCompany(myProfile.company);
-
-  //     }
-  //   } catch (err) {
-  //       console.error(err);
-  //   }
-  // }
-  
-  // useEffect(() => {
-  //   getMemberInfo();
-  // }, [])
-
-
   const updateData = {
     "name" : myProfile.name,
     "company": company,
     "email": email,
     "phone": phone
   }
-  console.log(updateData, "updateData🐰");
-  console.log(!!myProfile === !!updateData)
+  
   const updateMyInfo = async(e) => {
     e.preventDefault();
     if(window.confirm('개인정보를 수정하시겠습니까?')) {
