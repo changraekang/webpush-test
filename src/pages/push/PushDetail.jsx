@@ -92,7 +92,8 @@ const SubDemoTitle = styled.h4`
 
 const Message = styled.p`
   color: ${grey10};
-  padding-bottom: 40px;
+  padding-top: 40px;
+  padding-bottom: 20px;
   font-size: 18px;
 `;
 
@@ -567,23 +568,23 @@ export default function PushDetail() {
               </WrapMessage>
               <WrapMessage>
                 <SubTitle>이미지</SubTitle>
-                  <ImageInput
-                    placeholder="이미지를 등록하세요"
-                    value={previewImg ? previewImg.name : ""}
-                    name="image"
-                    readOnly={true}
-                  ></ImageInput>
-                  <ImageInput
-                    placeholder="이미지를 등록하세요"
-                    style={{ display: "none" }}
-                    type="file"
-                    accept="image/*"
-                    ref={imageInputRef}
-                    onChange={handleUploadImage}
-                  ></ImageInput>
-                  <RegisterImageButton handleUploadImage={onImgInputBtnClick}>
-                    이미지 등록
-                  </RegisterImageButton>
+                <ImageInput
+                  placeholder="이미지를 등록하세요"
+                  value={previewImg ? previewImg.name : ""}
+                  name="image"
+                  readOnly={true}
+                ></ImageInput>
+                <ImageInput
+                  placeholder="이미지를 등록하세요"
+                  style={{ display: "none" }}
+                  type="file"
+                  accept="image/*"
+                  ref={imageInputRef}
+                  onChange={handleUploadImage}
+                ></ImageInput>
+                <RegisterImageButton handleUploadImage={onImgInputBtnClick}>
+                  이미지 등록
+                </RegisterImageButton>
               </WrapMessage>
               {/* 아이콘!!!! 🐰 */}
               <WrapMessage icon>

@@ -356,7 +356,7 @@ export default function Layout({ children }) {
             </SubNav>
           )}
           <LI>
-            <LinkStyle to="/insertPush">Push 설정</LinkStyle>
+            <LinkStyle to="/insertPush">PUSH 설정</LinkStyle>
           </LI>
         </NavLi>
       </Nav>
