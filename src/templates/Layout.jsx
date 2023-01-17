@@ -177,7 +177,7 @@ const ProjectOptions = styled.li`
   &:hover {
     border-bottom: 3px solid ${primary4};
   }
-`;
+  `;
 const ProjectSelectOptions = styled.button`
   padding: 6px 8px;
   font-size: 14px;
@@ -213,8 +213,6 @@ export default function Layout({ children }) {
       const headersToken = tokenType + response.data.accessToken;
       setAccessTokenToCookie(headersToken);
       setRefreshTokenToCookie(response.data.refreshToken);
-      setMinutes(4);
-      setSeconds(59);
       instanceAxios.defaults.headers.common["Authorization"] = headersToken;
       console.log(response, "토큰 초기화");
     } catch (err) {
@@ -288,7 +286,7 @@ export default function Layout({ children }) {
     };
     setMyPushProject(body);
   };
-
+  
   const handleAddProject = () => {
     if (myProject.length > 2) {
       alert("프로젝트는 3개까지 가능합니다.");
@@ -381,11 +379,7 @@ export default function Layout({ children }) {
               } else {
                 return (
                   <li key={pid}>
-                    <ProjectSelectOptions
-                      onClick={() => handlePushProject(pid, name)}
-                    >
-                      {name}
-                    </ProjectSelectOptions>
+                    <ProjectSelectOptions onClick={() => handlePushProject(pid, name)}>{name}</ProjectSelectOptions>
                   </li>
                 );
               }

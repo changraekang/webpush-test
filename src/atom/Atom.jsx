@@ -20,11 +20,6 @@ const MyPushProject = atom({
   effects_UNSTABLE: [persistAtom],
 });
 
-const MyIcons = atom({
-  key: "MyIcons",
-  default: [], // default value (aka initial value)
-  effects_UNSTABLE: [persistAtom],
-});
 const IsOpenModal = atom({
   key: "IsOpen",
   default: true, // default value (aka initial value)
@@ -37,11 +32,16 @@ const MyCategory = atom({
   effects_UNSTABLE: [persistAtom],
 });
 
+const MyIcons = atom({
+  key: "MyIcons",
+  default: [], // default value (aka initial value)
+  effects_UNSTABLE: [persistAtom],
+});
 export {
   MyProfile,
   MyProject,
   MyPushProject,
-  MyIcons,
   MyCategory,
   IsOpenModal,
+  MyIcons,
 };

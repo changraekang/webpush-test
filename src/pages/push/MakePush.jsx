@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { PushBox } from "../../components/containers/push/PushBox";
 import Layout from "../../templates/Layout";
-import { grey5, grey10, grey2, grey4, grey3 } from "../../constants/color";
+import { grey5, grey10, grey2, grey4, grey3, primary4, grey1 } from "../../constants/color";
 import activeCheck from "../../assets/images/active-check.png";
 import Rectangle from "../../assets/images/demoBox.png";
 import inActiveCheck from "../../assets/images/inactive-check.png";
@@ -71,7 +71,7 @@ const Title = styled.h3`
   padding-bottom: 12px;
 `;
 const SubTitle = styled.h4`
-  width: 78px;
+  width: 150px;
   font-size: 18px;
   font-weight: 500;
   padding: 6px;
@@ -188,12 +188,19 @@ const DemoImg = styled.img`
   object-fit: cover;
 `;
 
+const SelectIconDiv = styled.div`
+  padding: 2px;
+  border: 3px solid ${primary4};
+  border-radius: 4px;
+  margin-top: -5px;
+`
+
 const IconBox = styled.div`
   position: relative;
-  width: 100px;
-  height: 100px;
+  width: 80px;
+  height: 80px;
   background-color: ${grey5};
-  margin-top: 20px;
+  padding: 5px;
 `;
 
 const Icon = styled.img`
@@ -219,7 +226,7 @@ const AlignIcon = styled.div`
   display: flex;
   width: 100%;
   gap: 16px;
-  margin-left: 29px;
+  margin: 20px 0 0 29px;
 `;
 export default function MakePush() {
   const [thisClock, setThisClock] = useState("");
@@ -405,18 +412,6 @@ export default function MakePush() {
   const [iconImg, setIconImg] = useState(null);
   const formData = new FormData();
 
-  // 이미지 파일 관리
-  const encodeFileBase64 = (file) => {
-    const reader = new FileReader();
-    // reader.readAsDataURL(file);
-    // setPreviewImg(file);
-    // return new Promise((resolve) => {
-    //   reader.onload = () => {
-    //     setPreviewImg(file.result);
-    //     resolve();
-    //   }
-    // })
-  };
   const [previewImg, setPreviewImg] = useState(null);
   const handleUploadImage = (e) => {
     const fileList = e.target.files;
@@ -465,7 +460,7 @@ export default function MakePush() {
     }
   }, [iconImg]);
 
-  const [iconArr, setIconArr] = useRecoilState(MyIcons);
+  const [iconArr, setIconArr] = useState([]);
   const requestIconAll = async () => {
     try {
       const response = await instanceAxios.get(
@@ -494,6 +489,12 @@ export default function MakePush() {
       requestIconAll();
     }
   }, [myPushProject]);
+
+  const [iconUrl, setIconUrl] = useState('')
+  const handleIconSelect = (e) => {
+    console.log(e.target.src);
+    setIconUrl(e.target.src);
+  }
 
   return (
     <Layout>
@@ -627,21 +628,29 @@ export default function MakePush() {
                 <SubTitle>아이콘</SubTitle>
                 <AlignIcon>
                   {/* map 돌릴 예정 */}
-                  {/* {iconArr.map(({url}, index) => {
-                    return (
-                      <IconBox key={index}>
-                        <MinusIconBtn>
-                          <DeleteIconImg
-                            src={minusIcon}
-                            alt="아이콘 삭제하기"
-                          />
-                        </MinusIconBtn>
-                        <Icon src={url} alt={url} />
-                        //{" "}
-                      </IconBox>
-                      // <p>{url}</p>
-                    )
-                  })} */}
+                  {iconArr.map(({url}, index) => {
+                     if(url === iconUrl) {
+                      return (
+                        <SelectIconDiv> 
+                        <IconBox onClick={handleIconSelect} key={index}>
+                           <MinusIconBtn>
+                             <DeleteIconImg src={minusIcon} alt="아이콘 삭제하기" />
+                           </MinusIconBtn>
+                           <Icon src={url} alt={url}/>
+                         </IconBox>
+                        </SelectIconDiv>
+                     )
+                     } else { 
+                       return (
+                         <IconBox onClick={handleIconSelect} key={index}>
+                            <MinusIconBtn>
+                              <DeleteIconImg src={minusIcon} alt="아이콘 삭제하기" />
+                            </MinusIconBtn>
+                            <Icon src={url} alt={url}/>
+                          </IconBox>
+                      )
+                    }
+                  })}
                 </AlignIcon>
                 <ImageInput
                   style={{ display: "none" }}

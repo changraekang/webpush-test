@@ -24,7 +24,7 @@ const Button = styled.button`
 const DeleteButton = styled.button`
   display: block;
   border: none;
-  width: 40px;
+  width: 60px;
   cursor: pointer;
   font-size: 12px;
   border-radius: 8px;
@@ -42,7 +42,7 @@ const DeleteButton = styled.button`
 const ImageButton = styled.button`
   display: block;
   border: none;
-  width: 140px;
+  width: 150px;
   /* width: ${(props) => (props.icon ? "100px" : "225px")}; */
   padding: 10px;
   margin: 15px 0 8px 15px;

@@ -232,7 +232,7 @@ export default function Login() {
       const cookies = new Cookies();
       cookies.remove("refreshToken");
       cookies.remove("accessToken");
-      window.location.reload();
+      //window.location.reload();
       console.error(err);
       console.error("실패");
     }

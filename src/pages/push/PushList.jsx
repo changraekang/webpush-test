@@ -53,7 +53,8 @@ const DetailMessage = styled.p`
   justify-content: center;
   width: 35%;
   color: ${grey9};
-  font-size: 18px;
+  margin-bottom: 5px;
+  font-size: 14px;
   border-right: 1px solid black;
 `;
 const PageTitle = styled.h2`
@@ -98,7 +99,7 @@ const PushContentListWrapper = styled.div`
   border-bottom: 1px solid black; ;
 `;
 const PushDetailListWrapper = styled.div`
-  width: 100%;
+  width: 160%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -274,6 +275,7 @@ const PushList = () => {
               <PushDetailListWrapper>
                 <DetailMessage>상태</DetailMessage>
                 <DetailMessage>발송타입</DetailMessage>
+                <DetailMessage>제목</DetailMessage>
                 <DetailMessage>내용</DetailMessage>
                 <DetailMessage>발송시간</DetailMessage>
               </PushDetailListWrapper>
@@ -287,9 +289,14 @@ const PushList = () => {
                   >
                     <DetailMessage>{item.state}</DetailMessage>
                     <DetailMessage>{item.pushType}</DetailMessage>
-                    <DetailMessage>{item.content}</DetailMessage>
+                    <DetailMessage>{item.title}</DetailMessage>
                     <DetailMessage>
-                      {item.sendTime.replace("T", " ")}
+                      {item.content.length > 20
+                        ? item.content.substring(0, 20) + "..."
+                        : item.content}
+                    </DetailMessage>
+                    <DetailMessage>
+                      {item.sendTime.replace("T", " ").substring(0, 16)}
                     </DetailMessage>
                   </PushDetailListWrapper>
                   <DetailMessage>
