@@ -50,3 +50,15 @@ export function AfterUpdateHomepage({children, updateHomePage}) {
       <Button active onClick={updateHomePage}>{children}</Button>
     )
 }
+
+export function BeforeCopy({children}) {
+  return (
+      <Button inactive disabled>{children}</Button>
+    )
+}
+
+export function AfterCopy({children, handleCopyScript}) {
+  return (
+      <Button active onClick={handleCopyScript}>{children}</Button>
+    )
+}

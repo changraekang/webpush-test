@@ -24,6 +24,7 @@ import DashBoard from "./pages/DashBoard";
 import NotFound from "./pages/NotFound";
 import NewPassword from "./pages/profile/NewPassword";
 import PushDetail from "./pages/push/PushDetail";
+import InsertPush from "./pages/push/InsertPush";
 
 function App() {
   return (
@@ -43,6 +44,7 @@ function App() {
             <Route path="/makePush" element={<MakePush />} />
             <Route path="/pushList" element={<PushList />} />
             <Route path="/pushdetail/:id" element={<PushDetail />} />
+            <Route path="/insertPush" element={<InsertPush />} />
 
             {/* 나의 정보 수정 */}
             <Route path="/myPage" element={<MyPage />} />

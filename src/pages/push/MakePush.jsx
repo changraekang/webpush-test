@@ -18,7 +18,7 @@ import {
 import ProjectModal from "../../components/modals/ProjectModal";
 import { instanceAxios } from "../../api/axios";
 import { getCookie } from "../../cookie/controlCookie";
-import { MyIcons, MyProject, MyPushProject } from "../../atom/Atom";
+import {  MyProject, MyPushProject } from "../../atom/Atom";
 import { useRecoilState } from "recoil";
 import Loading from "../../components/loading/Loading";
 const TitleWrapper = styled.div`
@@ -60,19 +60,19 @@ const DemoSection = styled.section`
 `;
 
 const PageTitle = styled.h2`
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 600;
   padding-bottom: 12px;
 `;
 
 const Title = styled.h3`
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 600;
   padding-bottom: 12px;
 `;
 const SubTitle = styled.h4`
   width: 150px;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 500;
   padding: 6px;
 `;
@@ -130,7 +130,7 @@ const ImageInput = styled.input`
   width: 100%;
   padding: 16px;
   margin-top: 8px;
-  margin-left: 20px;
+  margin-left: 30px;
   box-sizing: border-box;
   border-radius: 8px;
   border: 1px solid ${grey5};
@@ -225,7 +225,7 @@ const DeleteIconImg = styled.img`
 const AlignIcon = styled.div`
   display: flex;
   width: 100%;
-  gap: 16px;
+  gap: 8px;
   margin: 20px 0 0 29px;
 `;
 export default function MakePush() {
@@ -443,7 +443,12 @@ export default function MakePush() {
       formData.append("icon", iconImg);
       const response = await instanceAxios.post(
         `/image/${myPushProject.pid}/icon/upload`,
-        formData
+        formData,   
+        // {
+        //   headers: {
+        //     "Content-Type": "multipart/form-data",
+        //   },
+        // }
       );
       if (response.status === 200) {
         console.log("🚩아이콘 등록 성공", response);
@@ -605,23 +610,23 @@ export default function MakePush() {
               </WrapMessage>
               <WrapMessage>
                 <SubTitle>이미지</SubTitle>
-                <ImageInput
-                  placeholder="이미지를 등록하세요"
-                  value={previewImg ? previewImg.name : ""}
-                  name="image"
-                  readOnly={true}
-                ></ImageInput>
-                <ImageInput
-                  placeholder="이미지를 등록하세요"
-                  style={{ display: "none" }}
-                  type="file"
-                  accept="image/*"
-                  ref={imageInputRef}
-                  onChange={handleUploadImage}
-                ></ImageInput>
-                <RegisterImageButton handleUploadImage={onImgInputBtnClick}>
-                  이미지 등록
-                </RegisterImageButton>
+                  <ImageInput
+                    placeholder="이미지를 등록하세요"
+                    value={previewImg ? previewImg.name : ""}
+                    name="image"
+                    readOnly={true}
+                  ></ImageInput>
+                  <ImageInput
+                    placeholder="이미지를 등록하세요"
+                    style={{ display: "none" }}
+                    type="file"
+                    accept="image/*"
+                    ref={imageInputRef}
+                    onChange={handleUploadImage}
+                  ></ImageInput>
+                  <RegisterImageButton handleUploadImage={onImgInputBtnClick}>
+                    이미지 등록
+                  </RegisterImageButton>
               </WrapMessage>
               {/* 아이콘!!!! 🐰 */}
               <WrapMessage icon>
@@ -651,6 +656,24 @@ export default function MakePush() {
                       )
                     }
                   })}
+                  {/* <IconBox onClick={handleIconSelect}>
+                    <MinusIconBtn>
+                      <DeleteIconImg src={minusIcon} alt="아이콘 삭제하기" />
+                    </MinusIconBtn>
+                    <Icon src="" alt=""/>
+                  </IconBox>
+                  <IconBox onClick={handleIconSelect}>
+                    <MinusIconBtn>
+                      <DeleteIconImg src={minusIcon} alt="아이콘 삭제하기" />
+                    </MinusIconBtn>
+                    <Icon src="" alt=""/>
+                  </IconBox>
+                  <IconBox onClick={handleIconSelect}>
+                    <MinusIconBtn>
+                      <DeleteIconImg src={minusIcon} alt="아이콘 삭제하기" />
+                    </MinusIconBtn>
+                    <Icon src="" alt=""/>
+                  </IconBox> */}
                 </AlignIcon>
                 <ImageInput
                   style={{ display: "none" }}

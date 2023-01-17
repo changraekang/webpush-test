@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import HomepageBox from "../../components/containers/homepage/HomepageBox";
+import {HomepageBox} from "../../components/containers/homepage/HomepageBox";
 import Layout from '../../templates/Layout';
 import { InputGroup } from '../../components/inputs/InputGroups'
 import UpdateProfile from '../../components/buttons/ProfileButtons';
