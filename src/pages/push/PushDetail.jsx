@@ -18,7 +18,7 @@ import {
 import ProjectModal from "../../components/modals/ProjectModal";
 import { instanceAxios } from "../../api/axios";
 import { getCookie } from "../../cookie/controlCookie";
-import { MyIcons, MyProject, MyPushProject } from "../../atom/Atom";
+import { MyProject, MyPushProject } from "../../atom/Atom";
 import { useRecoilState } from "recoil";
 import { useNavigate, useParams } from "react-router-dom";
 const TitleWrapper = styled.div`
@@ -490,7 +490,7 @@ export default function PushDetail() {
     }
   }, [iconImg]);
 
-  const [iconArr, setIconArr] = useRecoilState(MyIcons);
+  const [iconArr, setIconArr] = useState();
   const requestIconAll = async () => {
     try {
       const response = await instanceAxios.get(
