@@ -594,14 +594,19 @@ export default function PushDetail() {
                 <SubTitle>아이콘</SubTitle>
                 <AlignIcon>
                   {/* map 돌릴 예정 */}
-                  {iconArr.map((iid, name, url) => {
-                    <IconBox key={iid}>
-                      <MinusIconBtn>
-                        <DeleteIconImg src={minusIcon} alt="아이콘 삭제하기" />
-                      </MinusIconBtn>
-                      <Icon src={url} alt={name} />
-                    </IconBox>;
-                  })}
+                  {iconArr
+                    ? iconArr.map((iid, name, url) => {
+                        <IconBox key={iid}>
+                          <MinusIconBtn>
+                            <DeleteIconImg
+                              src={minusIcon}
+                              alt="아이콘 삭제하기"
+                            />
+                          </MinusIconBtn>
+                          <Icon src={url} alt={name} />
+                        </IconBox>;
+                      })
+                    : null}
                 </AlignIcon>
                 <ImageInput
                   style={{ display: "none" }}

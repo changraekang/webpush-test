@@ -289,7 +289,11 @@ const PushList = () => {
                   >
                     <DetailMessage>{item.state}</DetailMessage>
                     <DetailMessage>{item.pushType}</DetailMessage>
-                    <DetailMessage>{item.title}</DetailMessage>
+                    <DetailMessage>
+                      {item.title.length > 20
+                        ? item.title.substring(0, 20) + "..."
+                        : item.title}
+                    </DetailMessage>
                     <DetailMessage>
                       {item.content.length > 20
                         ? item.content.substring(0, 20) + "..."
