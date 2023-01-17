@@ -78,7 +78,7 @@ const RadioLi = styled.li`
   align-items: center;
   gap: 4px;
 `;
-const PushConteneListWrapper = styled.div`
+const PushContentListWrapper = styled.div`
   padding-top: 5px;
   width: 100%;
   display: flex;
@@ -86,6 +86,13 @@ const PushConteneListWrapper = styled.div`
   align-items: center;
   flex-direction: row;
   border-bottom: 1px solid black; ;
+`;
+const PushDetailListWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: row;
 `;
 const Tabs = styled.div`
   display: flex;
@@ -253,23 +260,26 @@ const PushList = () => {
         </PushListBoxs>
         <PushListBoxs>
           <PushListWrapper>
-            <PushConteneListWrapper>
-              <Message10>상태</Message10>
-              <Message10>발송타입</Message10>
-              <Message35>내용</Message35>
-              <Message35>발송시간</Message35>
+            <PushContentListWrapper>
+              <PushDetailListWrapper>
+                <Message10>상태</Message10>
+                <Message10>발송타입</Message10>
+                <Message35>내용</Message35>
+                <Message35>발송시간</Message35>
+              </PushDetailListWrapper>
               <Message10></Message10>
-            </PushConteneListWrapper>
+            </PushContentListWrapper>
             {currentPosts.map((item, index) => {
               return (
-                <PushConteneListWrapper
-                  key={item.mid}
-                  onClick={() => navigate(`/pushdetail/${item.mid}`)}
-                >
-                  <Message10>{item.state}</Message10>
-                  <Message10>{item.pushType}</Message10>
-                  <Message35>{item.content}</Message35>
-                  <Message35>{item.sendTime.replace("T", " ")}</Message35>
+                <PushContentListWrapper key={item.mid}>
+                  <PushDetailListWrapper
+                    onClick={() => navigate(`/pushdetail/${item.mid}`)}
+                  >
+                    <Message10>{item.state}</Message10>
+                    <Message10>{item.pushType}</Message10>
+                    <Message35>{item.content}</Message35>
+                    <Message35>{item.sendTime.replace("T", " ")}</Message35>
+                  </PushDetailListWrapper>
                   <Message10>
                     <button>수정</button>
                     <ActiveDeletePushButton
@@ -278,7 +288,7 @@ const PushList = () => {
                       삭제
                     </ActiveDeletePushButton>
                   </Message10>
-                </PushConteneListWrapper>
+                </PushContentListWrapper>
               );
             })}
           </PushListWrapper>
