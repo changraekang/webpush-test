@@ -45,6 +45,7 @@ const Title = styled.p`
 const Message = styled.p`
   color: ${grey9};
   font-size: 18px;
+  border-right: 1px solid black;
 `;
 const PageTitle = styled.h2`
   font-size: 40px;
@@ -116,7 +117,7 @@ const Message10 = styled.div`
 const Message35 = styled.div`
   display: flex;
   justify-content: center;
-  width: 35%;
+  width: 100%;
   margin-bottom: 5px;
   font-size: 14px;
   height: 23px;
@@ -262,12 +263,12 @@ const PushList = () => {
           <PushListWrapper>
             <PushContentListWrapper>
               <PushDetailListWrapper>
-                <Message10>상태</Message10>
-                <Message10>발송타입</Message10>
-                <Message35>내용</Message35>
-                <Message35>발송시간</Message35>
+                <Message>상태</Message>
+                <Message>발송타입</Message>
+                <Message>내용</Message>
+                <Message>발송시간</Message>
               </PushDetailListWrapper>
-              <Message10></Message10>
+              <Message></Message>
             </PushContentListWrapper>
             {currentPosts.map((item, index) => {
               return (
@@ -275,19 +276,19 @@ const PushList = () => {
                   <PushDetailListWrapper
                     onClick={() => navigate(`/pushdetail/${item.mid}`)}
                   >
-                    <Message10>{item.state}</Message10>
-                    <Message10>{item.pushType}</Message10>
-                    <Message35>{item.content}</Message35>
-                    <Message35>{item.sendTime.replace("T", " ")}</Message35>
+                    <Message>{item.state}</Message>
+                    <Message>{item.pushType}</Message>
+                    <Message>{item.content}</Message>
+                    <Message>{item.sendTime.replace("T", " ")}</Message>
                   </PushDetailListWrapper>
-                  <Message10>
+                  <Message>
                     <button>수정</button>
                     <ActiveDeletePushButton
                       handleSubmit={() => handleSubmit(item.mid)}
                     >
                       삭제
                     </ActiveDeletePushButton>
-                  </Message10>
+                  </Message>
                 </PushContentListWrapper>
               );
             })}
