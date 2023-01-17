@@ -58,11 +58,13 @@ export default function SignupAgreement(props) {
     setOpenModal(true);
     setModalContent("personal");
   };
-  const openAgree = () => {
+  const openAgree = (e) => {
+    e.preventDefault();
     setOpenModal(true);
     setModalContent("agreement");
   };
-  const openMarketing = () => {
+  const openMarketing = (e) => {
+    e.preventDefault();
     setOpenModal(true);
     setModalContent("marketing");
   };

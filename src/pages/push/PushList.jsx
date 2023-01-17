@@ -43,6 +43,15 @@ const Title = styled.p`
 `;
 
 const Message = styled.p`
+  display: flex;
+  width: 35%;
+  color: ${grey9};
+  font-size: 18px;
+`;
+const DetailMessage = styled.p`
+  display: flex;
+  justify-content: center;
+  width: 35%;
   color: ${grey9};
   font-size: 18px;
   border-right: 1px solid black;
@@ -63,7 +72,7 @@ const PushButtonWrapper = styled.div`
   width: 100%;
   display: flex;
   justify-content: flex-start;
-  flex-direction: column;
+  flex-direction: row;
 `;
 const RadioList = styled.ul`
   display: flex;
@@ -117,7 +126,7 @@ const Message10 = styled.div`
 const Message35 = styled.div`
   display: flex;
   justify-content: center;
-  width: 100%;
+  width: 35%;
   margin-bottom: 5px;
   font-size: 14px;
   height: 23px;
@@ -263,12 +272,12 @@ const PushList = () => {
           <PushListWrapper>
             <PushContentListWrapper>
               <PushDetailListWrapper>
-                <Message>상태</Message>
-                <Message>발송타입</Message>
-                <Message>내용</Message>
-                <Message>발송시간</Message>
+                <DetailMessage>상태</DetailMessage>
+                <DetailMessage>발송타입</DetailMessage>
+                <DetailMessage>내용</DetailMessage>
+                <DetailMessage>발송시간</DetailMessage>
               </PushDetailListWrapper>
-              <Message></Message>
+              <DetailMessage></DetailMessage>
             </PushContentListWrapper>
             {currentPosts.map((item, index) => {
               return (
@@ -276,19 +285,20 @@ const PushList = () => {
                   <PushDetailListWrapper
                     onClick={() => navigate(`/pushdetail/${item.mid}`)}
                   >
-                    <Message>{item.state}</Message>
-                    <Message>{item.pushType}</Message>
-                    <Message>{item.content}</Message>
-                    <Message>{item.sendTime.replace("T", " ")}</Message>
+                    <DetailMessage>{item.state}</DetailMessage>
+                    <DetailMessage>{item.pushType}</DetailMessage>
+                    <DetailMessage>{item.content}</DetailMessage>
+                    <DetailMessage>
+                      {item.sendTime.replace("T", " ")}
+                    </DetailMessage>
                   </PushDetailListWrapper>
-                  <Message>
-                    <button>수정</button>
+                  <DetailMessage>
                     <ActiveDeletePushButton
                       handleSubmit={() => handleSubmit(item.mid)}
                     >
                       삭제
                     </ActiveDeletePushButton>
-                  </Message>
+                  </DetailMessage>
                 </PushContentListWrapper>
               );
             })}
