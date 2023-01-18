@@ -208,7 +208,8 @@ export default function Layout({ children }) {
       const response = await instanceAxios.post("/auth/refresh", {
         refreshToken: refreshToken,
       });
-
+      setMinutes(4);
+      setSeconds(59);
       const tokenType = response.data.tokenType;
       const headersToken = tokenType + response.data.accessToken;
       setAccessTokenToCookie(headersToken);
