@@ -202,14 +202,13 @@ export default function Layout({ children }) {
   const [myProfile, setMyProfile] = useRecoilState(MyProfile);
   const [myProject, setMyProject] = useRecoilState(MyProject);
   const [myPushProject, setMyPushProject] = useRecoilState(MyPushProject);
-  const [project, setProject] = useState([]);
+
   const requestAccessToken = async () => {
     try {
       const response = await instanceAxios.post("/auth/refresh", {
         refreshToken: refreshToken,
       });
-      setMinutes(4);
-      setSeconds(59);
+
       const tokenType = response.data.tokenType;
       const headersToken = tokenType + response.data.accessToken;
       setAccessTokenToCookie(headersToken);
@@ -242,6 +241,7 @@ export default function Layout({ children }) {
         console.error(err);
       }
     };
+
     const checkProject = async () => {
       try {
         const response = await instanceAxios.get("/project/all");
@@ -356,7 +356,7 @@ export default function Layout({ children }) {
             </SubNav>
           )}
           <LI>
-            <LinkStyle to="/insertPush">PUSH 설정</LinkStyle>
+            <LinkStyle to="/insertPush">Push 설정</LinkStyle>
           </LI>
         </NavLi>
       </Nav>

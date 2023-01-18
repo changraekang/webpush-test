@@ -142,12 +142,14 @@ const MessageEven = styled.div`
 const PushList = () => {
   //React 요소
   const navigate = useNavigate();
-
+  //현재 날짜
+  const offset = 1000 * 60 * 60 * 9;
+  const koreaNow = new Date(new Date().getTime() + offset).toISOString();
   //state
   const [myPushProject, setMyPushProject] = useRecoilState(MyPushProject);
-  const [isReserve, setIsReserve] = useState(false);
-  const [isProceed, setIsProceed] = useState(false);
-  const [isComplete, setIsComplete] = useState(false);
+  const [isReserve, setIsReserve] = useState(true);
+  const [isProceed, setIsProceed] = useState(true);
+  const [isComplete, setIsComplete] = useState(true);
   const [isAll, setIsAll] = useState(false);
   const [isModalOpen, setisModalOpen] = useState(false);
   const [pushList, setPushList] = useState([]);
@@ -245,6 +247,108 @@ const PushList = () => {
       setIsAll(false);
     }
   };
+  const renderAllPush = () => {
+    return currentPosts.map((item, index) => {
+      return (
+        <PushContentListWrapper key={item.mid}>
+          <PushDetailListWrapper
+            onClick={() => navigate(`/pushdetail/${item.mid}`)}
+          >
+            <DetailMessage>{item.state}</DetailMessage>
+            <DetailMessage>{item.pushType}</DetailMessage>
+            <DetailMessage>
+              {item.title.length > 20
+                ? item.title.substring(0, 20) + "..."
+                : item.title}
+            </DetailMessage>
+            <DetailMessage>
+              {item.content.length > 20
+                ? item.content.substring(0, 20) + "..."
+                : item.content}
+            </DetailMessage>
+            <DetailMessage>
+              {item.sendTime.replace("T", " ").substring(0, 16)}
+            </DetailMessage>
+          </PushDetailListWrapper>
+          <DetailMessage>
+            <ActiveDeletePushButton handleSubmit={() => handleSubmit(item.mid)}>
+              삭제
+            </ActiveDeletePushButton>
+          </DetailMessage>
+        </PushContentListWrapper>
+      );
+    });
+  };
+  const renderWaitingPush = () => {
+    return currentPosts.map((item, index) => {
+      return (
+        <PushContentListWrapper key={item.mid}>
+          <PushDetailListWrapper
+            onClick={() => navigate(`/pushdetail/${item.mid}`)}
+          >
+            <DetailMessage>{item.state}</DetailMessage>
+            <DetailMessage>{item.pushType}</DetailMessage>
+            <DetailMessage>
+              {item.title.length > 20
+                ? item.title.substring(0, 20) + "..."
+                : item.title}
+            </DetailMessage>
+            <DetailMessage>
+              {item.content.length > 20
+                ? item.content.substring(0, 20) + "..."
+                : item.content}
+            </DetailMessage>
+            <DetailMessage>
+              {item.sendTime.replace("T", " ").substring(0, 16)}
+            </DetailMessage>
+          </PushDetailListWrapper>
+          <DetailMessage>
+            <ActiveDeletePushButton handleSubmit={() => handleSubmit(item.mid)}>
+              삭제
+            </ActiveDeletePushButton>
+          </DetailMessage>
+        </PushContentListWrapper>
+      );
+    });
+  };
+  const renderReservePush = () => {
+    return currentPosts.map((item, index) => {
+      console.log(item.sendTime < koreaNow, "보낸 날짜");
+      console.log(koreaNow, "현재 날짜");
+      if (item.sendTime > koreaNow) {
+        return (
+          <PushContentListWrapper key={item.mid}>
+            <PushDetailListWrapper
+              onClick={() => navigate(`/pushdetail/${item.mid}`)}
+            >
+              <DetailMessage>{item.state}</DetailMessage>
+              <DetailMessage>{item.pushType}</DetailMessage>
+              <DetailMessage>
+                {item.title.length > 20
+                  ? item.title.substring(0, 20) + "..."
+                  : item.title}
+              </DetailMessage>
+              <DetailMessage>
+                {item.content.length > 20
+                  ? item.content.substring(0, 20) + "..."
+                  : item.content}
+              </DetailMessage>
+              <DetailMessage>
+                {item.sendTime.replace("T", " ").substring(0, 16)}
+              </DetailMessage>
+            </PushDetailListWrapper>
+            <DetailMessage>
+              <ActiveDeletePushButton
+                handleSubmit={() => handleSubmit(item.mid)}
+              >
+                삭제
+              </ActiveDeletePushButton>
+            </DetailMessage>
+          </PushContentListWrapper>
+        );
+      }
+    });
+  };
   return (
     <Layout>
       <PageWrapper>
@@ -304,38 +408,8 @@ const PushList = () => {
               </PushDetailListWrapper>
               <DetailMessage></DetailMessage>
             </PushContentListWrapper>
-            {currentPosts.map((item, index) => {
-              return (
-                <PushContentListWrapper key={item.mid}>
-                  <PushDetailListWrapper
-                    onClick={() => navigate(`/pushdetail/${item.mid}`)}
-                  >
-                    <DetailMessage>{item.state}</DetailMessage>
-                    <DetailMessage>{item.pushType}</DetailMessage>
-                    <DetailMessage>
-                      {item.title.length > 20
-                        ? item.title.substring(0, 20) + "..."
-                        : item.title}
-                    </DetailMessage>
-                    <DetailMessage>
-                      {item.content.length > 20
-                        ? item.content.substring(0, 20) + "..."
-                        : item.content}
-                    </DetailMessage>
-                    <DetailMessage>
-                      {item.sendTime.replace("T", " ").substring(0, 16)}
-                    </DetailMessage>
-                  </PushDetailListWrapper>
-                  <DetailMessage>
-                    <ActiveDeletePushButton
-                      handleSubmit={() => handleSubmit(item.mid)}
-                    >
-                      삭제
-                    </ActiveDeletePushButton>
-                  </DetailMessage>
-                </PushContentListWrapper>
-              );
-            })}
+            {isReserve && isComplete && isProceed && renderAllPush()}
+            {isReserve && !isAll && renderReservePush()}
           </PushListWrapper>
         </PushListBoxs>
         <Pagination

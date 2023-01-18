@@ -7,7 +7,6 @@ import {
   useRecoilValue,
 } from "recoil";
 import "./styles/global.css";
-import Test from "./pages/Test";
 import Signup from "./pages/Auth/Signup";
 import Login from "./pages/Auth/Login";
 import MakePush from "./pages/push/MakePush";
@@ -53,7 +52,6 @@ function App() {
             {/* 홈페이지 관리 */}
             <Route path="/homepage" element={<Homepage />} />
             {/* 에러페이지 */}
-            <Route path="/test" element={<Test />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

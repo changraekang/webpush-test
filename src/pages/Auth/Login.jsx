@@ -168,8 +168,8 @@ export default function Login() {
     }
   }, [browserName]);
   useEffect(() => {
-    console.log("commit-test: 01-18 10am");
     window.localStorage.removeItem("recoil-persist");
+    console.log("test-commit  0a55e1ac");
   }, []);
 
   const loginData = {

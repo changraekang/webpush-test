@@ -7,7 +7,7 @@ import { instanceAxios } from '../../api/axios';
 import { useEffect, useState } from 'react';
 import HompageButton from "../../components/buttons/HompageButtons";
 import { grey1, grey4, primary4, error3 } from "../../constants/color";
-import {SelectHomepage, BeforeUpdateHomepage, AfterUpdateHomepage} from "../../components/buttons/HompageButtons";
+import {SelectedHomepage, SelectHomepage, BeforeUpdateHomepage, AfterUpdateHomepage} from "../../components/buttons/HompageButtons";
 import { useRecoilState } from "recoil";
 import { MyCategory, MyProject, MyPushProject } from "../../atom/Atom";
 const WrapInputs = styled.div`
@@ -119,7 +119,7 @@ export default function Homepage() {
   }
   }
 
-  const renderButton = () => {
+  const renderSubmitButton = () => {
     if(MyPushProject.projectUrl ===  link || MyPushProject.name === homepage || MyPushProject.categoryCode === cateogry) {
       return <BeforeUpdateHomepage>수정</BeforeUpdateHomepage>
     } else {
@@ -127,20 +127,38 @@ export default function Homepage() {
     }
   }
 
+  const handleRenderHomepageBtns = () => {
+    return (
+      <>
+        {myProject?.map(({name, pid})=> {
+          if(pid === myPushProject.pid) {
+            return (
+              <li key={pid}>
+              <SelectedHomepage setValue={()=> {setPid(pid);}}>
+                  {name}
+              </SelectedHomepage >
+              </li>
+            )
+          } else {
+            return (
+              <li key={pid}>
+              <SelectHomepage setValue={()=> {setPid(pid);}}>
+                  {name}
+              </SelectHomepage >
+              </li>
+            )
+          }
+        })}
+      </>
+    )
+  }
+
   return (
     <Layout>
       <HomepageBox>
         <TopAlign>
           <WrapHomepages>
-            {myProject?.map(({name, pid})=> {
-              return (
-                <li key={pid}>
-                  <SelectHomepage setValue={()=> {setPid(pid);}}>
-                    {name}
-                  </SelectHomepage >
-                </li>
-              ) 
-            })}
+            {handleRenderHomepageBtns()}
           </WrapHomepages>
           <DeleteBtn onClick={deleteHomePage}>삭제하기</DeleteBtn>
         </TopAlign>
@@ -179,7 +197,7 @@ export default function Homepage() {
           </div>
         </WrapInputs>
           <WrapButton>
-          {renderButton()}
+          {renderSubmitButton()}
           </WrapButton>
         </form>
       </HomepageBox>
