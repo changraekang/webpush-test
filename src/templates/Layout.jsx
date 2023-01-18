@@ -247,7 +247,6 @@ export default function Layout({ children }) {
         const response = await instanceAxios.get("/project/all");
         if (response.status === 200) {
           setMyProject(response.data);
-          setMyPushProject(response.data[0]);
           if (response.data.length === 0) {
             setIsOpenModal(true);
           }
