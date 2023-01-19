@@ -195,7 +195,7 @@ const ReserveWrapper = styled.div`
 const DemoImg = styled.img`
   width: 130px;
   height: 130px;
-  object-fit: cover;
+  object-fit: contain;
 `;
 
 const SelectIconDiv = styled.div`
@@ -261,7 +261,8 @@ export default function PushDetail() {
           title: response.data.title,
           content: response.data.content,
           link: response.data.link,
-          image: "",
+          image: response.data.image,
+
           date: response.data.date,
           pid: response.data.pid,
         });
