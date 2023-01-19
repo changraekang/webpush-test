@@ -192,8 +192,8 @@ const ReserveWrapper = styled.div`
 
 const DemoImg = styled.img`
   width: 130px;
-  height: 130px;
-  object-fit: cover;
+  height: 65px;
+  object-fit: contain;
 `;
 
 const SelectIconDiv = styled.div`
@@ -277,7 +277,7 @@ export default function MakePush() {
     mobile: false,
     title: "",
     content: "",
-    link: "https://",
+    link: "",
     image: "",
     date: "",
     pid: myPushProject.pid,
@@ -343,7 +343,7 @@ export default function MakePush() {
         etc: isEtcCheck,
       });
     } else {
-      alert("PUSH 유형을 먼저 선택해주세요 😅");
+      alert("Please select Push Type");
     }
   };
 
@@ -502,7 +502,7 @@ export default function MakePush() {
       sendType: "advertising",
       link: inputs.link,
       // sendTime: inputs.date,
-      sendTime: "2023-01-19 05:55",
+      sendTime: inputs.date,
       iid: iid,
     };
     console.log(data, "data");

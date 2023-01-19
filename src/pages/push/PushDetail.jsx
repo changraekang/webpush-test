@@ -261,7 +261,7 @@ export default function PushDetail() {
           title: response.data.title,
           content: response.data.content,
           link: response.data.link,
-          image: "",
+          image: response.data.image,
           date: response.data.date,
           pid: response.data.pid,
         });
@@ -278,7 +278,6 @@ export default function PushDetail() {
     setThisMonth(koreaNow.toISOString().slice(0, 10));
   };
   useEffect(() => {
-    console.log(pushDetail, "디테일");
     getPushDetail();
     getClock();
     setInterval(getClock, 20000);
