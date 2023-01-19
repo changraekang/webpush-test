@@ -477,7 +477,7 @@ export default function MakePush() {
       return alert("Please select publish type");
     }
     if (isDirectCheck) {
-      inputs.date = thisMonth + " " + thisClock;
+      inputs.date = thisMonth + " " + (thisClock - 9);
     }
     if (isReserveCheck) {
       if (submitDate.slice(0, 10) === thisMonth) {
@@ -502,10 +502,10 @@ export default function MakePush() {
       sendType: "advertising",
       link: inputs.link,
       // sendTime: inputs.date,
-      sendTime: inputs.date,
+      sendTime: "2023-01-19 05:55",
       iid: iid,
     };
-
+    console.log(data, "data");
     formData.append(
       "request",
       new Blob([JSON.stringify(data)], { type: "application/json" })

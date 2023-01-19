@@ -151,7 +151,7 @@ const PushList = () => {
   const [isProceed, setIsProceed] = useState(true);
   const [isComplete, setIsComplete] = useState(true);
   const [isAll, setIsAll] = useState(false);
-  const [isModalOpen, setisModalOpen] = useState(false);
+  const [isFailed, setIsFailed] = useState(true);
   const [pushList, setPushList] = useState([]);
 
   // 페이지네이션
@@ -160,7 +160,6 @@ const PushList = () => {
   const lastPostIndex = currentPage * postsPerPage;
   const firstPostIndex = lastPostIndex - postsPerPage;
   const currentPosts = pushList
-    .slice(firstPostIndex, lastPostIndex)
     .sort(function (a, b) {
       if (a.create_time > b.create_time) {
         return -1;
@@ -170,7 +169,8 @@ const PushList = () => {
       }
       // a must be equal to b
       return 0;
-    });
+    })
+    .slice(firstPostIndex, lastPostIndex);
   console.log(
     currentPosts.sort(function (a, b) {
       if (a.create_time > b.create_time) {
@@ -186,13 +186,13 @@ const PushList = () => {
   );
 
   useEffect(() => {
-    if (isReserve && isProceed && isComplete) {
+    if (isReserve && isProceed && isComplete && isFailed) {
       setIsAll(true);
     }
-    if (!isReserve || !isProceed || !isComplete) {
+    if (!isReserve || !isProceed || !isComplete || !isFailed) {
       setIsAll(false);
     }
-  }, [isReserve, isProceed, isComplete]);
+  }, [isReserve, isProceed, isComplete, isFailed]);
   useEffect(() => {
     getPushList();
     console.log(pushList, "푸시리스트");
@@ -240,14 +240,54 @@ const PushList = () => {
       if (isReserve === false) {
         setIsReserve(true);
       }
+      if (isFailed === false) {
+        setIsFailed(true);
+      }
     } else {
       setIsProceed(false);
       setIsComplete(false);
       setIsReserve(false);
+      setIsFailed(false);
       setIsAll(false);
     }
   };
   const renderAllPush = () => {
+    return currentPosts.map((item, index) => {
+      return (
+        <PushContentListWrapper key={item.mid}>
+          <PushDetailListWrapper
+            onClick={() => navigate(`/pushdetail/${item.mid}`)}
+          >
+            {item.state === "complete" && (
+              <DetailMessage>발송완료</DetailMessage>
+            )}
+            {item.state === "waiting" && <DetailMessage>예약중</DetailMessage>}
+            {item.state === "shipping" && <DetailMessage>전달중</DetailMessage>}
+            {item.state === "failed" && <DetailMessage>실패</DetailMessage>}
+            <DetailMessage>
+              {item.title.length > 20
+                ? item.title.substring(0, 20) + "..."
+                : item.title}
+            </DetailMessage>
+            <DetailMessage>
+              {item.content.length > 20
+                ? item.content.substring(0, 20) + "..."
+                : item.content}
+            </DetailMessage>
+            <DetailMessage>
+              {item.sendTime.replace("T", " ").substring(0, 16)}
+            </DetailMessage>
+          </PushDetailListWrapper>
+          <DetailMessage>
+            <ActiveDeletePushButton handleSubmit={() => handleSubmit(item.mid)}>
+              삭제
+            </ActiveDeletePushButton>
+          </DetailMessage>
+        </PushContentListWrapper>
+      );
+    });
+  };
+  const renderShippingPush = () => {
     return currentPosts.map((item, index) => {
       return (
         <PushContentListWrapper key={item.mid}>
@@ -281,47 +321,53 @@ const PushList = () => {
   };
   const renderWaitingPush = () => {
     return currentPosts.map((item, index) => {
-      return (
-        <PushContentListWrapper key={item.mid}>
-          <PushDetailListWrapper
-            onClick={() => navigate(`/pushdetail/${item.mid}`)}
-          >
-            <DetailMessage>{item.state}</DetailMessage>
-            <DetailMessage>{item.pushType}</DetailMessage>
-            <DetailMessage>
-              {item.title.length > 20
-                ? item.title.substring(0, 20) + "..."
-                : item.title}
-            </DetailMessage>
-            <DetailMessage>
-              {item.content.length > 20
-                ? item.content.substring(0, 20) + "..."
-                : item.content}
-            </DetailMessage>
-            <DetailMessage>
-              {item.sendTime.replace("T", " ").substring(0, 16)}
-            </DetailMessage>
-          </PushDetailListWrapper>
-          <DetailMessage>
-            <ActiveDeletePushButton handleSubmit={() => handleSubmit(item.mid)}>
-              삭제
-            </ActiveDeletePushButton>
-          </DetailMessage>
-        </PushContentListWrapper>
-      );
-    });
-  };
-  const renderReservePush = () => {
-    return currentPosts.map((item, index) => {
       console.log(item.sendTime < koreaNow, "보낸 날짜");
       console.log(koreaNow, "현재 날짜");
-      if (item.sendTime > koreaNow) {
+      if (item.state === "waiting") {
         return (
           <PushContentListWrapper key={item.mid}>
             <PushDetailListWrapper
               onClick={() => navigate(`/pushdetail/${item.mid}`)}
             >
-              <DetailMessage>{item.state}</DetailMessage>
+              <DetailMessage>예약중</DetailMessage>
+              <DetailMessage>{item.pushType}</DetailMessage>
+              <DetailMessage>
+                {item.title.length > 20
+                  ? item.title.substring(0, 20) + "..."
+                  : item.title}
+              </DetailMessage>
+              <DetailMessage>
+                {item.content.length > 20
+                  ? item.content.substring(0, 20) + "..."
+                  : item.content}
+              </DetailMessage>
+              <DetailMessage>
+                {item.sendTime.replace("T", " ").substring(0, 16)}
+              </DetailMessage>
+            </PushDetailListWrapper>
+            <DetailMessage>
+              <ActiveDeletePushButton
+                handleSubmit={() => handleSubmit(item.mid)}
+              >
+                삭제
+              </ActiveDeletePushButton>
+            </DetailMessage>
+          </PushContentListWrapper>
+        );
+      }
+    });
+  };
+  const renderCompletePush = () => {
+    return currentPosts.map((item, index) => {
+      console.log(item.sendTime < koreaNow, "보낸 날짜");
+      console.log(koreaNow, "현재 날짜");
+      if (item.state === "complete") {
+        return (
+          <PushContentListWrapper key={item.mid}>
+            <PushDetailListWrapper
+              onClick={() => navigate(`/pushdetail/${item.mid}`)}
+            >
+              <DetailMessage>예약중</DetailMessage>
               <DetailMessage>{item.pushType}</DetailMessage>
               <DetailMessage>
                 {item.title.length > 20
@@ -391,7 +437,16 @@ const PushList = () => {
                 {isComplete && (
                   <img src={activeCheck} alt="모바일푸시 체크 아이콘" />
                 )}
-                진행완료
+                발송완료
+              </RadioLi>
+              <RadioLi onClick={() => setIsFailed(!isFailed)}>
+                {!isFailed && (
+                  <img src={inActiveCheck} alt="모바일푸시 체크 아이콘" />
+                )}
+                {isFailed && (
+                  <img src={activeCheck} alt="모바일푸시 체크 아이콘" />
+                )}
+                실패
               </RadioLi>
             </RadioList>
           </PushButtonWrapper>
@@ -401,15 +456,21 @@ const PushList = () => {
             <PushContentListWrapper>
               <PushDetailListWrapper>
                 <DetailMessage>상태</DetailMessage>
-                <DetailMessage>발송타입</DetailMessage>
                 <DetailMessage>제목</DetailMessage>
                 <DetailMessage>내용</DetailMessage>
                 <DetailMessage>발송시간</DetailMessage>
               </PushDetailListWrapper>
               <DetailMessage></DetailMessage>
             </PushContentListWrapper>
-            {isReserve && isComplete && isProceed && renderAllPush()}
-            {isReserve && !isAll && renderReservePush()}
+            {isReserve &&
+              isComplete &&
+              isProceed &&
+              isFailed &&
+              renderAllPush()}
+            {isReserve && !isAll && renderWaitingPush()}
+            {isComplete && !isAll && renderCompletePush()}
+            {isProceed && !isAll && renderWaitingPush()}
+            {isFailed && !isAll && renderWaitingPush()}
           </PushListWrapper>
         </PushListBoxs>
         <Pagination
