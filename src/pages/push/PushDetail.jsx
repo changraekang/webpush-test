@@ -278,7 +278,6 @@ export default function PushDetail() {
     setThisMonth(koreaNow.toISOString().slice(0, 10));
   };
   useEffect(() => {
-    console.log(pushDetail, "디테일");
     getPushDetail();
     getClock();
     setInterval(getClock, 20000);
@@ -413,7 +412,7 @@ export default function PushDetail() {
       if (response.status === 200) {
         alert("메세지 등록 성공🎉");
       }
-      console.log(response);
+      //  console.log(response);
     } catch (err) {
       console.error(err);
     }
@@ -652,7 +651,7 @@ export default function PushDetail() {
               <DemoWrapperBox>
                 <DemoBox>
                   <DemoImg
-                    src={demoImg ? demoImg : Rectangle}
+                    src={inputs.image ? inputs.image : Rectangle}
                     alt="데모이미지"
                   />
                   <DemoSection>
