@@ -99,6 +99,12 @@ export default function InsertPush() {
       console.error(err);
       }
   }
+
+  useEffect(() => {
+    if(pid) {
+      handleGetScript();
+    }
+  }, [pid])
   
   const handleCopyScript = (text) => {
     try {
@@ -142,15 +148,18 @@ export default function InsertPush() {
           <WrapHomepages>
             {handleRenderBtns()}
           </WrapHomepages>
-          <GetScript onClick={handleGetScript}>출력하기</GetScript>
+          {/* <GetScript>출력하기</GetScript> */}
         </TopAlign>
         <WrapInputs>
           <LabelStyle htmlFor="script">스크립트</LabelStyle>
-          <InputGroup 
+          {/* <InputGroup 
           type="text" 
           id='script' 
           value={script}
-          />
+          /> */}
+          <div>
+            {script.split(' ')}
+          </div>
         </WrapInputs>
         <WrapButton>
             {!script && <BeforeCopy>복사하기</BeforeCopy>}

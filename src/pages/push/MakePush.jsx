@@ -277,7 +277,7 @@ export default function MakePush() {
     mobile: false,
     title: "",
     content: "",
-    link: "",
+    link: "https://",
     image: "",
     date: "",
     pid: myPushProject.pid,
@@ -343,7 +343,7 @@ export default function MakePush() {
         etc: isEtcCheck,
       });
     } else {
-      alert("Please select Push Type");
+      alert("PUSH 유형을 먼저 선택해주세요 😅");
     }
   };
 

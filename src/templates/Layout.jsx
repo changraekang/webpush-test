@@ -435,10 +435,10 @@ export default function Layout({ children }) {
           </ProLi>
           <MyButton onClick={handleOpenMyMenu}>
             <ProfileImg src={member} alt="프로필 버튼 사진" />
-            마이프로필
+            {myProfile.name}
             {isOpenMyMenu && (
               <MyMenu>
-                <MyMenuLi first>{myProfile.name}(master)</MyMenuLi>
+                <MyMenuLi first>{myProfile.email}</MyMenuLi>
                 <MyMenuLi>
                   <MyMenuIcon
                     profile={true}
