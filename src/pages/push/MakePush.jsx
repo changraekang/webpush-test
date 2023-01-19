@@ -502,7 +502,7 @@ export default function MakePush() {
       sendType: "advertising",
       link: inputs.link,
       // sendTime: inputs.date,
-      sendTime: "2023-01-12 15:44",
+      sendTime: inputs.date,
       iid: iid,
     };
 
