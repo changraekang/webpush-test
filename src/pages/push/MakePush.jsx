@@ -277,7 +277,7 @@ export default function MakePush() {
     mobile: false,
     title: "",
     content: "",
-    link: "",
+    link: "https://",
     image: "",
     date: "",
     pid: myPushProject.pid,
