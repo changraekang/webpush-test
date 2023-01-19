@@ -29,6 +29,7 @@ import {
   InputValidateGroup,
 } from "../../components/inputs/InputGroups";
 
+
 const Section = styled.section`
   display: flex;
   justify-content: center;
@@ -170,6 +171,8 @@ const TimeSpan = styled.span`
 
 //--------------회원가입 페이지--------------------------
 export default function Signup() {
+  // 아이디 저장 기능 
+  
   const navigate = useNavigate();
   const emailList = [
     "test.com",

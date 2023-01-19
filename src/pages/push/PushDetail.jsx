@@ -195,7 +195,7 @@ const ReserveWrapper = styled.div`
 const DemoImg = styled.img`
   width: 130px;
   height: 130px;
-  object-fit: contain;
+  object-fit: cover;
 `;
 
 const SelectIconDiv = styled.div`
@@ -261,8 +261,7 @@ export default function PushDetail() {
           title: response.data.title,
           content: response.data.content,
           link: response.data.link,
-          image: response.data.image,
-
+          image: "",
           date: response.data.date,
           pid: response.data.pid,
         });
@@ -279,6 +278,7 @@ export default function PushDetail() {
     setThisMonth(koreaNow.toISOString().slice(0, 10));
   };
   useEffect(() => {
+    console.log(pushDetail, "디테일");
     getPushDetail();
     getClock();
     setInterval(getClock, 20000);
@@ -413,7 +413,7 @@ export default function PushDetail() {
       if (response.status === 200) {
         alert("메세지 등록 성공🎉");
       }
-      //  console.log(response);
+      console.log(response);
     } catch (err) {
       console.error(err);
     }
@@ -652,7 +652,7 @@ export default function PushDetail() {
               <DemoWrapperBox>
                 <DemoBox>
                   <DemoImg
-                    src={inputs.image ? inputs.image : Rectangle}
+                    src={demoImg ? demoImg : Rectangle}
                     alt="데모이미지"
                   />
                   <DemoSection>
