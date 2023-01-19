@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { instanceAxios } from "../../api/axios";
-import { MyCategory, MyProject } from "../../atom/Atom";
+import { MyCategory, MyProject, MyPushProject } from "../../atom/Atom";
 import {
   grey11,
   grey1,
@@ -149,6 +149,7 @@ const ProjectModal = (props) => {
   const [url, setUrl] = useState("https://");
   const [myProject, setMyProject] = useRecoilState(MyProject);
   const [myCategory, setMyCategoy] = useRecoilState(MyCategory);
+  const [myPushProject, setMyPushProject] = useRecoilState(MyPushProject);
 
   const handleClose = async () => {
     let body = {
@@ -164,6 +165,7 @@ const ProjectModal = (props) => {
             const response = await instanceAxios.get("/project/all");
             if (response.status === 200) {
               setMyProject(response.data);
+              setMyPushProject(response.data[0]);
               window.location.reload();
             }
           } catch (err) {
@@ -180,7 +182,11 @@ const ProjectModal = (props) => {
     }
   };
   const handleNext = () => {
-    setStep(2);
+    if(url.includes('https://')) {
+      setStep(2);
+    } else {
+      alert('홈페이지 주소는 "https://" 가 필요합니다.🥹');
+    }
   };
 
   const handleGoBack = () => {

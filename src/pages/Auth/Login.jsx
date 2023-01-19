@@ -169,7 +169,7 @@ export default function Login() {
   }, [browserName]);
   useEffect(() => {
     window.localStorage.removeItem("recoil-persist");
-    console.log("test-commit  0a55e1ac");
+    console.log("test-commit  55651f3");
   }, []);
 
   const loginData = {

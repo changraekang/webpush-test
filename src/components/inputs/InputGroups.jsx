@@ -24,6 +24,7 @@ export const InputGroup = ({
   value,
   setValue,
   id,
+  minlength,
   readonly = false,
 }) => {
   return (
@@ -33,6 +34,7 @@ export const InputGroup = ({
         value={value}
         id={id}
         readOnly={readonly}
+        minlength={minlength}
         onChange={(e) => setValue(e.target.value)}
       />
   );
