@@ -2,7 +2,15 @@ import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { PushBox } from "../../components/containers/push/PushBox";
 import Layout from "../../templates/Layout";
-import { grey5, grey10, grey2, grey4, grey3, primary4, grey1 } from "../../constants/color";
+import {
+  grey5,
+  grey10,
+  grey2,
+  grey4,
+  grey3,
+  primary4,
+  grey1,
+} from "../../constants/color";
 import activeCheck from "../../assets/images/active-check.png";
 import Rectangle from "../../assets/images/demoBox.png";
 import inActiveCheck from "../../assets/images/inactive-check.png";
@@ -18,7 +26,7 @@ import {
 import ProjectModal from "../../components/modals/ProjectModal";
 import { instanceAxios } from "../../api/axios";
 import { getCookie } from "../../cookie/controlCookie";
-import {  MyProject, MyPushProject } from "../../atom/Atom";
+import { MyProject, MyPushProject } from "../../atom/Atom";
 import { useRecoilState } from "recoil";
 import Loading from "../../components/loading/Loading";
 const TitleWrapper = styled.div`
@@ -193,7 +201,7 @@ const SelectIconDiv = styled.div`
   border: 3px solid ${primary4};
   border-radius: 4px;
   margin-top: -5px;
-`
+`;
 
 const IconBox = styled.div`
   position: relative;
@@ -238,8 +246,8 @@ export default function MakePush() {
   const [pid, setPid] = useState("");
   const [myProject, setMyProject] = useRecoilState(MyProject);
   const [myPushProject, setMyPushProject] = useRecoilState(MyPushProject);
-  const [iconUrl, setIconUrl] = useState('');
-  const [iid, setIid] = useState('');
+  const [iconUrl, setIconUrl] = useState("");
+  const [iid, setIid] = useState(null);
 
   const getClock = () => {
     const offset = 1000 * 60 * 60 * 9;
@@ -339,7 +347,6 @@ export default function MakePush() {
     }
   };
 
-
   // 이미지 파일 업로드
   const imageInputRef = useRef(null);
   const iconInputRef = useRef(null);
@@ -357,7 +364,7 @@ export default function MakePush() {
     const imageUrl = URL.createObjectURL(fileList[0]);
     setDomoImg(imageUrl);
   };
-  
+
   const handleUploadIcon = (e) => {
     const fileList = e.target.files;
     setIconImg(fileList[0]);
@@ -370,8 +377,8 @@ export default function MakePush() {
 
   const onIconInputBtnClick = (e) => {
     e.preventDefault();
-    if(iconArr.length > 2) {
-      alert('아이콘은 3개까지 등록이 가능합니다 😅');
+    if (iconArr.length > 2) {
+      alert("아이콘은 3개까지 등록이 가능합니다 😅");
     } else {
       iconInputRef.current.click();
     }
@@ -381,7 +388,10 @@ export default function MakePush() {
   const requestAddIcons = async () => {
     try {
       formData.append("icon", iconImg);
-      const response = await instanceAxios.post(`/${myPushProject.pid}/icon/upload`,formData);
+      const response = await instanceAxios.post(
+        `/${myPushProject.pid}/icon/upload`,
+        formData
+      );
       if (response.status === 200) {
         console.log("🚩아이콘 등록 성공", response);
         setIconImg(response.data.url);
@@ -407,7 +417,7 @@ export default function MakePush() {
       if (response.status === 200) {
         setIconArr(response.data);
       }
-      console.log(response.data, "아이콘들")
+      console.log(response.data, "아이콘들");
     } catch (err) {
       console.error(err);
     }
@@ -415,16 +425,19 @@ export default function MakePush() {
 
   // 아이콘 삭제하기
   const deleteIcon = async () => {
-    console.log(iid, "iid🎉🎉🎉")
-    if(iid === '') {
-      alert("삭제할 아이콘을 선택해주세요 😅")
+    console.log(iid, "iid🎉🎉🎉");
+    if (iid === "") {
+      alert("삭제할 아이콘을 선택해주세요 😅");
     } else {
-      if(window.confirm("아이콘이 삭제하시겠습니까?")) {
+      if (window.confirm("아이콘이 삭제하시겠습니까?")) {
         try {
-          const response = await instanceAxios.delete(`${myPushProject.pid}/icon/${iid}`, {});
+          const response = await instanceAxios.delete(
+            `${myPushProject.pid}/icon/${iid}`,
+            {}
+          );
           console.log(response);
-          if(response === 200) {
-            alert('성공적으로 아이콘이 삭제되었습니다 😆');
+          if (response === 200) {
+            alert("성공적으로 아이콘이 삭제되었습니다 😆");
             // requestIconAll();
           }
         } catch (err) {
@@ -443,13 +456,13 @@ export default function MakePush() {
   const handleIconSelect = (e) => {
     console.log(e.target.src);
     const imageSrc = e.target.src;
-    if(imageSrc === iconUrl) {
+    if (imageSrc === iconUrl) {
       setIconUrl(null);
     } else {
       setIconUrl(e.target.src);
-      setIid(imageSrc.split('/').at(-1));
+      setIid(imageSrc.split("/").at(-1));
     }
-  }
+  };
 
   // 제출
   const onClickSubmit = async (e) => {
@@ -481,7 +494,6 @@ export default function MakePush() {
       inputs.date = ReserveMin;
     }
     inputs.image = previewImg;
-
     let data = {
       pushType: pushType,
       messageType: pushTypeDemo,
@@ -629,50 +641,56 @@ export default function MakePush() {
               </WrapMessage>
               <WrapMessage>
                 <SubTitle>이미지</SubTitle>
-                  <ImageInput
-                    placeholder="이미지를 등록하세요"
-                    value={previewImg ? previewImg.name : ""}
-                    name="image"
-                    readOnly={true}
-                  ></ImageInput>
-                  <ImageInput
-                    placeholder="이미지를 등록하세요"
-                    style={{ display: "none" }}
-                    type="file"
-                    accept="image/*"
-                    ref={imageInputRef}
-                    onChange={handleUploadImage}
-                  ></ImageInput>
-                  <RegisterImageButton handleUploadImage={onImgInputBtnClick}>
-                    이미지 등록
-                  </RegisterImageButton>
+                <ImageInput
+                  placeholder="이미지를 등록하세요"
+                  value={previewImg ? previewImg.name : ""}
+                  name="image"
+                  readOnly={true}
+                ></ImageInput>
+                <ImageInput
+                  placeholder="이미지를 등록하세요"
+                  style={{ display: "none" }}
+                  type="file"
+                  accept="image/*"
+                  ref={imageInputRef}
+                  onChange={handleUploadImage}
+                ></ImageInput>
+                <RegisterImageButton handleUploadImage={onImgInputBtnClick}>
+                  이미지 등록
+                </RegisterImageButton>
               </WrapMessage>
               {/* 아이콘!!!! 🐰 */}
               <WrapMessage icon>
                 <SubTitle>아이콘</SubTitle>
                 <AlignIcon>
                   {/* map 돌릴 예정 */}
-                  {iconArr.map(({url}, index) => {
-                     if(url === iconUrl) {
+                  {iconArr.map(({ url }, index) => {
+                    if (url === iconUrl) {
                       return (
-                        <SelectIconDiv key={index}> 
-                        <IconBox onClick={handleIconSelect}>
-                           <MinusIconBtn onClick={deleteIcon}>
-                             <DeleteIconImg src={minusIcon} alt="아이콘 삭제하기" />
-                           </MinusIconBtn>
-                           <Icon src={url} alt={url}/>
-                         </IconBox>
-                        </SelectIconDiv>
-                     )
-                     } else { 
-                       return (
-                         <IconBox onClick={handleIconSelect} key={index}>
+                        <SelectIconDiv key={index}>
+                          <IconBox onClick={handleIconSelect}>
                             <MinusIconBtn onClick={deleteIcon}>
-                              <DeleteIconImg src={minusIcon} alt="아이콘 삭제하기" />
+                              <DeleteIconImg
+                                src={minusIcon}
+                                alt="아이콘 삭제하기"
+                              />
                             </MinusIconBtn>
-                            <Icon src={url} alt={url}/>
+                            <Icon src={url} alt={url} />
                           </IconBox>
-                      )
+                        </SelectIconDiv>
+                      );
+                    } else {
+                      return (
+                        <IconBox onClick={handleIconSelect} key={index}>
+                          <MinusIconBtn onClick={deleteIcon}>
+                            <DeleteIconImg
+                              src={minusIcon}
+                              alt="아이콘 삭제하기"
+                            />
+                          </MinusIconBtn>
+                          <Icon src={url} alt={url} />
+                        </IconBox>
+                      );
                     }
                   })}
                   {/* <IconBox onClick={handleIconSelect}>
