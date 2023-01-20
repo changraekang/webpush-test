@@ -160,12 +160,6 @@ export default function InsertPush() {
           {/* <GetScript>출력하기</GetScript> */}
         </TopAlign>
         <WrapInputs>
-          <LabelStyle htmlFor="script">스크립트</LabelStyle>
-          {/* <InputGroup 
-          type="text" 
-          id='script' 
-          value={script}
-          /> */}
           <TxtBox>
             <p>
               {script.split(' ')}
