@@ -424,7 +424,8 @@ export default function MakePush() {
   };
 
   // 아이콘 삭제하기
-  const deleteIcon = async () => {
+  const deleteIcon = async (e) => {
+    e.preventDefault();
     console.log(iid, "iid🎉🎉🎉");
     if (iid === "") {
       alert("삭제할 아이콘을 선택해주세요 😅");

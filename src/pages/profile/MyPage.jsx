@@ -108,11 +108,13 @@ export default function MyPage() {
             <LabelStyle htmlFor="email">이메일</LabelStyle>
             <div>
               <InputValidateGroup 
+              isEmail
               type="text" 
               id='email' 
               name='email'
               value={email === undefined ? '' : email} 
               setValue={handleEmail}
+              readonly={true}
               />
               {!isValidEmail && email && 
                <LabelWarning>올바른 이메일 형식이 아닙니다.</LabelWarning>
