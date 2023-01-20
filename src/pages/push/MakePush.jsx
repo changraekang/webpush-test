@@ -499,7 +499,7 @@ export default function MakePush() {
     if (isReserveCheck && submitDate) {
       inputs.date = submitDate.replace("T", " ");
     } else {
-      inputs.date = ReserveMin;
+      inputs.date = "2023-01-20 00:00";
     }
     inputs.image = previewImg;
     let data = {
@@ -509,7 +509,7 @@ export default function MakePush() {
       content: inputs.content,
       sendType: "advertising",
       link: inputs.link,
-      sendTime: "2023-01-20 00:00",
+      sendTime: inputs.date,
       iid: iid,
     };
     console.log(inputs.date, "data");
