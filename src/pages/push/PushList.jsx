@@ -171,8 +171,9 @@ const PushList = () => {
       return 0;
     })
     .slice(firstPostIndex, lastPostIndex);
-  console.log(
-    currentPosts.sort(function (a, b) {
+  const WaitingPosts = pushList
+    .filter((item) => item.state === "waiting")
+    .sort(function (a, b) {
       if (a.create_time > b.create_time) {
         return -1;
       }
@@ -181,9 +182,23 @@ const PushList = () => {
       }
       // a must be equal to b
       return 0;
-    }),
-    "currentPosts역순"
-  );
+    })
+    .slice(firstPostIndex, lastPostIndex);
+  const CompletePosts = pushList
+    .filter((item) => item.state === "complete")
+
+    .sort(function (a, b) {
+      if (a.create_time > b.create_time) {
+        return -1;
+      }
+      if (a.create_time < b.create_time) {
+        return 1;
+      }
+      // a must be equal to b
+      return 0;
+    })
+    .slice(firstPostIndex, lastPostIndex);
+  console.log(CompletePosts);
 
   useEffect(() => {
     if (isReserve && isProceed && isComplete && isFailed) {
@@ -255,9 +270,7 @@ const PushList = () => {
     return currentPosts.map((item, index) => {
       return (
         <PushContentListWrapper key={item.mid}>
-          <PushDetailListWrapper
-            onClick={() => navigate(`/pushdetail/${item.mid}`)}
-          >
+          <PushDetailListWrapper>
             {item.state === "complete" && (
               <DetailMessage>발송완료</DetailMessage>
             )}
@@ -279,6 +292,11 @@ const PushList = () => {
             </DetailMessage>
           </PushDetailListWrapper>
           <DetailMessage>
+            <ActiveDeletePushButton
+              handleSubmit={() => navigate(`/pushdetail/${item.mid}`)}
+            >
+              상세보기
+            </ActiveDeletePushButton>
             <ActiveDeletePushButton handleSubmit={() => handleSubmit(item.mid)}>
               삭제
             </ActiveDeletePushButton>
@@ -292,9 +310,7 @@ const PushList = () => {
       if (item.state === "shipping") {
         return (
           <PushContentListWrapper key={item.mid}>
-            <PushDetailListWrapper
-              onClick={() => navigate(`/pushdetail/${item.mid}`)}
-            >
+            <PushDetailListWrapper>
               <DetailMessage>진행중</DetailMessage>
               <DetailMessage>{item.pushType}</DetailMessage>
               <DetailMessage>
@@ -313,6 +329,11 @@ const PushList = () => {
             </PushDetailListWrapper>
             <DetailMessage>
               <ActiveDeletePushButton
+                handleSubmit={() => navigate(`/pushdetail/${item.mid}`)}
+              >
+                상세보기
+              </ActiveDeletePushButton>
+              <ActiveDeletePushButton
                 handleSubmit={() => handleSubmit(item.mid)}
               >
                 삭제
@@ -324,13 +345,11 @@ const PushList = () => {
     });
   };
   const renderWaitingPush = () => {
-    return currentPosts.map((item, index) => {
+    return WaitingPosts.map((item, index) => {
       if (item.state === "waiting") {
         return (
           <PushContentListWrapper key={item.mid}>
-            <PushDetailListWrapper
-              onClick={() => navigate(`/pushdetail/${item.mid}`)}
-            >
+            <PushDetailListWrapper>
               <DetailMessage>예약중</DetailMessage>
               <DetailMessage>{item.pushType}</DetailMessage>
               <DetailMessage>
@@ -349,6 +368,11 @@ const PushList = () => {
             </PushDetailListWrapper>
             <DetailMessage>
               <ActiveDeletePushButton
+                handleSubmit={() => navigate(`/pushdetail/${item.mid}`)}
+              >
+                상세보기
+              </ActiveDeletePushButton>
+              <ActiveDeletePushButton
                 handleSubmit={() => handleSubmit(item.mid)}
               >
                 삭제
@@ -360,13 +384,11 @@ const PushList = () => {
     });
   };
   const renderCompletePush = () => {
-    return currentPosts.map((item, index) => {
+    return CompletePosts.map((item, index) => {
       if (item.state === "complete") {
         return (
           <PushContentListWrapper key={item.mid}>
-            <PushDetailListWrapper
-              onClick={() => navigate(`/pushdetail/${item.mid}`)}
-            >
+            <PushDetailListWrapper>
               <DetailMessage>발송완료</DetailMessage>
               <DetailMessage>{item.pushType}</DetailMessage>
               <DetailMessage>
@@ -385,6 +407,11 @@ const PushList = () => {
             </PushDetailListWrapper>
             <DetailMessage>
               <ActiveDeletePushButton
+                handleSubmit={() => navigate(`/pushdetail/${item.mid}`)}
+              >
+                상세보기
+              </ActiveDeletePushButton>
+              <ActiveDeletePushButton
                 handleSubmit={() => handleSubmit(item.mid)}
               >
                 삭제
@@ -400,9 +427,7 @@ const PushList = () => {
       if (item.state === "failed") {
         return (
           <PushContentListWrapper key={item.mid}>
-            <PushDetailListWrapper
-              onClick={() => navigate(`/pushdetail/${item.mid}`)}
-            >
+            <PushDetailListWrapper>
               <DetailMessage>실패</DetailMessage>
               <DetailMessage>{item.pushType}</DetailMessage>
               <DetailMessage>
@@ -420,6 +445,11 @@ const PushList = () => {
               </DetailMessage>
             </PushDetailListWrapper>
             <DetailMessage>
+              <ActiveDeletePushButton
+                handleSubmit={() => navigate(`/pushdetail/${item.mid}`)}
+              >
+                상세보기
+              </ActiveDeletePushButton>
               <ActiveDeletePushButton
                 handleSubmit={() => handleSubmit(item.mid)}
               >
