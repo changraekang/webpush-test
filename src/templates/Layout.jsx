@@ -18,6 +18,7 @@ import {
   grey4,
   grey5,
   grey6,
+  primary1,
 } from "../constants/color";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -148,7 +149,7 @@ const MyMenu = styled.ul`
     left: 15px;
     top: 55px;
   }
-  
+
   &::before {
     display: block;
     content: "";
@@ -158,7 +159,7 @@ const MyMenu = styled.ul`
     border-bottom: 28px solid ${grey1};
     border-left: 0px solid transparent;
     border-right: 28px solid transparent;
-    right:0;
+    right: 0;
     top: -14px;
     transform: rotate(270deg);
   }
@@ -192,12 +193,12 @@ const MyMenuLi = styled.li`
   cursor: pointer;
   color: ${(props) => (props.first ? `${grey10}` : ` ${grey7}`)};
   margin: ${(props) => (props.first ? "12px 0 26px" : "16px 0")};
-  justify-content : ${(props) => (props.first ? "center" : "")};
+  justify-content: ${(props) => (props.first ? "center" : "")};
 `;
 
 const MyMenuIcon = styled.img`
-  width: ${(props) => (props.profile ? "18px" : "15px")}
-`
+  width: ${(props) => (props.profile ? "18px" : "15px")};
+`;
 
 const ProjectOptions = styled.li`
   padding: 6px 0;
@@ -205,6 +206,19 @@ const ProjectOptions = styled.li`
   font-weight: 500;
   color: ${primary4};
   border-bottom: 3px solid ${grey1};
+  cursor: pointer;
+  &:hover {
+    border-bottom: 3px solid ${primary4};
+  }
+`;
+const ProjectEXpiredOptions = styled.li`
+  padding: 6px 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: ${primary1};
+  background-color: ${grey4};
+  border-bottom: 3px solid ${grey1};
+  border-radius: 6px;
   cursor: pointer;
   &:hover {
     border-bottom: 3px solid ${primary4};
@@ -219,10 +233,19 @@ const ProjectSelectOptions = styled.button`
   background-color: ${primary4};
   cursor: pointer;
 `;
+const ProjectExpiredSelectOptions = styled.button`
+  padding: 6px 8px;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 6px;
+  color: ${grey1};
+  background-color: ${grey10};
+  cursor: pointer;
+`;
 
 const ProfileImg = styled.img`
   width: 30px;
-`
+`;
 
 export default function Layout({ children }) {
   const [myCategory, setMyCategory] = useRecoilState(MyCategory);
@@ -313,13 +336,20 @@ export default function Layout({ children }) {
   const handleOpenMyMenu = () => {
     !isOpenMyMenu ? setIsOpenMyMenu(true) : setIsOpenMyMenu(false);
   };
-  const handlePushProject = (categoryCode, pid, name, projectUrl) => {
+  const handlePushProject = (
+    categoryCode,
+    pid,
+    name,
+    projectUrl,
+    expiryDate
+  ) => {
     handleOpenPushProject();
     let body = {
       categoryCode: categoryCode,
       projectUrl: projectUrl,
       pid: pid,
       name: name,
+      expiryDate: expiryDate,
     };
     setMyPushProject(body);
   };
@@ -402,28 +432,67 @@ export default function Layout({ children }) {
       <WrapRight>
         <TopHeader>
           <ProLi>
-            {myProject.map(({ categoryCode, pid, name, projectUrl }) => {
-              if (pid !== myPushProject.pid) {
-                return (
-                  <li
-                    key={pid}
-                    onClick={() =>
-                      handlePushProject(categoryCode, pid, name, projectUrl)
-                    }
-                  >
-                    <button>
-                      <ProjectOptions>{name}</ProjectOptions>
-                    </button>
-                  </li>
-                );
-              } else {
-                return (
-                  <li key={pid}>
-                    <ProjectSelectOptions>{name}</ProjectSelectOptions>
-                  </li>
-                );
+            {myProject.map(
+              ({ categoryCode, pid, name, projectUrl, expiryDate }) => {
+                if (expiryDate) {
+                  if (pid !== myPushProject.pid) {
+                    return (
+                      <li
+                        key={pid}
+                        onClick={() =>
+                          handlePushProject(
+                            categoryCode,
+                            pid,
+                            name,
+                            projectUrl,
+                            expiryDate
+                          )
+                        }
+                      >
+                        <button>
+                          <ProjectEXpiredOptions>{name}</ProjectEXpiredOptions>
+                        </button>
+                      </li>
+                    );
+                  } else {
+                    return (
+                      <li key={pid}>
+                        <ProjectExpiredSelectOptions>
+                          {name}
+                        </ProjectExpiredSelectOptions>
+                      </li>
+                    );
+                  }
+                } else {
+                  if (pid !== myPushProject.pid) {
+                    return (
+                      <li
+                        key={pid}
+                        onClick={() =>
+                          handlePushProject(
+                            categoryCode,
+                            pid,
+                            name,
+                            projectUrl,
+                            expiryDate
+                          )
+                        }
+                      >
+                        <button>
+                          <ProjectOptions>{name}</ProjectOptions>
+                        </button>
+                      </li>
+                    );
+                  } else {
+                    return (
+                      <li key={pid}>
+                        <ProjectSelectOptions>{name}</ProjectSelectOptions>
+                      </li>
+                    );
+                  }
+                }
               }
-            })}
+            )}
             <Icon src={plus} alt="plus" onClick={handleAddProject} />
             <Icon
               src={settingHomepage}
@@ -440,7 +509,11 @@ export default function Layout({ children }) {
               <MyMenu>
                 <MyMenuLi first>{myProfile.email}</MyMenuLi>
                 <MyMenuLi>
-                  <MyMenuIcon profile={true} src={profile} alt="내 정보 아이콘" />
+                  <MyMenuIcon
+                    profile={true}
+                    src={profile}
+                    alt="내 정보 아이콘"
+                  />
                   <LinkStyle to="/myPage">내 정보</LinkStyle>
                 </MyMenuLi>
                 <MyMenuLi>
