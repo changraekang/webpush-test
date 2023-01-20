@@ -310,6 +310,7 @@ export default function MakePush() {
   };
   const handleDirectCheckRadio = () => {
     isDirectCheck ? setIsDirectCheck(false) : setIsDirectCheck(true);
+    console.log(thisClock.slice(0, 2) - 9 + thisClock.slice(2), "시간");
     setIsReserveCheck(false);
   };
   const handleReserveCheckRadio = () => {
@@ -477,7 +478,14 @@ export default function MakePush() {
       return alert("Please select publish type");
     }
     if (isDirectCheck) {
-      inputs.date = thisMonth + " " + (thisClock - 9);
+      let time;
+      if (thisClock.slice(0, 2) - 9 > 10) {
+        time = thisClock.slice(0, 2) - 9;
+      } else {
+        time = "0" + thisClock.slice(0, 2) - 9;
+      }
+      inputs.date =
+        thisMonth + "0" + thisClock.slice(0, 2) - 9 + thisClock.slice(2);
     }
     if (isReserveCheck) {
       if (submitDate.slice(0, 10) === thisMonth) {
@@ -501,11 +509,10 @@ export default function MakePush() {
       content: inputs.content,
       sendType: "advertising",
       link: inputs.link,
-      // sendTime: inputs.date,
-      sendTime: inputs.date,
+      sendTime: "2023-01-20 00:00",
       iid: iid,
     };
-    console.log(data, "data");
+    console.log(inputs.date, "data");
     formData.append(
       "request",
       new Blob([JSON.stringify(data)], { type: "application/json" })
@@ -719,9 +726,11 @@ export default function MakePush() {
                   ref={iconInputRef}
                   onChange={handleUploadIcon}
                 />
-                <RegisterIconButton handleUploadIcon={onIconInputBtnClick}>
-                  아이콘 등록
-                </RegisterIconButton>
+                {myPushProject.expiryDate ? null : (
+                  <RegisterIconButton handleUploadIcon={onIconInputBtnClick}>
+                    아이콘 등록
+                  </RegisterIconButton>
+                )}
               </WrapMessage>
             </PushBox>
             <PushBox>
@@ -782,6 +791,7 @@ export default function MakePush() {
             title &&
             link &&
             myPushProject.pid &&
+            !myPushProject.expiryDate &&
             (isMobileCheck || isWebCheck) &&
             (isDirectCheck || isReserveCheck) && (
               <ActivePushButton handleSubmit={onClickSubmit}>
@@ -792,6 +802,7 @@ export default function MakePush() {
             !title ||
             !link ||
             !myPushProject.pid ||
+            myPushProject.expiryDate ||
             (!isMobileCheck && !isWebCheck) ||
             (!isDirectCheck && !isReserveCheck)) && (
             <InactivePushButton>발송</InactivePushButton>

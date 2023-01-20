@@ -18,6 +18,7 @@ import {
   grey4,
   grey5,
   grey6,
+  primary1,
 } from "../constants/color";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -210,6 +211,19 @@ const ProjectOptions = styled.li`
     border-bottom: 3px solid ${primary4};
   }
 `;
+const ProjectEXpiredOptions = styled.li`
+  padding: 6px 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: ${primary1};
+  background-color: ${grey4};
+  border-bottom: 3px solid ${grey1};
+  border-radius: 6px;
+  cursor: pointer;
+  &:hover {
+    border-bottom: 3px solid ${primary4};
+  }
+`;
 const ProjectSelectOptions = styled.button`
   padding: 6px 8px;
   font-size: 14px;
@@ -217,6 +231,15 @@ const ProjectSelectOptions = styled.button`
   border-radius: 6px;
   color: ${grey1};
   background-color: ${primary4};
+  cursor: pointer;
+`;
+const ProjectExpiredSelectOptions = styled.button`
+  padding: 6px 8px;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 6px;
+  color: ${grey1};
+  background-color: ${grey10};
   cursor: pointer;
 `;
 
@@ -313,13 +336,20 @@ export default function Layout({ children }) {
   const handleOpenMyMenu = () => {
     !isOpenMyMenu ? setIsOpenMyMenu(true) : setIsOpenMyMenu(false);
   };
-  const handlePushProject = (categoryCode, pid, name, projectUrl) => {
+  const handlePushProject = (
+    categoryCode,
+    pid,
+    name,
+    projectUrl,
+    expiryDate
+  ) => {
     handleOpenPushProject();
     let body = {
       categoryCode: categoryCode,
       projectUrl: projectUrl,
       pid: pid,
       name: name,
+      expiryDate: expiryDate,
     };
     setMyPushProject(body);
   };
@@ -402,28 +432,67 @@ export default function Layout({ children }) {
       <WrapRight>
         <TopHeader>
           <ProLi>
-            {myProject.map(({ categoryCode, pid, name, projectUrl }) => {
-              if (pid !== myPushProject.pid) {
-                return (
-                  <li
-                    key={pid}
-                    onClick={() =>
-                      handlePushProject(categoryCode, pid, name, projectUrl)
-                    }
-                  >
-                    <button>
-                      <ProjectOptions>{name}</ProjectOptions>
-                    </button>
-                  </li>
-                );
-              } else {
-                return (
-                  <li key={pid}>
-                    <ProjectSelectOptions>{name}</ProjectSelectOptions>
-                  </li>
-                );
+            {myProject.map(
+              ({ categoryCode, pid, name, projectUrl, expiryDate }) => {
+                if (expiryDate) {
+                  if (pid !== myPushProject.pid) {
+                    return (
+                      <li
+                        key={pid}
+                        onClick={() =>
+                          handlePushProject(
+                            categoryCode,
+                            pid,
+                            name,
+                            projectUrl,
+                            expiryDate
+                          )
+                        }
+                      >
+                        <button>
+                          <ProjectEXpiredOptions>{name}</ProjectEXpiredOptions>
+                        </button>
+                      </li>
+                    );
+                  } else {
+                    return (
+                      <li key={pid}>
+                        <ProjectExpiredSelectOptions>
+                          {name}
+                        </ProjectExpiredSelectOptions>
+                      </li>
+                    );
+                  }
+                } else {
+                  if (pid !== myPushProject.pid) {
+                    return (
+                      <li
+                        key={pid}
+                        onClick={() =>
+                          handlePushProject(
+                            categoryCode,
+                            pid,
+                            name,
+                            projectUrl,
+                            expiryDate
+                          )
+                        }
+                      >
+                        <button>
+                          <ProjectOptions>{name}</ProjectOptions>
+                        </button>
+                      </li>
+                    );
+                  } else {
+                    return (
+                      <li key={pid}>
+                        <ProjectSelectOptions>{name}</ProjectSelectOptions>
+                      </li>
+                    );
+                  }
+                }
               }
-            })}
+            )}
             <Icon src={plus} alt="plus" onClick={handleAddProject} />
             <Icon
               src={settingHomepage}

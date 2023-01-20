@@ -262,7 +262,7 @@ const PushList = () => {
               <DetailMessage>발송완료</DetailMessage>
             )}
             {item.state === "waiting" && <DetailMessage>예약중</DetailMessage>}
-            {item.state === "shipping" && <DetailMessage>전달중</DetailMessage>}
+            {item.state === "shipping" && <DetailMessage>진행중</DetailMessage>}
             {item.state === "failed" && <DetailMessage>실패</DetailMessage>}
             <DetailMessage>
               {item.title.length > 20
@@ -289,40 +289,42 @@ const PushList = () => {
   };
   const renderShippingPush = () => {
     return currentPosts.map((item, index) => {
-      return (
-        <PushContentListWrapper key={item.mid}>
-          <PushDetailListWrapper
-            onClick={() => navigate(`/pushdetail/${item.mid}`)}
-          >
-            <DetailMessage>{item.state}</DetailMessage>
-            <DetailMessage>{item.pushType}</DetailMessage>
+      if (item.state === "shipping") {
+        return (
+          <PushContentListWrapper key={item.mid}>
+            <PushDetailListWrapper
+              onClick={() => navigate(`/pushdetail/${item.mid}`)}
+            >
+              <DetailMessage>진행중</DetailMessage>
+              <DetailMessage>{item.pushType}</DetailMessage>
+              <DetailMessage>
+                {item.title.length > 20
+                  ? item.title.substring(0, 20) + "..."
+                  : item.title}
+              </DetailMessage>
+              <DetailMessage>
+                {item.content.length > 20
+                  ? item.content.substring(0, 20) + "..."
+                  : item.content}
+              </DetailMessage>
+              <DetailMessage>
+                {item.sendTime.replace("T", " ").substring(0, 16)}
+              </DetailMessage>
+            </PushDetailListWrapper>
             <DetailMessage>
-              {item.title.length > 20
-                ? item.title.substring(0, 20) + "..."
-                : item.title}
+              <ActiveDeletePushButton
+                handleSubmit={() => handleSubmit(item.mid)}
+              >
+                삭제
+              </ActiveDeletePushButton>
             </DetailMessage>
-            <DetailMessage>
-              {item.content.length > 20
-                ? item.content.substring(0, 20) + "..."
-                : item.content}
-            </DetailMessage>
-            <DetailMessage>
-              {item.sendTime.replace("T", " ").substring(0, 16)}
-            </DetailMessage>
-          </PushDetailListWrapper>
-          <DetailMessage>
-            <ActiveDeletePushButton handleSubmit={() => handleSubmit(item.mid)}>
-              삭제
-            </ActiveDeletePushButton>
-          </DetailMessage>
-        </PushContentListWrapper>
-      );
+          </PushContentListWrapper>
+        );
+      }
     });
   };
   const renderWaitingPush = () => {
     return currentPosts.map((item, index) => {
-      console.log(item.sendTime < koreaNow, "보낸 날짜");
-      console.log(koreaNow, "현재 날짜");
       if (item.state === "waiting") {
         return (
           <PushContentListWrapper key={item.mid}>
@@ -359,15 +361,49 @@ const PushList = () => {
   };
   const renderCompletePush = () => {
     return currentPosts.map((item, index) => {
-      console.log(item.sendTime < koreaNow, "보낸 날짜");
-      console.log(koreaNow, "현재 날짜");
       if (item.state === "complete") {
         return (
           <PushContentListWrapper key={item.mid}>
             <PushDetailListWrapper
               onClick={() => navigate(`/pushdetail/${item.mid}`)}
             >
-              <DetailMessage>예약중</DetailMessage>
+              <DetailMessage>발송완료</DetailMessage>
+              <DetailMessage>{item.pushType}</DetailMessage>
+              <DetailMessage>
+                {item.title.length > 20
+                  ? item.title.substring(0, 20) + "..."
+                  : item.title}
+              </DetailMessage>
+              <DetailMessage>
+                {item.content.length > 20
+                  ? item.content.substring(0, 20) + "..."
+                  : item.content}
+              </DetailMessage>
+              <DetailMessage>
+                {item.sendTime.replace("T", " ").substring(0, 16)}
+              </DetailMessage>
+            </PushDetailListWrapper>
+            <DetailMessage>
+              <ActiveDeletePushButton
+                handleSubmit={() => handleSubmit(item.mid)}
+              >
+                삭제
+              </ActiveDeletePushButton>
+            </DetailMessage>
+          </PushContentListWrapper>
+        );
+      }
+    });
+  };
+  const renderFailedPush = () => {
+    return currentPosts.map((item, index) => {
+      if (item.state === "failed") {
+        return (
+          <PushContentListWrapper key={item.mid}>
+            <PushDetailListWrapper
+              onClick={() => navigate(`/pushdetail/${item.mid}`)}
+            >
+              <DetailMessage>실패</DetailMessage>
               <DetailMessage>{item.pushType}</DetailMessage>
               <DetailMessage>
                 {item.title.length > 20
@@ -469,8 +505,8 @@ const PushList = () => {
               renderAllPush()}
             {isReserve && !isAll && renderWaitingPush()}
             {isComplete && !isAll && renderCompletePush()}
-            {isProceed && !isAll && renderWaitingPush()}
-            {isFailed && !isAll && renderWaitingPush()}
+            {isProceed && !isAll && renderShippingPush()}
+            {isFailed && !isAll && renderFailedPush()}
           </PushListWrapper>
         </PushListBoxs>
         <Pagination
