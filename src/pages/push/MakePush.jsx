@@ -11,6 +11,7 @@ import {
   primary4,
   grey1,
 } from "../../constants/color";
+import chrome from "../../assets/images/chrome_logo.png"
 import activeCheck from "../../assets/images/active-check.png";
 import Rectangle from "../../assets/images/demoBox.png";
 import inActiveCheck from "../../assets/images/inactive-check.png";
@@ -171,8 +172,8 @@ const RadioLi = styled.li`
 `;
 const SubMessage = styled.p`
   color: ${grey5};
-  padding-top: 20px;
-  padding-bottom: 60px;
+  padding-top: 6px;
+  padding-bottom: 15px;
 `;
 const LinkMessage = styled.p`
   color: ${grey5};
@@ -191,9 +192,10 @@ const ReserveWrapper = styled.div`
 `;
 
 const DemoImg = styled.img`
-  width: 130px;
-  height: 65px;
-  object-fit: contain;
+  width: 100%;
+  height: 250px;
+  border-radius: 8px 8px 0  0;
+  /* object-fit: contain; */
 `;
 
 const SelectIconDiv = styled.div`
@@ -236,6 +238,24 @@ const AlignIcon = styled.div`
   gap: 8px;
   margin: 20px 0 0 29px;
 `;
+
+const WrapDemoContent = styled.div`
+  padding: 20px;
+`
+
+const WrapBrowserImg = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`
+const ChromeImg = styled.img`
+  width: 23px;
+`
+const WrapIconDiv = styled.div`
+  width: 60px;
+  height: 60px;
+  background: ${grey4};
+`
 export default function MakePush() {
   const [thisClock, setThisClock] = useState("");
   const [thisMonth, setThisMonth] = useState("");
@@ -510,7 +530,7 @@ export default function MakePush() {
       content: inputs.content,
       sendType: "advertising",
       link: inputs.link,
-      sendTime: "2023-01-12 15:44",
+      sendTime: inputs.date,
       iid: iid,
     };
     console.log(inputs.date, "data");
@@ -778,9 +798,22 @@ export default function MakePush() {
                     alt="데모이미지"
                   />
                   <DemoSection>
-                    <SubDemoTitle>{inputs.title}</SubDemoTitle>
-                    <SubMessage>{inputs.content}</SubMessage>
-                    <LinkMessage>{inputs.link}</LinkMessage>
+                    <WrapDemoContent>
+                      <WrapBrowserImg>
+                        <ChromeImg src={chrome} alt="크롬 로고" />
+                        <p>Chrome</p>
+                      </WrapBrowserImg>
+                      <div style={{display:"flex", gap:"18px", alignItems:"flex-start", "marginTop" : "20px"}}>
+                        <WrapIconDiv>
+                          <img style={{width:"100%"}} src={iconUrl} alt="" />
+                        </WrapIconDiv>
+                        <div  style={{display:"flex", flexDirection:"column"}}>
+                          <SubDemoTitle>{inputs.title}</SubDemoTitle>
+                          <SubMessage>{inputs.content}</SubMessage>
+                          <LinkMessage>{inputs.link}</LinkMessage>
+                        </div>
+                      </div>
+                    </WrapDemoContent>
                   </DemoSection>
                 </DemoBox>
               </DemoWrapperBox>
