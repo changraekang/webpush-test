@@ -8,13 +8,13 @@ const Box = styled.div`
   border-radius: 16px;
 `;
 const DemoShowBox = styled.div`
-  display: flex;
-  gap: 20px;
-  padding: 32px;
   width: 100%;
   margin-left: 0;
   box-shadow: 0px -3px 16px rgba(0, 0, 0, 0.25);
-  border-radius: 16px;
+  /* display: flex; */
+  /* gap: 20px; */
+  /* padding: 32px; */
+  border-radius: 8px;
 `;
 
 export function DemoWrapBox({ children }) {
