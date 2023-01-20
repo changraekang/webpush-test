@@ -24,7 +24,8 @@ const Button = styled.button`
 const DeleteButton = styled.button`
   display: block;
   border: none;
-  width: 40px;
+  width: 60px;
+  margin-right: 10px;
   cursor: pointer;
   font-size: 12px;
   border-radius: 8px;
