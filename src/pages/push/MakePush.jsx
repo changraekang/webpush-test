@@ -283,7 +283,7 @@ export default function MakePush() {
     setInterval(getClock, 20000);
   }, []);
 
-  const [isWebCheck, setisWebCheck] = useState(false);
+  const [isWebCheck, setisWebCheck] = useState(true);
   const [isMobileCheck, setisMobileCheck] = useState(false);
   const [isModalOpen, setisModalOpen] = useState(false);
   const [isAdsCheck, setIsAdsCheck] = useState(false);
@@ -595,7 +595,7 @@ export default function MakePush() {
                   {isMobileCheck && (
                     <img src={activeCheck} alt="모바일푸시 체크 아이콘" />
                   )}
-                  모바일 웹 푸시
+                  모바일 앱 푸시
                 </RadioLi>
               </RadioList>
             </PushBox>
