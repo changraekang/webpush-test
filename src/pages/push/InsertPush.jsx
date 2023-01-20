@@ -5,7 +5,7 @@ import { InputGroup } from '../../components/inputs/InputGroups'
 import UpdateProfile from '../../components/buttons/ProfileButtons';
 import { instanceAxios } from '../../api/axios';
 import { useEffect, useState } from 'react';
-import { grey1, grey4, primary4, error3 } from "../../constants/color";
+import { grey1, grey4, primary4, error3, grey3, grey8, grey7 } from "../../constants/color";
 import {SelectedHomepage, SelectHomepage, AfterCopy, BeforeCopy} from "../../components/buttons/HompageButtons";
 import { useRecoilState } from "recoil";
 import { MyCategory, MyProject, MyPushProject } from "../../atom/Atom";
@@ -55,6 +55,15 @@ const WrapHomepages = styled.ul`
  const GetScript = styled.button`
   color: ${error3};
   font-weight: 600;
+ `
+
+ const TxtBox = styled.div`
+  width: fit-content;
+  background-color: ${grey3};
+  border-radius: 8px;
+  padding: 20px;
+  font-size: 14px;
+  color: ${grey8};
  `
 
 export default function InsertPush() {
@@ -157,9 +166,11 @@ export default function InsertPush() {
           id='script' 
           value={script}
           /> */}
-          <div>
-            {script.split(' ')}
-          </div>
+          <TxtBox>
+            <p>
+              {script.split(' ')}
+            </p>
+          </TxtBox>
         </WrapInputs>
         <WrapButton>
             {!script && <BeforeCopy>복사하기</BeforeCopy>}
