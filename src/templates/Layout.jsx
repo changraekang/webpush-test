@@ -21,7 +21,7 @@ import {
   primary1,
 } from "../constants/color";
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { instanceAxios } from "../api/axios";
 import { deviceDetect } from "react-device-detect";
 import {
@@ -261,7 +261,8 @@ export default function Layout({ children }) {
   const [myProfile, setMyProfile] = useRecoilState(MyProfile);
   const [myProject, setMyProject] = useRecoilState(MyProject);
   const [myPushProject, setMyPushProject] = useRecoilState(MyPushProject);
-
+  const para = document.location.href;
+  const params = para.search("pushdetail");
   const requestAccessToken = async () => {
     try {
       const response = await instanceAxios.post("/auth/refresh", {
@@ -325,6 +326,7 @@ export default function Layout({ children }) {
     }
     getCategory();
     requestAccessToken(refreshToken);
+    console.log(params, "주소");
   }, []);
   const handleOpenNav = () => {
     !isOpenNav ? setIsOpenNav(true) : setIsOpenNav(false);
@@ -434,7 +436,9 @@ export default function Layout({ children }) {
           <ProLi>
             {myProject.map(
               ({ categoryCode, pid, name, projectUrl, expiryDate }) => {
-                if (expiryDate) {
+                if (params > 0) {
+                  return null;
+                } else if (expiryDate) {
                   if (pid !== myPushProject.pid) {
                     return (
                       <li
