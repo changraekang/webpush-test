@@ -7,7 +7,7 @@ const Button = styled.button`
   width: 100%;
   width: ${(props) => (props.delete ? `35px` : null)};
   padding: 16px;
-  cursor: pointer;
+  cursor: ${(props) => (props.inactive ? `none` : `pointer`)};
   font-size: 24px;
   border-radius: 8px;
   background: ${(props) => (props.normal ? `${grey1}` : null)};
@@ -64,15 +64,17 @@ const ImageButton = styled.button`
   width: 150px;
   padding: 10px;
   margin: 15px 0 8px 15px;
-  margin-top: ${props => props.delete ? "-1px" : null};
+  margin-top: ${(props) => (props.delete ? "-1px" : null)};
   cursor: pointer;
   font-size: 16px;
   border-radius: 8px;
-  color:  ${props => props.delete ? `${error3}` : `${primary4}`};
-  border: ${props => props.delete ? `1px solid ${error3}` : `1px solid ${primary4}`};
+  color: ${(props) => (props.delete ? `${error3}` : `${primary4}`)};
+  border: ${(props) =>
+    props.delete ? `1px solid ${error3}` : `1px solid ${primary4}`};
 
   &:hover {
-    background-color: ${props => props.delete ? `${error3}` : `${primary4}`};
+    background-color: ${(props) =>
+      props.delete ? `${error3}` : `${primary4}`};
     color: ${grey1};
   }
 `;
@@ -135,5 +137,5 @@ export {
   RegisterIconButton,
   ActiveDeletePushButton,
   ActiveEditPushButton,
-  DeleteIconButton
+  DeleteIconButton,
 };
