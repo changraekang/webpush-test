@@ -158,11 +158,11 @@ const ProjectModal = (props) => {
       code: cat,
     };
     try {
-      const response = await instanceAxios.post("/project/add", body);
+      const response = await instanceAxios.post("/add", body);
       if (response.status === 200) {
         const checkProject = async () => {
           try {
-            const response = await instanceAxios.get("/project/all");
+            const response = await instanceAxios.get("/all");
             if (response.status === 200) {
               setMyProject(response.data);
               setMyPushProject(response.data[0]);
@@ -182,7 +182,7 @@ const ProjectModal = (props) => {
     }
   };
   const handleNext = () => {
-    if(url.includes('https://')) {
+    if (url.includes("https://")) {
       setStep(2);
     } else {
       alert('홈페이지 주소는 "https://" 가 필요합니다.🥹');

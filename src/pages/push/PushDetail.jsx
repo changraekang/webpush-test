@@ -489,7 +489,6 @@ export default function PushDetail() {
       requestIconAll();
       if (myPushProject.expiryDate) {
         alert("삭제예정 홈페이지입니다");
-        navigate("/dashboard");
       }
     }
   }, [myPushProject]);
@@ -587,13 +586,12 @@ export default function PushDetail() {
       <TitleWrapper>
         <WrapHomepages>
           {myPushProject.name ? myPushProject.name : "프로젝트를 선택해주세요"}
+          {myPushProject.expiryDate ? (
+            <> {myPushProject.expiryDate.slice(0, 10)}에 삭제 예정입니다</>
+          ) : null}
         </WrapHomepages>
         <PageTitle>PUSH 수정 </PageTitle>
-        {myPushProject.expiryDate ? (
-          <> {myPushProject.expiryDate.slice(0, 10)}에 삭제 예정입니다</>
-        ) : (
-          <Message>고객들에게 날릴 웹푸시를 수정하는 페이지입니다.</Message>
-        )}
+        <Message>고객들에게 날릴 웹푸시를 수정하는 페이지입니다.</Message>
         {myPushProject.expiryDate ? null : (
           <ActiveEditPushButton handleSubmit={onClickChange}>
             수정하기
@@ -716,9 +714,11 @@ export default function PushDetail() {
                   ref={imageInputRef}
                   onChange={handleUploadImage}
                 ></ImageInput>
-                <RegisterImageButton handleUploadImage={onImgInputBtnClick}>
-                  이미지 등록
-                </RegisterImageButton>
+                {myPushProject.expiryDate ? null : (
+                  <RegisterImageButton handleUploadImage={onImgInputBtnClick}>
+                    이미지 등록
+                  </RegisterImageButton>
+                )}
               </WrapMessage>
               {/* 아이콘!!!! 🐰 */}
               <WrapMessage icon>

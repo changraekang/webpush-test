@@ -305,7 +305,7 @@ export default function Layout({ children }) {
 
     const checkProject = async () => {
       try {
-        const response = await instanceAxios.get("/project/all");
+        const response = await instanceAxios.get("/all");
         if (response.status === 200) {
           setMyProject(response.data);
           if (response.data.length === 0) {
@@ -436,7 +436,7 @@ export default function Layout({ children }) {
           <ProLi>
             {myProject.map(
               ({ categoryCode, pid, name, projectUrl, expiryDate }) => {
-                if (params > 0) {
+                if (params < -3) {
                   return null;
                 } else if (expiryDate) {
                   if (pid !== myPushProject.pid) {

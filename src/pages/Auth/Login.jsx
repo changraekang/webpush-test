@@ -204,7 +204,7 @@ export default function Login() {
               setMyProfile(response.data);
               const checkProject = async () => {
                 try {
-                  const response = await instanceAxios.get("/project/all");
+                  const response = await instanceAxios.get("/all");
                   if (response.status === 200) {
                     setMyProject(response.data);
                     setMyPushProject(response.data[0]);

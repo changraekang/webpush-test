@@ -721,9 +721,11 @@ export default function MakePush() {
                       아이콘 등록
                     </RegisterIconButton>
                   )}
-                  <DeleteIconButton deleteIcon={deleteIcon}>
-                    아이콘 삭제
-                  </DeleteIconButton>
+                  {iconUrl ? (
+                    <DeleteIconButton deleteIcon={deleteIcon}>
+                      아이콘 삭제
+                    </DeleteIconButton>
+                  ) : null}
                 </IconButnsAlign>
               </WrapMessage>
             </PushBox>
