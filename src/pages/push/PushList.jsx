@@ -164,11 +164,11 @@ const PushList = () => {
     },
     {
       id: 3,
-      state: "failed",
+      state: "complete",
     },
     {
       id: 4,
-      state: "complete",
+      state: "failed",
     },
   ]);
 
@@ -308,6 +308,24 @@ const PushList = () => {
   const handleAllClick = () => {
     if (isAll === false) {
       setIsAll(true);
+      setFilterList([
+        {
+          id: 1,
+          state: "waiting",
+        },
+        {
+          id: 2,
+          state: "shipping",
+        },
+        {
+          id: 3,
+          state: "complete",
+        },
+        {
+          id: 4,
+          state: "failed",
+        },
+      ]);
       if (isProceed === false) {
         setIsProceed(true);
       }
