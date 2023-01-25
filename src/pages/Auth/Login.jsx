@@ -17,7 +17,7 @@ import {
 } from "../../components/buttons/AuthButtons";
 import activeCheck from "../../assets/images/active-radio.png";
 import inActiveCheck from "../../assets/images/inactive-radio.png";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import { deviceDetect, mobileModel, osName } from "react-device-detect";
@@ -26,7 +26,7 @@ import {
   setAccessTokenToCookie,
   setRefreshTokenToCookie,
 } from "../../cookie/controlCookie";
-import { InputGroup } from "../../components/inputs/InputGroups";
+import { InputGroup, InputValidateGroup } from "../../components/inputs/InputGroups";
 import { useRecoilState } from "recoil";
 import {
   MyProfile,
@@ -35,6 +35,8 @@ import {
   IsOpenModal,
 } from "../../atom/Atom";
 import Cookies from "universal-cookie";
+import { useCookies } from 'react-cookie';
+import { version } from "react";
 
 const Section = styled.section`
   display: flex;
@@ -139,19 +141,59 @@ const LinkStyle = styled(Link)`
   color: ${grey11};
 `;
 
+const RememberEmail = styled.input`
+  background:${props => props.active ? `url(${activeCheck})` : `url(${inActiveCheck})`};
+  /* background: url(${inActiveCheck}); */
+  background-repeat : no-repeat;
+  background-size : 15px;
+  width: 15px;
+  border: none;
+  cursor: pointer;
+  `
+
 //--------------로그인 페이지--------------------------
 export default function Login() {
   const navigate = useNavigate();
-  const [isCheck, setIsCheck] = useState(false);
+  const [cookies, setCookie, removeCookie] = useCookies(['rememberEmail']);
   const [email, setEmail] = useState("");
+  const [isCheck, setIsCheck] = useState(false);
   const [password, setPassword] = useState("");
   const [myProfile, setMyProfile] = useRecoilState(MyProfile);
   const [myProject, setMyProject] = useRecoilState(MyProject);
   const [myPushProject, setMyPushProject] = useRecoilState(MyPushProject);
   const [isOpenMobal, setIsOpenModal] = useRecoilState(IsOpenModal);
-  const handleCheckRadio = () => {
+  
+  // 처음 페이지 진입
+  useEffect(() => {
+    if(cookies.rememberEmail !== undefined) {
+      setEmail(cookies.rememberEmail);
+      setIsCheck(true);
+    } else {
+      setIsCheck(false);
+      removeCookie('rememberEmail');
+    }
+  }, [])
+
+  
+  console.log(isCheck, "isCheck");
+  console.log(cookies.rememberEmail, "cookies.rememberEmail");
+  let today = new Date;
+  today.setDate(today.getDate() + 7);
+  console.log(today)
+  const handleEmailValue = useCallback(
+    (e) => {
+      setEmail(e.target.value);
+      setCookie('rememberEmail', email, {expires: today}); 
+    }, [email]) 
+  
+  const handleCheckBox = () => {
     isCheck ? setIsCheck(false) : setIsCheck(true);
-  };
+    if(isCheck) {
+      removeCookie('rememberEmail');
+    } else {
+      setCookie('rememberEmail', email, {expires: today});
+    }
+  }
 
   const handleGoSignup = () => {
     // e.preventDefault();
@@ -254,8 +296,8 @@ export default function Login() {
             <form action="post">
               <IDInputWrap>
                 <SubTitle>아이디</SubTitle>
-                <InputGroup
-                  setValue={setEmail}
+                <InputValidateGroup
+                  setValue={handleEmailValue}
                   value={email}
                   type="text"
                   placeholder="이메일을 입력하세요"
@@ -272,12 +314,22 @@ export default function Login() {
                 />
               </PwdInputWrap>
               <RadioList>
-                <RadioLi onClick={handleCheckRadio}>
+                <RadioLi>
                   {!isCheck && (
-                    <img src={inActiveCheck} alt="아이디저장하기 체크 아이콘" />
+                    <RememberEmail 
+                    type="text" 
+                    readOnly
+                    checked={isCheck} 
+                    onClick={handleCheckBox}/>
+                    // <img src={inActiveCheck} alt="아이디저장하기 체크 아이콘"  />
                   )}
                   {isCheck && (
-                    <img src={activeCheck} alt="아이디저장하기 체크 아이콘" />
+                    <RememberEmail active 
+                    type="text" 
+                    readOnly
+                    checked={isCheck} 
+                    onClick={handleCheckBox}/>
+                    // <img src={activeCheck} alt="아이디저장하기 체크 아이콘" />
                   )}
                   아이디 저장
                 </RadioLi>
