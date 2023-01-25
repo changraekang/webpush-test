@@ -273,6 +273,7 @@ export default function PushDetail() {
         {}
       );
       if (response.status === 200) {
+        console.log(response.data);
         setPushDetail(response.data);
         setInputs({
           title: response.data.title,
@@ -593,12 +594,14 @@ export default function PushDetail() {
             <> {myPushProject.expiryDate.slice(0, 10)}에 삭제 예정입니다</>
           ) : null}
         </WrapHomepages>
-        <PageTitle>PUSH 수정 </PageTitle>
-        <Message>고객들에게 날린 웹푸시를 수정하는 페이지입니다.</Message>
         {myPushProject.expiryDate ? null : (
-          <ActiveEditPushButton handleSubmit={onClickChange}>
-            수정하기
-          </ActiveEditPushButton>
+          <>
+            <PageTitle>PUSH 수정 </PageTitle>
+            <Message>고객들에게 날린 웹푸시를 수정하는 페이지입니다.</Message>
+            <ActiveEditPushButton handleSubmit={onClickChange}>
+              수정하기
+            </ActiveEditPushButton>
+          </>
         )}
       </TitleWrapper>
       <PageWrapper>
@@ -701,28 +704,29 @@ export default function PushDetail() {
                   style={{ backgroundColor: isChange ? `${grey4}` : null }}
                 ></Input>
               </WrapMessage>
-              <WrapMessage>
-                <SubTitle>이미지</SubTitle>
-                <ImageInput
-                  placeholder="이미지를 등록하세요"
-                  value={previewImg ? previewImg.name : ""}
-                  name="image"
-                  readOnly={true}
-                ></ImageInput>
-                <ImageInput
-                  placeholder="이미지를 등록하세요"
-                  style={{ display: "none" }}
-                  type="file"
-                  accept="image/*"
-                  ref={imageInputRef}
-                  onChange={handleUploadImage}
-                ></ImageInput>
-                {myPushProject.expiryDate ? null : (
+
+              {myPushProject.expiryDate ? null : (
+                <WrapMessage>
+                  <SubTitle>이미지</SubTitle>
+                  <ImageInput
+                    placeholder="이미지를 등록하세요"
+                    value={previewImg ? previewImg.name : ""}
+                    name="image"
+                    readOnly={true}
+                  ></ImageInput>
+                  <ImageInput
+                    placeholder="이미지를 등록하세요"
+                    style={{ display: "none" }}
+                    type="file"
+                    accept="image/*"
+                    ref={imageInputRef}
+                    onChange={handleUploadImage}
+                  ></ImageInput>
                   <RegisterImageButton handleUploadImage={onImgInputBtnClick}>
                     이미지 등록
                   </RegisterImageButton>
-                )}
-              </WrapMessage>
+                </WrapMessage>
+              )}
               {/* 아이콘!!!! 🐰 */}
               <WrapMessage icon>
                 <SubTitle>아이콘</SubTitle>
@@ -759,45 +763,49 @@ export default function PushDetail() {
                       아이콘 등록
                     </RegisterIconButton>
                   )}
-                  <DeleteIconButton deleteIcon={deleteIcon}>
-                    아이콘 삭제
-                  </DeleteIconButton>
+                  {iconUrl ? (
+                    <DeleteIconButton deleteIcon={deleteIcon}>
+                      아이콘 삭제
+                    </DeleteIconButton>
+                  ) : null}
                 </IconButnsAlign>
               </WrapMessage>
             </PushBox>
-            <PushBox>
-              <Title>03.발송 유형</Title>
-              <RadioList>
-                <RadioLi onClick={handleDirectCheckRadio}>
-                  {!isDirectCheck && (
-                    <img src={inActiveCheck} alt="즉시발송 체크 아이콘" />
-                  )}
-                  {isDirectCheck && (
-                    <img src={activeCheck} alt="즉시발송 체크 아이콘" />
-                  )}
-                  즉시발송
-                </RadioLi>
-                <ReserveWrapper>
-                  <RadioLi onClick={handleReserveCheckRadio}>
-                    {!isReserveCheck && (
-                      <img src={inActiveCheck} alt="예약발송 체크 아이콘" />
+            {myPushProject.expiryDate ? null : (
+              <PushBox>
+                <Title>03.발송 유형</Title>
+                <RadioList>
+                  <RadioLi onClick={handleDirectCheckRadio}>
+                    {!isDirectCheck && (
+                      <img src={inActiveCheck} alt="즉시발송 체크 아이콘" />
                     )}
-                    {isReserveCheck && (
-                      <img src={activeCheck} alt="예약발송 체크 아이콘" />
+                    {isDirectCheck && (
+                      <img src={activeCheck} alt="즉시발송 체크 아이콘" />
                     )}
-                    예약발송
+                    즉시발송
                   </RadioLi>
-                  {isReserveCheck && (
-                    <InputDate
-                      type="datetime-local"
-                      value={submitDate ? submitDate : ReserveMin}
-                      onChange={handleInputDates}
-                      min={ReserveMin}
-                    ></InputDate>
-                  )}
-                </ReserveWrapper>
-              </RadioList>
-            </PushBox>
+                  <ReserveWrapper>
+                    <RadioLi onClick={handleReserveCheckRadio}>
+                      {!isReserveCheck && (
+                        <img src={inActiveCheck} alt="예약발송 체크 아이콘" />
+                      )}
+                      {isReserveCheck && (
+                        <img src={activeCheck} alt="예약발송 체크 아이콘" />
+                      )}
+                      예약발송
+                    </RadioLi>
+                    {isReserveCheck && (
+                      <InputDate
+                        type="datetime-local"
+                        value={submitDate ? submitDate : ReserveMin}
+                        onChange={handleInputDates}
+                        min={ReserveMin}
+                      ></InputDate>
+                    )}
+                  </ReserveWrapper>
+                </RadioList>
+              </PushBox>
+            )}
           </Section>
           <DemoSection>
             <DemoWrapBox>
@@ -805,7 +813,7 @@ export default function PushDetail() {
               <DemoWrapperBox>
                 <DemoBox>
                   <DemoImg
-                    src={demoImg ? demoImg : Rectangle}
+                    src={demoImg ? demoImg : inputs.image}
                     alt="데모이미지"
                   />
                   <DemoSection>
@@ -823,7 +831,11 @@ export default function PushDetail() {
                         }}
                       >
                         <WrapIconDiv>
-                          <img style={{ width: "100%" }} src={iconUrl} alt="" />
+                          <img
+                            style={{ width: "100%" }}
+                            src={iconUrl ? iconUrl : pushDetail.icon}
+                            alt=""
+                          />
                         </WrapIconDiv>
                         <div
                           style={{ display: "flex", flexDirection: "column" }}

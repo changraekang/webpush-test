@@ -108,7 +108,10 @@ export default function Homepage() {
   const updateHomePage = async (e) => {
     e.preventDefault();
     try {
-      const response = await instanceAxios.put(`/${pid}`, updateData);
+      const response = await instanceAxios.put(
+        `/${myPushProject.pid}`,
+        updateData
+      );
       console.log(response.data);
     } catch (err) {
       console.error(err);
@@ -119,7 +122,8 @@ export default function Homepage() {
     e.preventDefault();
     if (window.confirm("정말 홈페이지를 삭제하시겠습니까?")) {
       try {
-        const response = await instanceAxios.delete(`/${pid}`);
+        console.log(pid, "pid");
+        const response = await instanceAxios.delete(`/${myPushProject.pid}`);
         if (response.status === 200) {
           alert("성공적으로 삭제되었습니다.");
           console.log(response.data, "데이터 지우기⚠️");
