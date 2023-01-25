@@ -198,7 +198,6 @@ const PushList = () => {
     .slice(firstPostIndex, lastPostIndex);
   const arryByState = pushList.filter((item) => {
     for (var i = 0; i < filterList.length; i++) {
-      console.log(filterList[i].state, "필터키");
       if (item.state === filterList[i].state) return true;
     }
     return false;
@@ -309,24 +308,6 @@ const PushList = () => {
   const handleAllClick = () => {
     if (isAll === false) {
       setIsAll(true);
-      setFilterList([
-        {
-          id: 1,
-          state: "waiting",
-        },
-        {
-          id: 2,
-          state: "shipping",
-        },
-        {
-          id: 3,
-          state: "failed",
-        },
-        {
-          id: 4,
-          state: "complete",
-        },
-      ]);
       if (isProceed === false) {
         setIsProceed(true);
       }
