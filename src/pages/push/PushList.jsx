@@ -153,13 +153,39 @@ const PushList = () => {
   const [isAll, setIsAll] = useState(false);
   const [isFailed, setIsFailed] = useState(true);
   const [pushList, setPushList] = useState([]);
+  const [filterList, setFilterList] = useState([
+    {
+      id: 1,
+      state: "waiting",
+    },
+    {
+      id: 2,
+      state: "shipping",
+    },
+    {
+      id: 3,
+      state: "failed",
+    },
+    {
+      id: 4,
+      state: "complete",
+    },
+  ]);
 
   // 페이지네이션
   const [currentPage, setCurrrentPage] = useState(1);
   const [postsPerPage, setPostsPerPage] = useState(10);
   const lastPostIndex = currentPage * postsPerPage;
   const firstPostIndex = lastPostIndex - postsPerPage;
+
   const currentPosts = pushList
+    .filter((item) => {
+      for (var i = 0; i < filterList.length; i++) {
+        console.log(filterList[i].state, "필터키");
+        if (item.state === filterList[i].state) return true;
+      }
+      return false;
+    })
     .sort(function (a, b) {
       if (a.create_time > b.create_time) {
         return -1;
@@ -171,35 +197,13 @@ const PushList = () => {
       return 0;
     })
     .slice(firstPostIndex, lastPostIndex);
-  const WaitingPosts = pushList
-    .filter((item) => item.state === "waiting")
-    .sort(function (a, b) {
-      if (a.create_time > b.create_time) {
-        return -1;
-      }
-      if (a.create_time < b.create_time) {
-        return 1;
-      }
-      // a must be equal to b
-      return 0;
-    })
-    .slice(firstPostIndex, lastPostIndex);
-  const CompletePosts = pushList
-    .filter((item) => item.state === "complete")
-
-    .sort(function (a, b) {
-      if (a.create_time > b.create_time) {
-        return -1;
-      }
-      if (a.create_time < b.create_time) {
-        return 1;
-      }
-      // a must be equal to b
-      return 0;
-    })
-    .slice(firstPostIndex, lastPostIndex);
-  console.log(CompletePosts);
-
+  const arryByState = pushList.filter((item) => {
+    for (var i = 0; i < filterList.length; i++) {
+      console.log(filterList[i].state, "필터키");
+      if (item.state === filterList[i].state) return true;
+    }
+    return false;
+  });
   useEffect(() => {
     if (isReserve && isProceed && isComplete && isFailed) {
       setIsAll(true);
@@ -210,7 +214,6 @@ const PushList = () => {
   }, [isReserve, isProceed, isComplete, isFailed]);
   useEffect(() => {
     getPushList();
-    console.log(pushList, "푸시리스트");
   }, [myPushProject]);
   const getPushList = async () => {
     try {
@@ -243,9 +246,87 @@ const PushList = () => {
     }
   };
 
+  const handleReserve = () => {
+    if (isReserve) {
+      setIsReserve(false);
+      setFilterList(filterList.filter((user) => user.id !== 1));
+    } else {
+      setIsReserve(true);
+      setFilterList([
+        ...filterList,
+        {
+          id: 1,
+          state: "waiting",
+        },
+      ]);
+    }
+  };
+  const handleProceed = () => {
+    if (isProceed) {
+      setIsProceed(false);
+      setFilterList(filterList.filter((user) => user.id !== 2));
+    } else {
+      setIsProceed(true);
+      setFilterList([
+        ...filterList,
+        {
+          id: 2,
+          state: "shipping",
+        },
+      ]);
+    }
+  };
+  const handleComplete = () => {
+    if (isComplete) {
+      setIsComplete(false);
+      setFilterList(filterList.filter((user) => user.id !== 3));
+    } else {
+      setIsComplete(true);
+      setFilterList([
+        ...filterList,
+        {
+          id: 3,
+          state: "complete",
+        },
+      ]);
+    }
+  };
+  const handleFailed = () => {
+    if (isFailed) {
+      setIsFailed(false);
+      setFilterList(filterList.filter((user) => user.id !== 4));
+    } else {
+      setIsFailed(true);
+      setFilterList([
+        ...filterList,
+        {
+          id: 4,
+          state: "failed",
+        },
+      ]);
+    }
+  };
   const handleAllClick = () => {
     if (isAll === false) {
       setIsAll(true);
+      setFilterList([
+        {
+          id: 1,
+          state: "waiting",
+        },
+        {
+          id: 2,
+          state: "shipping",
+        },
+        {
+          id: 3,
+          state: "failed",
+        },
+        {
+          id: 4,
+          state: "complete",
+        },
+      ]);
       if (isProceed === false) {
         setIsProceed(true);
       }
@@ -259,6 +340,7 @@ const PushList = () => {
         setIsFailed(true);
       }
     } else {
+      setFilterList([]);
       setIsProceed(false);
       setIsComplete(false);
       setIsReserve(false);
@@ -305,162 +387,6 @@ const PushList = () => {
       );
     });
   };
-  const renderShippingPush = () => {
-    return currentPosts.map((item, index) => {
-      if (item.state === "shipping") {
-        return (
-          <PushContentListWrapper key={item.mid}>
-            <PushDetailListWrapper>
-              <DetailMessage>진행중</DetailMessage>
-              <DetailMessage>{item.pushType}</DetailMessage>
-              <DetailMessage>
-                {item.title.length > 20
-                  ? item.title.substring(0, 20) + "..."
-                  : item.title}
-              </DetailMessage>
-              <DetailMessage>
-                {item.content.length > 20
-                  ? item.content.substring(0, 20) + "..."
-                  : item.content}
-              </DetailMessage>
-              <DetailMessage>
-                {item.sendTime.replace("T", " ").substring(0, 16)}
-              </DetailMessage>
-            </PushDetailListWrapper>
-            <DetailMessage>
-              <ActiveDeletePushButton
-                handleSubmit={() => navigate(`/pushdetail/${item.mid}`)}
-              >
-                상세보기
-              </ActiveDeletePushButton>
-              <ActiveDeletePushButton
-                handleSubmit={() => handleSubmit(item.mid)}
-              >
-                삭제
-              </ActiveDeletePushButton>
-            </DetailMessage>
-          </PushContentListWrapper>
-        );
-      }
-    });
-  };
-  const renderWaitingPush = () => {
-    return WaitingPosts.map((item, index) => {
-      if (item.state === "waiting") {
-        return (
-          <PushContentListWrapper key={item.mid}>
-            <PushDetailListWrapper>
-              <DetailMessage>예약중</DetailMessage>
-              <DetailMessage>{item.pushType}</DetailMessage>
-              <DetailMessage>
-                {item.title.length > 20
-                  ? item.title.substring(0, 20) + "..."
-                  : item.title}
-              </DetailMessage>
-              <DetailMessage>
-                {item.content.length > 20
-                  ? item.content.substring(0, 20) + "..."
-                  : item.content}
-              </DetailMessage>
-              <DetailMessage>
-                {item.sendTime.replace("T", " ").substring(0, 16)}
-              </DetailMessage>
-            </PushDetailListWrapper>
-            <DetailMessage>
-              <ActiveDeletePushButton
-                handleSubmit={() => navigate(`/pushdetail/${item.mid}`)}
-              >
-                상세보기
-              </ActiveDeletePushButton>
-              <ActiveDeletePushButton
-                handleSubmit={() => handleSubmit(item.mid)}
-              >
-                삭제
-              </ActiveDeletePushButton>
-            </DetailMessage>
-          </PushContentListWrapper>
-        );
-      }
-    });
-  };
-  const renderCompletePush = () => {
-    return CompletePosts.map((item, index) => {
-      if (item.state === "complete") {
-        return (
-          <PushContentListWrapper key={item.mid}>
-            <PushDetailListWrapper>
-              <DetailMessage>발송완료</DetailMessage>
-              <DetailMessage>{item.pushType}</DetailMessage>
-              <DetailMessage>
-                {item.title.length > 20
-                  ? item.title.substring(0, 20) + "..."
-                  : item.title}
-              </DetailMessage>
-              <DetailMessage>
-                {item.content.length > 20
-                  ? item.content.substring(0, 20) + "..."
-                  : item.content}
-              </DetailMessage>
-              <DetailMessage>
-                {item.sendTime.replace("T", " ").substring(0, 16)}
-              </DetailMessage>
-            </PushDetailListWrapper>
-            <DetailMessage>
-              <ActiveDeletePushButton
-                handleSubmit={() => navigate(`/pushdetail/${item.mid}`)}
-              >
-                상세보기
-              </ActiveDeletePushButton>
-              <ActiveDeletePushButton
-                handleSubmit={() => handleSubmit(item.mid)}
-              >
-                삭제
-              </ActiveDeletePushButton>
-            </DetailMessage>
-          </PushContentListWrapper>
-        );
-      }
-    });
-  };
-  const renderFailedPush = () => {
-    return currentPosts.map((item, index) => {
-      if (item.state === "failed") {
-        return (
-          <PushContentListWrapper key={item.mid}>
-            <PushDetailListWrapper>
-              <DetailMessage>실패</DetailMessage>
-              <DetailMessage>{item.pushType}</DetailMessage>
-              <DetailMessage>
-                {item.title.length > 20
-                  ? item.title.substring(0, 20) + "..."
-                  : item.title}
-              </DetailMessage>
-              <DetailMessage>
-                {item.content.length > 20
-                  ? item.content.substring(0, 20) + "..."
-                  : item.content}
-              </DetailMessage>
-              <DetailMessage>
-                {item.sendTime.replace("T", " ").substring(0, 16)}
-              </DetailMessage>
-            </PushDetailListWrapper>
-            <DetailMessage>
-              <ActiveDeletePushButton
-                handleSubmit={() => navigate(`/pushdetail/${item.mid}`)}
-              >
-                상세보기
-              </ActiveDeletePushButton>
-              <ActiveDeletePushButton
-                handleSubmit={() => handleSubmit(item.mid)}
-              >
-                삭제
-              </ActiveDeletePushButton>
-            </DetailMessage>
-          </PushContentListWrapper>
-        );
-      }
-    });
-  };
   return (
     <Layout>
       <PageWrapper>
@@ -478,7 +404,7 @@ const PushList = () => {
                 {isAll && <img src={activeCheck} alt="웹푸시 체크 아이콘" />}
                 전체
               </RadioLi>
-              <RadioLi onClick={() => setIsReserve(!isReserve)}>
+              <RadioLi onClick={handleReserve}>
                 {!isReserve && (
                   <img src={inActiveCheck} alt="웹푸시 체크 아이콘" />
                 )}
@@ -487,7 +413,7 @@ const PushList = () => {
                 )}
                 예약중
               </RadioLi>
-              <RadioLi onClick={() => setIsProceed(!isProceed)}>
+              <RadioLi onClick={handleProceed}>
                 {!isProceed && (
                   <img src={inActiveCheck} alt="모바일푸시 체크 아이콘" />
                 )}
@@ -496,7 +422,7 @@ const PushList = () => {
                 )}
                 진행중
               </RadioLi>
-              <RadioLi onClick={() => setIsComplete(!isComplete)}>
+              <RadioLi onClick={handleComplete}>
                 {!isComplete && (
                   <img src={inActiveCheck} alt="모바일푸시 체크 아이콘" />
                 )}
@@ -505,7 +431,7 @@ const PushList = () => {
                 )}
                 발송완료
               </RadioLi>
-              <RadioLi onClick={() => setIsFailed(!isFailed)}>
+              <RadioLi onClick={handleFailed}>
                 {!isFailed && (
                   <img src={inActiveCheck} alt="모바일푸시 체크 아이콘" />
                 )}
@@ -528,19 +454,11 @@ const PushList = () => {
               </PushDetailListWrapper>
               <DetailMessage></DetailMessage>
             </PushContentListWrapper>
-            {isReserve &&
-              isComplete &&
-              isProceed &&
-              isFailed &&
-              renderAllPush()}
-            {isReserve && !isAll && renderWaitingPush()}
-            {isComplete && !isAll && renderCompletePush()}
-            {isProceed && !isAll && renderShippingPush()}
-            {isFailed && !isAll && renderFailedPush()}
+            {renderAllPush()}
           </PushListWrapper>
         </PushListBoxs>
         <Pagination
-          totalPost={pushList.length}
+          totalPost={arryByState.length}
           postsPerPage={postsPerPage}
           setCurrrentPage={setCurrrentPage}
         />
