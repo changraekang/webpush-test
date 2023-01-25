@@ -11,7 +11,7 @@ import {
   primary4,
   grey1,
 } from "../../constants/color";
-import chrome from "../../assets/images/chrome_logo.png"
+import chrome from "../../assets/images/chrome_logo.png";
 import activeCheck from "../../assets/images/active-check.png";
 import Rectangle from "../../assets/images/demoBox.png";
 import inActiveCheck from "../../assets/images/inactive-check.png";
@@ -31,6 +31,7 @@ import { getCookie } from "../../cookie/controlCookie";
 import { MyProject, MyPushProject } from "../../atom/Atom";
 import { useRecoilState } from "recoil";
 import Loading from "../../components/loading/Loading";
+import { useNavigate } from "react-router-dom";
 const TitleWrapper = styled.div`
   width: 100%;
   display: flex;
@@ -194,7 +195,7 @@ const ReserveWrapper = styled.div`
 const DemoImg = styled.img`
   width: 100%;
   height: 250px;
-  border-radius: 8px 8px 0  0;
+  border-radius: 8px 8px 0 0;
   /* object-fit: contain; */
 `;
 
@@ -225,28 +226,30 @@ const AlignIcon = styled.div`
 
 const WrapDemoContent = styled.div`
   padding: 20px;
-`
+`;
 
 const WrapBrowserImg = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
-`
+`;
 const ChromeImg = styled.img`
   width: 23px;
-`
+`;
 const WrapIconDiv = styled.div`
   width: 60px;
   height: 60px;
   background: ${grey4};
-`
+`;
 
 const IconButnsAlign = styled.div`
   display: flex;
   flex-direction: column;
   margin-top: 7px;
-`
+`;
 export default function MakePush() {
+  const navigate = useNavigate();
+
   const [thisClock, setThisClock] = useState("");
   const [thisMonth, setThisMonth] = useState("");
   const [ReserveMin, setReserveMin] = useState("");
@@ -462,9 +465,13 @@ export default function MakePush() {
   useEffect(() => {
     if (myPushProject) {
       requestIconAll();
+      if (myPushProject.expiryDate) {
+        alert("삭제예정 홈페이지입니다");
+        navigate("/dashboard");
+      }
     }
   }, [myPushProject]);
-  
+
   const handleIconSelect = (e) => {
     console.log(e.target.src);
     const imageSrc = e.target.src;
@@ -715,7 +722,7 @@ export default function MakePush() {
                     </RegisterIconButton>
                   )}
                   <DeleteIconButton deleteIcon={deleteIcon}>
-                      아이콘 삭제
+                    아이콘 삭제
                   </DeleteIconButton>
                 </IconButnsAlign>
               </WrapMessage>
@@ -769,11 +776,20 @@ export default function MakePush() {
                         <ChromeImg src={chrome} alt="크롬 로고" />
                         <p>Chrome</p>
                       </WrapBrowserImg>
-                      <div style={{display:"flex", gap:"18px", alignItems:"flex-start", "marginTop" : "20px"}}>
+                      <div
+                        style={{
+                          display: "flex",
+                          gap: "18px",
+                          alignItems: "flex-start",
+                          marginTop: "20px",
+                        }}
+                      >
                         <WrapIconDiv>
-                          <img style={{width:"100%"}} src={iconUrl} alt="" />
+                          <img style={{ width: "100%" }} src={iconUrl} alt="" />
                         </WrapIconDiv>
-                        <div  style={{display:"flex", flexDirection:"column"}}>
+                        <div
+                          style={{ display: "flex", flexDirection: "column" }}
+                        >
                           <SubDemoTitle>{inputs.title}</SubDemoTitle>
                           <SubMessage>{inputs.content}</SubMessage>
                           <LinkMessage>{inputs.link}</LinkMessage>

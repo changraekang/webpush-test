@@ -517,12 +517,18 @@ export default function PushDetail() {
   return (
     <Layout>
       <TitleWrapper>
-        <Message>고객들에게 날릴 웹푸시를 수정하는 페이지입니다.</Message>
+        {myPushProject.expiryDate ? (
+          <> {myPushProject.expiryDate.slice(0, 10)}에 삭제 예정입니다</>
+        ) : (
+          <Message>고객들에게 날릴 웹푸시를 수정하는 페이지입니다.</Message>
+        )}
         <WrapTitle>
           <PageTitle>PUSH 상세 </PageTitle>
-          <ActiveEditPushButton handleSubmit={onClickChange}>
-            수정하기
-          </ActiveEditPushButton>
+          {myPushProject.expiryDate ? null : (
+            <ActiveEditPushButton handleSubmit={onClickChange}>
+              수정하기
+            </ActiveEditPushButton>
+          )}
         </WrapTitle>
       </TitleWrapper>
       <PageWrapper>
@@ -664,26 +670,28 @@ export default function PushDetail() {
             </DemoWrapBox>
           </DemoSection>
         </SectionWrapper>
-        <ButtonWrapper>
-          {content &&
-            title &&
-            link &&
-            myPushProject.pid &&
-            (isMobileCheck || isWebCheck) &&
-            (isDirectCheck || isReserveCheck) && (
-              <ActivePushButton handleSubmit={onClickSubmit}>
-                발송
-              </ActivePushButton>
+        {myPushProject.expiryDate ? null : (
+          <ButtonWrapper>
+            {content &&
+              title &&
+              link &&
+              myPushProject.pid &&
+              (isMobileCheck || isWebCheck) &&
+              (isDirectCheck || isReserveCheck) && (
+                <ActivePushButton handleSubmit={onClickSubmit}>
+                  발송
+                </ActivePushButton>
+              )}
+            {(!content ||
+              !title ||
+              !link ||
+              !myPushProject.pid ||
+              (!isMobileCheck && !isWebCheck) ||
+              (!isDirectCheck && !isReserveCheck)) && (
+              <InactivePushButton>발송</InactivePushButton>
             )}
-          {(!content ||
-            !title ||
-            !link ||
-            !myPushProject.pid ||
-            (!isMobileCheck && !isWebCheck) ||
-            (!isDirectCheck && !isReserveCheck)) && (
-            <InactivePushButton>발송</InactivePushButton>
-          )}
-        </ButtonWrapper>
+          </ButtonWrapper>
+        )}
       </PageWrapper>
     </Layout>
   );

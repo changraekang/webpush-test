@@ -391,6 +391,9 @@ const PushList = () => {
       <PageWrapper>
         <Title>
           {myPushProject.name ? myPushProject.name : "프로젝트를 선택해주세요"}
+          {myPushProject.expiryDate ? (
+            <> {myPushProject.expiryDate.slice(0, 10)}에 삭제 예정입니다</>
+          ) : null}
         </Title>
         <PageTitle>PUSH 리스트 </PageTitle>
 
