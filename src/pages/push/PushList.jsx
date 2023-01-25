@@ -181,7 +181,6 @@ const PushList = () => {
   const currentPosts = pushList
     .filter((item) => {
       for (var i = 0; i < filterList.length; i++) {
-        console.log(filterList[i].state, "필터키");
         if (item.state === filterList[i].state) return true;
       }
       return false;
@@ -211,6 +210,7 @@ const PushList = () => {
     if (!isReserve || !isProceed || !isComplete || !isFailed) {
       setIsAll(false);
     }
+    console.log(filterList);
   }, [isReserve, isProceed, isComplete, isFailed]);
   useEffect(() => {
     getPushList();
