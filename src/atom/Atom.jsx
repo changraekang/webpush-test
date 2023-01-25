@@ -31,12 +31,6 @@ const MyCategory = atom({
   default: [], // default value (aka initial value)
   effects_UNSTABLE: [persistAtom],
 });
-
-const IsOpenModal = atom({
-  key: "IsOpen",
-  default: true, // default value (aka initial value)
-  effects_UNSTABLE: [persistAtom],
-});
 // Alert
 const IsAlertOpen = atom({
   key: "AlertModalOpen", // unique ID (with respect to other atoms/selectors)
@@ -54,7 +48,6 @@ export {
   MyProject,
   MyPushProject,
   MyCategory,
-  IsOpenModal,
   IsAlertOpen,
   AlertMessage,
 };

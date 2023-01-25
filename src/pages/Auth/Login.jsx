@@ -32,12 +32,7 @@ import {
   InputValidateGroup,
 } from "../../components/inputs/InputGroups";
 import { useRecoilState } from "recoil";
-import {
-  MyProfile,
-  MyProject,
-  MyPushProject,
-  IsOpenModal,
-} from "../../atom/Atom";
+import { MyProfile, MyProject, MyPushProject } from "../../atom/Atom";
 import Cookies from "universal-cookie";
 import { useCookies } from "react-cookie";
 import { version } from "react";
@@ -175,13 +170,12 @@ export default function Login() {
   const [myProfile, setMyProfile] = useRecoilState(MyProfile);
   const [myProject, setMyProject] = useRecoilState(MyProject);
   const [myPushProject, setMyPushProject] = useRecoilState(MyPushProject);
-  const [isOpenMobal, setIsOpenModal] = useRecoilState(IsOpenModal);
-  
+
   //이메일 저장 날짤 설정
-  let today = new Date;
+  let today = new Date();
   today.setDate(today.getDate() + 7);
-  
-  //capsLock 여부 
+
+  //capsLock 여부
   const handleCheckCapsLock = (e) => {
     if (e.getModifierState("CapsLock")) {
       setIsCapsLock(true);
@@ -203,8 +197,8 @@ export default function Login() {
 
   const handleCheckBox = () => {
     isCheck ? setIsCheck(false) : setIsCheck(true);
-    if(isCheck) {
-      removeCookie('rememberEmail');
+    if (isCheck) {
+      removeCookie("rememberEmail");
     }
   };
 
@@ -256,8 +250,8 @@ export default function Login() {
           try {
             const response = await instanceAxios.post("/member/me");
             if (response.status === 200) {
-              if(isCheck) {
-                setCookie('rememberEmail', email, {expires: today});
+              if (isCheck) {
+                setCookie("rememberEmail", email, { expires: today });
               }
               setMyProfile(response.data);
               const checkProject = async () => {
@@ -276,9 +270,6 @@ export default function Login() {
                       );
                     } else {
                       setMyPushProject(response.data[0]);
-                    }
-                    if (response.data.length > 0) {
-                      setIsOpenModal(false);
                     }
                   }
                 } catch (err) {

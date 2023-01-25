@@ -27,7 +27,12 @@ import {
 } from "../../components/buttons/PushButtons";
 import { instanceAxios } from "../../api/axios";
 import { getCookie } from "../../cookie/controlCookie";
-import { MyProject, MyPushProject } from "../../atom/Atom";
+import {
+  AlertMessage,
+  IsAlertOpen,
+  MyProject,
+  MyPushProject,
+} from "../../atom/Atom";
 import { useRecoilState } from "recoil";
 import Loading from "../../components/loading/Loading";
 import { useNavigate } from "react-router-dom";
@@ -261,6 +266,10 @@ export default function MakePush() {
   const [iconUrl, setIconUrl] = useState(null);
   const [iid, setIid] = useState(null);
 
+  // Alert Modal
+  const [isAlertOpen, setIsAlertOpen] = useRecoilState(IsAlertOpen);
+  const [alertMessage, setAlertMessage] = useRecoilState(AlertMessage);
+
   const getClock = () => {
     const offset = 1000 * 60 * 60 * 9;
     const koreaNow = new Date(new Date().getTime() + offset);
@@ -337,7 +346,10 @@ export default function MakePush() {
     if (e.target.value.slice(0, 10) === thisMonth) {
       if (e.target.value.slice(11, 16) < thisClock) {
         setSubmitDate(ReserveMin);
-        return alert("현재시간보다 빠르게 설정 할 수 없습니다.");
+        return (
+          setIsAlertOpen(true),
+          setAlertMessage("현재시간보다 빠르게 설정 할 수 없습니다.")
+        );
       }
     }
     setSubmitDate(e.target.value);
@@ -391,7 +403,8 @@ export default function MakePush() {
   const onIconInputBtnClick = (e) => {
     e.preventDefault();
     if (iconArr.length > 2) {
-      alert("아이콘은 3개까지 등록이 가능합니다 😅");
+      setIsAlertOpen(true);
+      setAlertMessage("아이콘은 3개까지 등록이 가능합니다 😅");
     } else {
       iconInputRef.current.click();
     }
@@ -451,7 +464,8 @@ export default function MakePush() {
           );
           console.log(response);
           if (response === 200) {
-            alert("성공적으로 아이콘이 삭제되었습니다 😆");
+            setIsAlertOpen(true);
+            setAlertMessage("성공적으로 아이콘이 삭제되었습니다 😆");
             // requestIconAll();
           }
         } catch (err) {
@@ -465,7 +479,8 @@ export default function MakePush() {
     if (myPushProject) {
       requestIconAll();
       if (myPushProject.expiryDate) {
-        alert("삭제예정 홈페이지입니다");
+        setIsAlertOpen(true);
+        setAlertMessage("삭제예정 홈페이지입니다");
         navigate("/dashboard");
       }
     }
@@ -509,7 +524,10 @@ export default function MakePush() {
       if (submitDate.slice(0, 10) === thisMonth) {
         if (submitDate.slice(11, 16) < thisClock) {
           setSubmitDate(ReserveMin);
-          return alert("현재시간보다 빠르게 설정 할 수 없습니다.");
+          return (
+            setIsAlertOpen(true),
+            setAlertMessage("현재시간보다 빠르게 설정 할 수 없습니다.")
+          );
         }
       }
     }
@@ -547,7 +565,8 @@ export default function MakePush() {
         }
       );
       if (response.status === 200) {
-        alert("메세지 등록 성공🎉");
+        setIsAlertOpen(true);
+        setAlertMessage("메세지 등록 성공🎉");
         setIsLoading(false);
         window.location.reload();
       }

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { instanceAxios } from "../../api/axios";
+import { AlertMessage, IsAlertOpen } from "../../atom/Atom";
 import {
   grey11,
   grey1,
@@ -16,6 +18,7 @@ import { InputGroup } from "../inputs/InputGroups";
 
 const Wrapper = styled.div`
   position: fixed;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));
   z-index: 10;
   display: flex;
   flex-direction: column;
@@ -143,16 +146,26 @@ const Button = styled.div`
     color: ${grey1};
   }
 `;
-const AlertModal = ({ children }) => {
+const AlertModal = () => {
+  const [isAlertOpen, setIsAlertOpen] = useRecoilState(IsAlertOpen);
+  const [alertMessage, setAlertMessage] = useRecoilState(AlertMessage);
   const renderCloseModal = () => {
-    return <Button onClick={() => {}}>닫기</Button>;
+    return (
+      <Button
+        onClick={() => {
+          setIsAlertOpen(false);
+        }}
+      >
+        닫기
+      </Button>
+    );
   };
 
   const renderModal = () => {
     return (
       <ModalWrapper>
         <ModalContent>
-          <WrapContents>{children}</WrapContents>
+          <WrapContents>{alertMessage}</WrapContents>
         </ModalContent>
         {renderCloseModal()}
       </ModalWrapper>
@@ -161,7 +174,7 @@ const AlertModal = ({ children }) => {
   return (
     <Wrapper
       onClick={() => {
-        console.log("안녕");
+        setIsAlertOpen(false);
       }}
     >
       <Modal onClick={(event) => event.stopPropagation()}>

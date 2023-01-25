@@ -37,8 +37,8 @@ import {
   MyProfile,
   MyProject,
   MyPushProject,
-  IsOpenModal,
   IsAlertOpen,
+  AlertMessage,
 } from "../atom/Atom";
 import ProjectModal from "../components/modals/ProjectModal";
 import settingHomepage from "../assets/images/homepageSetting.png";
@@ -256,14 +256,17 @@ export default function Layout({ children }) {
   const [isOpenMyMenu, setIsOpenMyMenu] = useState(false);
   const [isProjectOpen, setIsProjectOpen] = useState(false);
   const [isOpenMobal, setIsOpenModal] = useState(false);
-  //const [isOpenMobal, setIsOpenModal] = useRecoilState(IsOpenModal); recoil 나중에 다시 한번 시도
   const [minutes, setMinutes] = useState(5);
   const [seconds, setSeconds] = useState(0);
   const [refreshToken, setRefreshToken] = useState(getCookie("refreshToken"));
   const [myProfile, setMyProfile] = useRecoilState(MyProfile);
   const [myProject, setMyProject] = useRecoilState(MyProject);
   const [myPushProject, setMyPushProject] = useRecoilState(MyPushProject);
+
+  // Alert Modal
   const [isAlertOpen, setIsAlertOpen] = useRecoilState(IsAlertOpen);
+  const [alertMessage, setAlertMessage] = useRecoilState(AlertMessage);
+
   const para = document.location.href;
   const params = para.search("pushdetail");
   const requestAccessToken = async () => {
@@ -362,6 +365,7 @@ export default function Layout({ children }) {
   const handleAddProject = () => {
     if (myProject.length > 2) {
       setIsAlertOpen(true);
+      setAlertMessage("프로젝트는 3개까지 가능합니다");
     } else {
       setIsOpenModal(true);
     }
@@ -396,6 +400,7 @@ export default function Layout({ children }) {
   return (
     <Header>
       {/* 왼쪽 */}
+
       <Nav>
         {isOpenMobal && <ProjectModal setClose={setIsOpenModal} />}
         <Link to="/dashboard">
@@ -537,6 +542,9 @@ export default function Layout({ children }) {
         </TopHeader>
         <main>{children}</main>
       </WrapRight>
+      {/* alert */}
+      {isAlertOpen && <AlertModal></AlertModal>}
+      {/* alert */}
     </Header>
   );
 }

@@ -14,7 +14,7 @@ import {
   primary2,
 } from "../../constants/color";
 import { useRecoilState } from "recoil";
-import { MyPushProject } from "../../atom/Atom";
+import { AlertMessage, IsAlertOpen, MyPushProject } from "../../atom/Atom";
 import { instanceAxios } from "../../api/axios";
 import { ActiveDeletePushButton } from "../../components/buttons/PushButtons";
 import Pagination from "../../components/pagination/Pagination";
@@ -145,6 +145,11 @@ const PushList = () => {
   //현재 날짜
   const offset = 1000 * 60 * 60 * 9;
   const koreaNow = new Date(new Date().getTime() + offset).toISOString();
+
+  // Alert Modal
+  const [isAlertOpen, setIsAlertOpen] = useRecoilState(IsAlertOpen);
+  const [alertMessage, setAlertMessage] = useRecoilState(AlertMessage);
+
   //state
   const [myPushProject, setMyPushProject] = useRecoilState(MyPushProject);
   const [isReserve, setIsReserve] = useState(true);
@@ -234,7 +239,8 @@ const PushList = () => {
           `/${myPushProject.pid}/${mid}`
         );
         if (response.status === 200) {
-          alert("성공적으로 삭제되었습니다.");
+          setIsAlertOpen(true);
+          setAlertMessage("성공적으로 삭제되었습니다 ⚠️");
           window.location.reload();
           console.log(response.data, "데이터 지우기⚠️");
         }
