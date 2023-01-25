@@ -273,7 +273,6 @@ export default function PushDetail() {
         {}
       );
       if (response.status === 200) {
-        console.log(response.data);
         setPushDetail(response.data);
         setInputs({
           title: response.data.title,
