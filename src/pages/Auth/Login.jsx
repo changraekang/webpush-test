@@ -176,8 +176,12 @@ export default function Login() {
   const [myProject, setMyProject] = useRecoilState(MyProject);
   const [myPushProject, setMyPushProject] = useRecoilState(MyPushProject);
   const [isOpenMobal, setIsOpenModal] = useRecoilState(IsOpenModal);
-
-  //capsLock 여부
+  
+  //이메일 저장 날짤 설정
+  let today = new Date;
+  today.setDate(today.getDate() + 7);
+  
+  //capsLock 여부 
   const handleCheckCapsLock = (e) => {
     if (e.getModifierState("CapsLock")) {
       setIsCapsLock(true);
@@ -197,19 +201,10 @@ export default function Login() {
     }
   }, []);
 
-  let today = new Date();
-  today.setDate(today.getDate() + 7);
-  const handleEmailValue = (e) => {
-    setEmail(e.target.value);
-    setCookie("rememberEmail", email, { expires: today });
-  };
-
   const handleCheckBox = () => {
     isCheck ? setIsCheck(false) : setIsCheck(true);
-    if (isCheck) {
-      removeCookie("rememberEmail");
-    } else {
-      setCookie("rememberEmail", email, { expires: today });
+    if(isCheck) {
+      removeCookie('rememberEmail');
     }
   };
 
@@ -261,6 +256,9 @@ export default function Login() {
           try {
             const response = await instanceAxios.post("/member/me");
             if (response.status === 200) {
+              if(isCheck) {
+                setCookie('rememberEmail', email, {expires: today});
+              }
               setMyProfile(response.data);
               const checkProject = async () => {
                 try {
@@ -325,8 +323,8 @@ export default function Login() {
             <form action="post">
               <IDInputWrap>
                 <SubTitle>아이디</SubTitle>
-                <InputValidateGroup
-                  setValue={handleEmailValue}
+                <InputGroup
+                  setValue={setEmail}
                   value={email}
                   type="text"
                   placeholder="이메일을 입력하세요"
