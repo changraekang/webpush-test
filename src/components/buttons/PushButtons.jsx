@@ -7,7 +7,7 @@ const Button = styled.button`
   width: 100%;
   width: ${(props) => (props.delete ? `35px` : null)};
   padding: 16px;
-  cursor: ${(props) => (props.inactive ? `none` : `pointer`)};
+  cursor: ${(props) => (props.inactive ? `auto` : `pointer`)};
   font-size: 24px;
   border-radius: 8px;
   background: ${(props) => (props.normal ? `${grey1}` : null)};
