@@ -26,7 +26,10 @@ import {
   setAccessTokenToCookie,
   setRefreshTokenToCookie,
 } from "../../cookie/controlCookie";
-import { InputGroup, InputValidateGroup } from "../../components/inputs/InputGroups";
+import {
+  InputGroup,
+  InputValidateGroup,
+} from "../../components/inputs/InputGroups";
 import { useRecoilState } from "recoil";
 import {
   MyProfile,
@@ -35,7 +38,7 @@ import {
   IsOpenModal,
 } from "../../atom/Atom";
 import Cookies from "universal-cookie";
-import { useCookies } from 'react-cookie';
+import { useCookies } from "react-cookie";
 import { version } from "react";
 
 const Section = styled.section`
@@ -142,19 +145,20 @@ const LinkStyle = styled(Link)`
 `;
 
 const RememberEmail = styled.input`
-  background:${props => props.active ? `url(${activeCheck})` : `url(${inActiveCheck})`};
+  background: ${(props) =>
+    props.active ? `url(${activeCheck})` : `url(${inActiveCheck})`};
   /* background: url(${inActiveCheck}); */
-  background-repeat : no-repeat;
-  background-size : 15px;
+  background-repeat: no-repeat;
+  background-size: 15px;
   width: 15px;
   border: none;
   cursor: pointer;
-  `
+`;
 
 //--------------로그인 페이지--------------------------
 export default function Login() {
   const navigate = useNavigate();
-  const [cookies, setCookie, removeCookie] = useCookies(['rememberEmail']);
+  const [cookies, setCookie, removeCookie] = useCookies(["rememberEmail"]);
   const [email, setEmail] = useState("");
   const [isCheck, setIsCheck] = useState(false);
   const [password, setPassword] = useState("");
@@ -162,38 +166,39 @@ export default function Login() {
   const [myProject, setMyProject] = useRecoilState(MyProject);
   const [myPushProject, setMyPushProject] = useRecoilState(MyPushProject);
   const [isOpenMobal, setIsOpenModal] = useRecoilState(IsOpenModal);
-  
+
   // 처음 페이지 진입
   useEffect(() => {
-    if(cookies.rememberEmail !== undefined) {
+    if (cookies.rememberEmail !== undefined) {
       setEmail(cookies.rememberEmail);
       setIsCheck(true);
     } else {
       setIsCheck(false);
-      removeCookie('rememberEmail');
+      removeCookie("rememberEmail");
     }
-  }, [])
+  }, []);
 
-  
   console.log(isCheck, "isCheck");
   console.log(cookies.rememberEmail, "cookies.rememberEmail");
-  let today = new Date;
+  let today = new Date();
   today.setDate(today.getDate() + 7);
-  console.log(today)
+  console.log(today);
   const handleEmailValue = useCallback(
     (e) => {
-      setCookie('rememberEmail', email, {expires: today}); 
+      setCookie("rememberEmail", email, { expires: today });
       setEmail(e.target.value);
-    }, [email]) 
-  
+    },
+    [email]
+  );
+
   const handleCheckBox = () => {
     isCheck ? setIsCheck(false) : setIsCheck(true);
-    if(isCheck) {
-      removeCookie('rememberEmail');
+    if (isCheck) {
+      removeCookie("rememberEmail");
     } else {
-      setCookie('rememberEmail', email, {expires: today});
+      setCookie("rememberEmail", email, { expires: today });
     }
-  }
+  };
 
   const handleGoSignup = () => {
     // e.preventDefault();
@@ -249,7 +254,18 @@ export default function Login() {
                   const response = await instanceAxios.get("/all");
                   if (response.status === 200) {
                     setMyProject(response.data);
-                    setMyPushProject(response.data[0]);
+                    if (
+                      response.data.filter((item) => item.expiryDate === null)
+                        .length > 0
+                    ) {
+                      setMyPushProject(
+                        response.data.filter(
+                          (item) => item.expiryDate === null
+                        )[0]
+                      );
+                    } else {
+                      setMyPushProject(response.data[0]);
+                    }
                     if (response.data.length > 0) {
                       setIsOpenModal(false);
                     }
@@ -316,19 +332,22 @@ export default function Login() {
               <RadioList>
                 <RadioLi>
                   {!isCheck && (
-                    <RememberEmail 
-                    type="text" 
-                    readOnly
-                    checked={isCheck} 
-                    onClick={handleCheckBox}/>
+                    <RememberEmail
+                      type="text"
+                      readOnly
+                      checked={isCheck}
+                      onClick={handleCheckBox}
+                    />
                     // <img src={inActiveCheck} alt="아이디저장하기 체크 아이콘"  />
                   )}
                   {isCheck && (
-                    <RememberEmail active 
-                    type="text" 
-                    readOnly
-                    checked={isCheck} 
-                    onClick={handleCheckBox}/>
+                    <RememberEmail
+                      active
+                      type="text"
+                      readOnly
+                      checked={isCheck}
+                      onClick={handleCheckBox}
+                    />
                     // <img src={activeCheck} alt="아이디저장하기 체크 아이콘" />
                   )}
                   아이디 저장

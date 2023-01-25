@@ -539,7 +539,7 @@ export default function MakePush() {
     formData.append("file", previewImg);
     try {
       const response = await instanceAxios.post(
-        `/message/${myPushProject.pid}/add`,
+        `/${myPushProject.pid}/add`,
         formData,
         {
           headers: {
