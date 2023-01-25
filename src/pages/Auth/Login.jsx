@@ -182,8 +182,8 @@ export default function Login() {
   console.log(today)
   const handleEmailValue = useCallback(
     (e) => {
-      setEmail(e.target.value);
       setCookie('rememberEmail', email, {expires: today}); 
+      setEmail(e.target.value);
     }, [email]) 
   
   const handleCheckBox = () => {
