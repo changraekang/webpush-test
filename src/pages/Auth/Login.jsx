@@ -322,7 +322,7 @@ export default function Login() {
           <WrapContents>
             <form action="post">
               <IDInputWrap>
-                <SubTitle>아이디</SubTitle>
+                <SubTitle>이메일</SubTitle>
                 <InputGroup
                   setValue={setEmail}
                   value={email}
@@ -365,11 +365,11 @@ export default function Login() {
                     />
                     // <img src={activeCheck} alt="아이디저장하기 체크 아이콘" />
                   )}
-                  아이디 저장
+                  이메일 저장
                 </RadioLi>
                 <WrapFindAuth>
                   <li>
-                    <LinkStyle to="/findEmail">아아디 찾기</LinkStyle>
+                    <LinkStyle to="/findEmail">이메일 찾기</LinkStyle>
                   </li>
                   <li>|</li>
                   <li>

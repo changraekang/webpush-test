@@ -87,6 +87,7 @@ const TopHeader = styled.div`
 
 const LI = styled.li`
   margin-bottom: 16px;
+  font-weight: 600;
 `;
 
 const A = styled.a`
@@ -103,6 +104,7 @@ const SubNav = styled.ul`
 const SubLI = styled.li`
   margin-bottom: 10px;
   font-size: 14px;
+  font-weight: 600;
 `;
 const LinkStyle = styled(Link)`
   color: ${props => props.sub ? `${grey7}`: `${grey9}`};
