@@ -216,10 +216,7 @@ const PushList = () => {
   }, [myPushProject]);
   const getPushList = async () => {
     try {
-      const response = await instanceAxios.get(
-        `/message/${myPushProject.pid}/all`,
-        {}
-      );
+      const response = await instanceAxios.get(`/${myPushProject.pid}/all`, {});
       if (response.status === 200) {
         setPushList(response.data);
       }
@@ -233,7 +230,9 @@ const PushList = () => {
     console.log(mid);
     if (window.confirm("push 메세지를 삭제하시겠습니까?")) {
       try {
-        const response = await instanceAxios.delete(`/message/${mid}`);
+        const response = await instanceAxios.delete(
+          `/${myPushProject.pid}/${mid}`
+        );
         if (response.status === 200) {
           alert("성공적으로 삭제되었습니다.");
           window.location.reload();

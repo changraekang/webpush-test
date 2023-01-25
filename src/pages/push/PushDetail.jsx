@@ -268,7 +268,10 @@ export default function PushDetail() {
   const [iid, setIid] = useState(null);
   const getPushDetail = async () => {
     try {
-      const response = await instanceAxios.get(`/message/${params.id}`, {});
+      const response = await instanceAxios.get(
+        `/${myPushProject.pid}/${params.id}`,
+        {}
+      );
       if (response.status === 200) {
         setPushDetail(response.data);
         setInputs({
@@ -559,8 +562,8 @@ export default function PushDetail() {
     );
     formData.append("file", previewImg);
     try {
-      const response = await instanceAxios.post(
-        `/message/${myPushProject.pid}/add`,
+      const response = await instanceAxios.put(
+        `/${myPushProject.pid}/${params.id}`,
         formData,
         {
           headers: {
@@ -591,7 +594,7 @@ export default function PushDetail() {
           ) : null}
         </WrapHomepages>
         <PageTitle>PUSH 수정 </PageTitle>
-        <Message>고객들에게 날릴 웹푸시를 수정하는 페이지입니다.</Message>
+        <Message>고객들에게 날린 웹푸시를 수정하는 페이지입니다.</Message>
         {myPushProject.expiryDate ? null : (
           <ActiveEditPushButton handleSubmit={onClickChange}>
             수정하기
