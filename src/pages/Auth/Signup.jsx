@@ -173,6 +173,7 @@ const TimeSpan = styled.span`
 export default function Signup() {
   // 아이디 저장 기능 
   
+  const [iscapslock, setIsCapsLock] = useState(false);
   const navigate = useNavigate();
   const emailList = [
     "test.com",
@@ -194,6 +195,15 @@ export default function Signup() {
   const [agreement, setAgreement] = useState(false);
   const [minutes, setMinutes] = useState(parseInt(3));
   const [seconds, setSeconds] = useState(parseInt(0));
+  
+  //capsLock 여부 
+  const handleCheckCapsLock = (e) => {
+    if(e.getModifierState('CapsLock')) {
+      setIsCapsLock(true);
+    } else {
+      setIsCapsLock(false);
+    }
+  }
 
   useEffect(() => {
     if (isOpenTokenBox) {
@@ -500,6 +510,7 @@ export default function Signup() {
                   value={password}
                   name="password"
                   setValue={handleInputValues}
+                  isKeyDown={handleCheckCapsLock}
                   style={{
                     border: !passwordVaildation ? `1px solid ${error3}` : null,
                   }}
@@ -509,6 +520,7 @@ export default function Signup() {
                     비밀번호는 영문/숫자/특문을 포함한 8자이상 입력해주세요.
                   </LabelWarning>
                 )}
+                {iscapslock && <LabelWarning>Caps Lock이 켜져있습니다!</LabelWarning>}
               </WrapRightItems>
             </InputAlign>
 
@@ -522,6 +534,7 @@ export default function Signup() {
                   value={confirmPassword}
                   name="confirmPassword"
                   setValue={handleInputValues}
+                  isKeyDown={handleCheckCapsLock}
                   style={{
                     border: !conPasswdVaildation ? `1px solid ${error3}` : null,
                   }}
@@ -531,6 +544,7 @@ export default function Signup() {
                     비밀번호가 일치하지 않습니다.
                   </LabelWarning>
                 )}
+                {iscapslock && <LabelWarning>Caps Lock이 켜져있습니다!</LabelWarning>}
               </WrapRightItems>
             </InputAlign>
 
