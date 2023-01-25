@@ -436,7 +436,7 @@ export default function Layout({ children }) {
           <ProLi>
             {myProject.map(
               ({ categoryCode, pid, name, projectUrl, expiryDate }) => {
-                if (params < -3) {
+                if (params > 0) {
                   return null;
                 } else if (expiryDate) {
                   if (pid !== myPushProject.pid) {
