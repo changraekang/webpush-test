@@ -139,7 +139,6 @@ const InputDate = styled.input`
 const ImageInput = styled.input`
   width: 100%;
   padding: 16px;
-  margin-top: 8px;
   margin-left: 30px;
   box-sizing: border-box;
   border-radius: 8px;
@@ -200,17 +199,14 @@ const DemoImg = styled.img`
 `;
 
 const SelectIconDiv = styled.div`
-  padding: 2px;
-  border: 3px solid ${primary4};
-  border-radius: 4px;
-  margin-top: -5px;
+  border: 1px solid ${primary4};
+  margin-top: -10px;
 `;
 
 const IconBox = styled.div`
   position: relative;
   width: 80px;
   height: 80px;
-  background-color: ${grey5};
   padding: 5px;
 `;
 
@@ -218,19 +214,6 @@ const Icon = styled.img`
   width: 100%;
   height: 100%;
   object-fit: cover;
-`;
-
-const MinusIconBtn = styled.button`
-  width: 30px;
-  height: 30px;
-  position: absolute;
-  left: -12px;
-  top: -6px;
-`;
-
-const DeleteIconImg = styled.img`
-  width: 30px;
-  height: 30px;
 `;
 
 const AlignIcon = styled.div`
@@ -257,6 +240,12 @@ const WrapIconDiv = styled.div`
   height: 60px;
   background: ${grey4};
 `
+
+const IconButnsAlign = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-top: 7px;
+`
 export default function MakePush() {
   const [thisClock, setThisClock] = useState("");
   const [thisMonth, setThisMonth] = useState("");
@@ -267,7 +256,7 @@ export default function MakePush() {
   const [pid, setPid] = useState("");
   const [myProject, setMyProject] = useRecoilState(MyProject);
   const [myPushProject, setMyPushProject] = useRecoilState(MyPushProject);
-  const [iconUrl, setIconUrl] = useState("");
+  const [iconUrl, setIconUrl] = useState(null);
   const [iid, setIid] = useState(null);
 
   const getClock = () => {
@@ -449,7 +438,7 @@ export default function MakePush() {
   const deleteIcon = async (e) => {
     e.preventDefault();
     console.log(iid, "iid🎉🎉🎉");
-    if (iid === "") {
+    if (iid === null) {
       alert("삭제할 아이콘을 선택해주세요 😅");
     } else {
       if (window.confirm("아이콘이 삭제하시겠습니까?")) {
@@ -475,12 +464,13 @@ export default function MakePush() {
       requestIconAll();
     }
   }, [myPushProject]);
-
+  
   const handleIconSelect = (e) => {
     console.log(e.target.src);
     const imageSrc = e.target.src;
     if (imageSrc === iconUrl) {
       setIconUrl(null);
+      setIid(null);
     } else {
       setIconUrl(e.target.src);
       setIid(imageSrc.split("/").at(-1));
@@ -698,12 +688,6 @@ export default function MakePush() {
                       return (
                         <SelectIconDiv key={index}>
                           <IconBox onClick={handleIconSelect}>
-                            <MinusIconBtn onClick={deleteIcon}>
-                              <DeleteIconImg
-                                src={minusIcon}
-                                alt="아이콘 삭제하기"
-                              />
-                            </MinusIconBtn>
                             <Icon src={url} alt={url} />
                           </IconBox>
                         </SelectIconDiv>
@@ -711,12 +695,6 @@ export default function MakePush() {
                     } else {
                       return (
                         <IconBox onClick={handleIconSelect} key={index}>
-                          {/* <MinusIconBtn onClick={deleteIcon}>
-                            <DeleteIconImg
-                              src={minusIcon}
-                              alt="아이콘 삭제하기"
-                            />
-                          </MinusIconBtn> */}
                           <Icon src={url} alt={url} />
                         </IconBox>
                       );
@@ -730,14 +708,16 @@ export default function MakePush() {
                   ref={iconInputRef}
                   onChange={handleUploadIcon}
                 />
-                {myPushProject.expiryDate ? null : (
-                  <RegisterIconButton handleUploadIcon={onIconInputBtnClick}>
-                    아이콘 등록
-                  </RegisterIconButton>
-                )}
-                <DeleteIconButton>
-                    아이콘 삭제
+                <IconButnsAlign>
+                  {myPushProject.expiryDate ? null : (
+                    <RegisterIconButton handleUploadIcon={onIconInputBtnClick}>
+                      아이콘 등록
+                    </RegisterIconButton>
+                  )}
+                  <DeleteIconButton deleteIcon={deleteIcon}>
+                      아이콘 삭제
                   </DeleteIconButton>
+                </IconButnsAlign>
               </WrapMessage>
             </PushBox>
             <PushBox>

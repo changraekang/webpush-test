@@ -64,16 +64,16 @@ const ImageButton = styled.button`
   width: 150px;
   padding: 10px;
   margin: 15px 0 8px 15px;
+  margin-top: ${props => props.delete ? "-1px" : null};
   cursor: pointer;
   font-size: 16px;
   border-radius: 8px;
-  color: ${primary4};
-  border: 1px solid ${primary4};
+  color:  ${props => props.delete ? `${error3}` : `${primary4}`};
   border: ${props => props.delete ? `1px solid ${error3}` : `1px solid ${primary4}`};
 
   &:hover {
-    background-color: ${primary4};
-    color: ${grey5};
+    background-color: ${props => props.delete ? `${error3}` : `${primary4}`};
+    color: ${grey1};
   }
 `;
 
@@ -120,9 +120,9 @@ function RegisterIconButton({ children, handleUploadIcon }) {
     </ImageButton>
   );
 }
-function DeleteIconButton({ children }) {
+function DeleteIconButton({ children, deleteIcon }) {
   return (
-    <ImageButton icon delete>
+    <ImageButton icon delete onClick={deleteIcon}>
       {children}
     </ImageButton>
   );
