@@ -197,7 +197,7 @@ const MyMenuLi = styled.li`
 `;
 
 const MyMenuIcon = styled.img`
-  width: ${(props) => (props.profile ? "18px" : "15px")};
+  width: ${(props) => (props.profileIcon ? "18px" : "15px")};
 `;
 
 const ProjectOptions = styled.li`
@@ -514,7 +514,7 @@ export default function Layout({ children }) {
                 <MyMenuLi first>{myProfile.email}</MyMenuLi>
                 <MyMenuLi>
                   <MyMenuIcon
-                    profile={true}
+                    profileIcon={true}
                     src={profile}
                     alt="내 정보 아이콘"
                   />
