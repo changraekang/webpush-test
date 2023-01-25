@@ -7,6 +7,7 @@ import {
   grey5,
   grey6,
   grey10,
+  error3,
 } from "../../constants/color";
 import logo from "../../assets/images/logo.png";
 import mainImage from "../../assets/images/mainpage.png";
@@ -155,9 +156,18 @@ const RememberEmail = styled.input`
   cursor: pointer;
 `;
 
+const LabelWarning = styled.span`
+  display: block;
+  color: ${error3};
+  font-size: 12px;
+  margin-top: 8px;
+  margin-bottom: ${(props) => (props.email ? "8px" : "0")};
+`;
+
 //--------------로그인 페이지--------------------------
 export default function Login() {
   const navigate = useNavigate();
+  const [iscapslock, setIsCapsLock] = useState(false);
   const [cookies, setCookie, removeCookie] = useCookies(["rememberEmail"]);
   const [email, setEmail] = useState("");
   const [isCheck, setIsCheck] = useState(false);
@@ -166,6 +176,15 @@ export default function Login() {
   const [myProject, setMyProject] = useRecoilState(MyProject);
   const [myPushProject, setMyPushProject] = useRecoilState(MyPushProject);
   const [isOpenMobal, setIsOpenModal] = useRecoilState(IsOpenModal);
+
+  //capsLock 여부
+  const handleCheckCapsLock = (e) => {
+    if (e.getModifierState("CapsLock")) {
+      setIsCapsLock(true);
+    } else {
+      setIsCapsLock(false);
+    }
+  };
 
   // 처음 페이지 진입
   useEffect(() => {
@@ -178,18 +197,12 @@ export default function Login() {
     }
   }, []);
 
-  console.log(isCheck, "isCheck");
-  console.log(cookies.rememberEmail, "cookies.rememberEmail");
   let today = new Date();
   today.setDate(today.getDate() + 7);
-  console.log(today);
-  const handleEmailValue = useCallback(
-    (e) => {
-      setCookie("rememberEmail", email, { expires: today });
-      setEmail(e.target.value);
-    },
-    [email]
-  );
+  const handleEmailValue = (e) => {
+    setEmail(e.target.value);
+    setCookie("rememberEmail", email, { expires: today });
+  };
 
   const handleCheckBox = () => {
     isCheck ? setIsCheck(false) : setIsCheck(true);
@@ -323,11 +336,15 @@ export default function Login() {
                 <SubTitle>비밀번호</SubTitle>
                 <InputGroup
                   setValue={setPassword}
+                  isKeyDown={handleCheckCapsLock}
                   value={password}
                   last
                   type="password"
                   placeholder="비밀번호를 입력하세요"
                 />
+                {iscapslock && (
+                  <LabelWarning>Caps Lock이 켜져있습니다!</LabelWarning>
+                )}
               </PwdInputWrap>
               <RadioList>
                 <RadioLi>
