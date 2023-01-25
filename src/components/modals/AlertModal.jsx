@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { instanceAxios } from "../../api/axios";
-import { MyCategory, MyProject, MyPushProject } from "../../atom/Atom";
 import {
   grey11,
   grey1,
@@ -19,7 +17,6 @@ import { InputGroup } from "../inputs/InputGroups";
 const Wrapper = styled.div`
   position: fixed;
   z-index: 10;
-  background: linear-gradient(0deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -33,12 +30,14 @@ const Wrapper = styled.div`
 `;
 
 const Modal = styled.div`
+  position: fixed;
+  z-index: 15;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   background-color: ${grey1};
-  width: 560px;
+  width: 360px;
   padding: 40px 0;
   border-radius: 16px;
 `;
@@ -116,6 +115,7 @@ const ModalContent = styled.div`
   pointer-events: auto;
   border-radius: 8px;
   outline: 0;
+  margin-bottom: 24px;
 `;
 const ProjectInputWrap = styled.div`
   width: 399px;
@@ -132,8 +132,9 @@ const Button = styled.div`
   width: 100px;
   justify-content: center;
   align-items: center;
-  background: ${grey3};
-  border: 1px solid ${grey5};
+  color: ${primary4};
+  background: ${grey1};
+  border: 1px solid ${primary4};
   border-radius: 24px;
   padding: 10px 12px;
   cursor: pointer;
@@ -142,42 +143,30 @@ const Button = styled.div`
     color: ${grey1};
   }
 `;
-const AlertModal = (props) => {
-  const [cat, setCat] = useState("");
-  const [url, setUrl] = useState("https://");
-  const [myProject, setMyProject] = useRecoilState(MyProject);
-  const [myCategory, setMyCategoy] = useRecoilState(MyCategory);
-  const [myPushProject, setMyPushProject] = useRecoilState(MyPushProject);
-
+const AlertModal = ({ children }) => {
   const renderCloseModal = () => {
-    if (myProject.length > 0) {
-      return (
-        <CloseModal
-          onClick={() => {
-            props.setClose(false);
-          }}
-        >
-          X
-        </CloseModal>
-      );
-    }
+    return <Button onClick={() => {}}>닫기</Button>;
   };
 
   const renderModal = () => {
     return (
       <ModalWrapper>
-        {renderCloseModal()}
-        <Title>🏠 홈페이지</Title>
-        <SubTitle>DMPUSH를 사용할 홈페이지와 주소를 입력해주세요</SubTitle>
         <ModalContent>
-          <WrapContents></WrapContents>
+          <WrapContents>{children}</WrapContents>
         </ModalContent>
+        {renderCloseModal()}
       </ModalWrapper>
     );
   };
   return (
-    <Wrapper>
-      <Modal>{renderModal()}</Modal>
+    <Wrapper
+      onClick={() => {
+        console.log("안녕");
+      }}
+    >
+      <Modal onClick={(event) => event.stopPropagation()}>
+        {renderModal()}
+      </Modal>
     </Wrapper>
   );
 };

@@ -26,7 +26,6 @@ import {
   DeleteIconButton,
   ActiveEditPushButton,
 } from "../../components/buttons/PushButtons";
-import ProjectModal from "../../components/modals/ProjectModal";
 import { instanceAxios } from "../../api/axios";
 import { getCookie } from "../../cookie/controlCookie";
 import { MyProject, MyPushProject } from "../../atom/Atom";

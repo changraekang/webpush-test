@@ -38,9 +38,11 @@ import {
   MyProject,
   MyPushProject,
   IsOpenModal,
+  IsAlertOpen,
 } from "../atom/Atom";
 import ProjectModal from "../components/modals/ProjectModal";
 import settingHomepage from "../assets/images/homepageSetting.png";
+import AlertModal from "../components/modals/AlertModal";
 
 const Header = styled.header`
   display: flex;
@@ -261,6 +263,7 @@ export default function Layout({ children }) {
   const [myProfile, setMyProfile] = useRecoilState(MyProfile);
   const [myProject, setMyProject] = useRecoilState(MyProject);
   const [myPushProject, setMyPushProject] = useRecoilState(MyPushProject);
+  const [isAlertOpen, setIsAlertOpen] = useRecoilState(IsAlertOpen);
   const para = document.location.href;
   const params = para.search("pushdetail");
   const requestAccessToken = async () => {
@@ -358,7 +361,7 @@ export default function Layout({ children }) {
 
   const handleAddProject = () => {
     if (myProject.length > 2) {
-      alert("프로젝트는 3개까지 가능합니다.");
+      setIsAlertOpen(true);
     } else {
       setIsOpenModal(true);
     }

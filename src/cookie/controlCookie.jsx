@@ -1,5 +1,6 @@
 import Cookies from "universal-cookie";
 import { instanceAxios } from "../api/axios";
+
 const cookies = new Cookies();
 
 export function setRefreshTokenToCookie(refreshToken) {
@@ -38,6 +39,7 @@ export const logout = async () => {
       cookies.remove("accessToken");
       instanceAxios.defaults.headers.common["Authorization"] = null;
       window.location.reload();
+
       alert("로그아웃 성공🎉");
     }
   } catch (err) {
@@ -62,6 +64,7 @@ export const logoutSession = async () => {
       cookies.remove("accessToken");
       instanceAxios.defaults.headers.common["Authorization"] = null;
       window.location.reload();
+
       console.log("로그아웃 성공🎉");
     }
   } catch (err) {

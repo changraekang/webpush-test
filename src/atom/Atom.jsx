@@ -2,18 +2,19 @@ import { atom } from "recoil";
 import { recoilPersist } from "recoil-persist";
 const { persistAtom } = recoilPersist();
 
+// Auth
 const MyProfile = atom({
   key: "MyProfile", // unique ID (with respect to other atoms/selectors)
   default: [], // default value (aka initial value)
   effects_UNSTABLE: [persistAtom],
 });
-
 const RemeberEmail = atom({
   key: "RemeberEmail", // unique ID (with respect to other atoms/selectors)
   default: "", // default value (aka initial value)
   effects_UNSTABLE: [persistAtom],
-})
+});
 
+//project
 const MyProject = atom({
   key: "MyProject", // unique ID (with respect to other atoms/selectors)
   default: [], // default value (aka initial value)
@@ -25,16 +26,26 @@ const MyPushProject = atom({
   default: [], // default value (aka initial value)
   effects_UNSTABLE: [persistAtom],
 });
+const MyCategory = atom({
+  key: "MyCategory", // unique ID (with respect to other atoms/selectors)
+  default: [], // default value (aka initial value)
+  effects_UNSTABLE: [persistAtom],
+});
 
 const IsOpenModal = atom({
   key: "IsOpen",
   default: true, // default value (aka initial value)
   effects_UNSTABLE: [persistAtom],
 });
-
-const MyCategory = atom({
-  key: "MyCategory", // unique ID (with respect to other atoms/selectors)
-  default: [], // default value (aka initial value)
+// Alert
+const IsAlertOpen = atom({
+  key: "AlertModalOpen", // unique ID (with respect to other atoms/selectors)
+  default: false, // default value (aka initial value)
+  effects_UNSTABLE: [persistAtom],
+});
+const AlertMessage = atom({
+  key: "AlertMessage", // unique ID (with respect to other atoms/selectors)
+  default: "", // default value (aka initial value)
   effects_UNSTABLE: [persistAtom],
 });
 
@@ -44,4 +55,6 @@ export {
   MyPushProject,
   MyCategory,
   IsOpenModal,
+  IsAlertOpen,
+  AlertMessage,
 };

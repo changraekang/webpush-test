@@ -165,7 +165,16 @@ const ProjectModal = (props) => {
             const response = await instanceAxios.get("/all");
             if (response.status === 200) {
               setMyProject(response.data);
-              setMyPushProject(response.data[0]);
+              if (
+                response.data.filter((item) => item.expiryDate === null)
+                  .length > 0
+              ) {
+                setMyPushProject(
+                  response.data.filter((item) => item.expiryDate === null)[0]
+                );
+              } else {
+                setMyPushProject(response.data[0]);
+              }
               window.location.reload();
             }
           } catch (err) {
