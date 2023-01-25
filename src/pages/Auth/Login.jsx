@@ -173,7 +173,7 @@ export default function Login() {
 
   //이메일 저장 날짤 설정
   let today = new Date();
-  today.setDate(today.getDate() + 7);
+  today.setDate(today.getDate() + 1);
 
   //capsLock 여부
   const handleCheckCapsLock = (e) => {
