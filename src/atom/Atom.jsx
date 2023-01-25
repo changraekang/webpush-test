@@ -8,6 +8,12 @@ const MyProfile = atom({
   effects_UNSTABLE: [persistAtom],
 });
 
+const RemeberEmail = atom({
+  key: "RemeberEmail", // unique ID (with respect to other atoms/selectors)
+  default: "", // default value (aka initial value)
+  effects_UNSTABLE: [persistAtom],
+})
+
 const MyProject = atom({
   key: "MyProject", // unique ID (with respect to other atoms/selectors)
   default: [], // default value (aka initial value)
