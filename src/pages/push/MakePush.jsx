@@ -23,6 +23,7 @@ import {
   InactivePushButton,
   RegisterImageButton,
   RegisterIconButton,
+  DeleteIconButton,
 } from "../../components/buttons/PushButtons";
 import ProjectModal from "../../components/modals/ProjectModal";
 import { instanceAxios } from "../../api/axios";
@@ -710,35 +711,17 @@ export default function MakePush() {
                     } else {
                       return (
                         <IconBox onClick={handleIconSelect} key={index}>
-                          <MinusIconBtn onClick={deleteIcon}>
+                          {/* <MinusIconBtn onClick={deleteIcon}>
                             <DeleteIconImg
                               src={minusIcon}
                               alt="아이콘 삭제하기"
                             />
-                          </MinusIconBtn>
+                          </MinusIconBtn> */}
                           <Icon src={url} alt={url} />
                         </IconBox>
                       );
                     }
                   })}
-                  {/* <IconBox onClick={handleIconSelect}>
-                    <MinusIconBtn>
-                      <DeleteIconImg src={minusIcon} alt="아이콘 삭제하기" />
-                    </MinusIconBtn>
-                    <Icon src="" alt=""/>
-                  </IconBox>
-                  <IconBox onClick={handleIconSelect}>
-                    <MinusIconBtn>
-                      <DeleteIconImg src={minusIcon} alt="아이콘 삭제하기" />
-                    </MinusIconBtn>
-                    <Icon src="" alt=""/>
-                  </IconBox>
-                  <IconBox onClick={handleIconSelect}>
-                    <MinusIconBtn>
-                      <DeleteIconImg src={minusIcon} alt="아이콘 삭제하기" />
-                    </MinusIconBtn>
-                    <Icon src="" alt=""/>
-                  </IconBox> */}
                 </AlignIcon>
                 <ImageInput
                   style={{ display: "none" }}
@@ -752,6 +735,9 @@ export default function MakePush() {
                     아이콘 등록
                   </RegisterIconButton>
                 )}
+                <DeleteIconButton>
+                    아이콘 삭제
+                  </DeleteIconButton>
               </WrapMessage>
             </PushBox>
             <PushBox>

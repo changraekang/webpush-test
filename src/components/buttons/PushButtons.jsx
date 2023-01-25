@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { primary4, grey1, grey3, grey5 } from "../../constants/color";
+import { primary4, grey1, grey3, grey5, error3 } from "../../constants/color";
 
 const Button = styled.button`
   display: block;
@@ -62,7 +62,6 @@ const ImageButton = styled.button`
   display: block;
   border: none;
   width: 150px;
-  /* width: ${(props) => (props.icon ? "100px" : "225px")}; */
   padding: 10px;
   margin: 15px 0 8px 15px;
   cursor: pointer;
@@ -70,6 +69,7 @@ const ImageButton = styled.button`
   border-radius: 8px;
   color: ${primary4};
   border: 1px solid ${primary4};
+  border: ${props => props.delete ? `1px solid ${error3}` : `1px solid ${primary4}`};
 
   &:hover {
     background-color: ${primary4};
@@ -120,6 +120,13 @@ function RegisterIconButton({ children, handleUploadIcon }) {
     </ImageButton>
   );
 }
+function DeleteIconButton({ children }) {
+  return (
+    <ImageButton icon delete>
+      {children}
+    </ImageButton>
+  );
+}
 
 export {
   ActivePushButton,
@@ -128,4 +135,5 @@ export {
   RegisterIconButton,
   ActiveDeletePushButton,
   ActiveEditPushButton,
+  DeleteIconButton
 };
