@@ -26,6 +26,7 @@ export const InputGroup = ({
   id,
   minlength,
   readonly = false,
+  isKeyDown
 }) => {
   return (
       <Input
@@ -36,6 +37,7 @@ export const InputGroup = ({
         readOnly={readonly}
         minlength={minlength}
         onChange={(e) => setValue(e.target.value)}
+        onKeyDown={isKeyDown}
       />
   );
 };
@@ -48,6 +50,7 @@ export const InputValidateGroup = ({
   id,
   name,
   maxlength,
+  isKeyDown,
   readonly = false,
 }) => {
   return (
@@ -60,6 +63,7 @@ export const InputValidateGroup = ({
         maxlength={maxlength}
         name={name}
         onChange={setValue}
+        onKeyDown={isKeyDown}
       />
   );
 };
