@@ -19,6 +19,7 @@ import {
   grey5,
   grey6,
   primary1,
+  grey9,
 } from "../constants/color";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -100,11 +101,11 @@ const SubNav = styled.ul`
 `;
 
 const SubLI = styled.li`
-  color: ${grey10};
-  margin-bottom: 12px;
+  margin-bottom: 10px;
+  font-size: 14px;
 `;
 const LinkStyle = styled(Link)`
-  color: ${grey7};
+  color: ${props => props.sub ? `${grey7}`: `${grey9}`};
 `;
 
 const MyButton = styled.button`
@@ -417,10 +418,10 @@ export default function Layout({ children }) {
           {isOpenNav && (
             <SubNav>
               <SubLI>
-                <LinkStyle to="/makePush">PUSH 작성</LinkStyle>
+                <LinkStyle sub to="/makePush">PUSH 작성</LinkStyle>
               </SubLI>
               <SubLI>
-                <LinkStyle to="/pushList">PUSH 리스트</LinkStyle>
+                <LinkStyle sub to="/pushList">PUSH 리스트</LinkStyle>
               </SubLI>
             </SubNav>
           )}
