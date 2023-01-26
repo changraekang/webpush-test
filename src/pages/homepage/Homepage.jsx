@@ -148,9 +148,9 @@ export default function Homepage() {
 
   const renderSubmitButton = () => {
     if (
-      MyPushProject.projectUrl === link ||
-      MyPushProject.name === homepage ||
-      MyPushProject.categoryCode === cateogry
+      myPushProject.projectUrl === link &&
+      myPushProject.name === homepage &&
+      myCategory[myPushProject.categoryCode - 1].name === cateogry
     ) {
       return <BeforeUpdateHomepage>수정</BeforeUpdateHomepage>;
     } else {

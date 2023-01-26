@@ -133,7 +133,7 @@ export default function MyPage() {
                 type="text"
                 id="email"
                 name="email"
-                readonly
+                readOnly={true}
                 value={email}
               />
             </div>
