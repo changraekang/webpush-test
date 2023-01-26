@@ -8,6 +8,8 @@ const Input = styled.input`
   border-radius: 4px;
   border: 1px solid ${grey5};
 
+  cursor: ${props => props.dropbox ? "pointer" : null};
+
   &:focus {
     border: 1px solid ${primary5};
   }
@@ -65,5 +67,28 @@ export const InputValidateGroup = ({
         onChange={setValue}
         onKeyDown={isKeyDown}
       />
+  );
+};
+
+export const DropboxInput = ({
+  type,
+  placeholder,
+  setValue,
+  handleClick,
+  value,
+  name,
+  readOnly= false
+}) => {
+  return (
+    <Input 
+      dropbox
+      type={type}
+      placeholder={placeholder}
+      value={value}
+      name={name}
+      onChange={setValue}
+      onClick={handleClick}
+      readOnly={readOnly}
+    />
   );
 };
