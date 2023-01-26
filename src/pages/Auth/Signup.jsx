@@ -28,7 +28,7 @@ import {
   DropboxInput,
   InputValidateGroup,
 } from "../../components/inputs/InputGroups";
-import Dropbox from '../../components/dropbox/dropbox'
+import {EmailDropbox} from '../../components/dropbox/dropbox'
 
 const Section = styled.section`
   display: flex;
@@ -361,7 +361,7 @@ export default function Signup() {
             )}
           </SubInputAlign>
         {isOpenEmail && 
-        <Dropbox 
+        <EmailDropbox 
           arrList={emailList} 
           handleClick={handleEmail} 
           width={"173px"}

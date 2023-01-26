@@ -77,6 +77,7 @@ export const DropboxInput = ({
   handleClick,
   value,
   name,
+  id,
   readOnly= false
 }) => {
   return (
@@ -85,6 +86,7 @@ export const DropboxInput = ({
       type={type}
       placeholder={placeholder}
       value={value}
+      id={id}
       name={name}
       onChange={setValue}
       onClick={handleClick}

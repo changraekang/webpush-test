@@ -9,8 +9,6 @@ const EmailList = styled.ul`
   display: flex;
   flex-direction: column;
   position: absolute;
-  /* right: 0;
-  top: 42px; */
   background-color: ${grey1};
   font-size: 14px;
   box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.16);
@@ -40,7 +38,7 @@ const ItemBtn = styled.button`
 `
 
 
-export default function Dropbox ({ arrList, handleClick, width, ver, hor, last }) {
+export function EmailDropbox ({ arrList, handleClick, width, ver, hor, last }) {
   return (
     <EmailList style={{"width": `${width}`, top: `${ver}`, right: `${hor}`}}>
         {arrList.map((item, index) => (
@@ -51,10 +49,28 @@ export default function Dropbox ({ arrList, handleClick, width, ver, hor, last }
         </EmailOptions>
         ))}
         <EmailOptions last>
-          {last}
+          { last }
         </EmailOptions>
     </EmailList>
 )
 }
+
+export  function CategoryDropbox ({ arrList, handleClick, width, ver, hor, last }) {
+  return (
+    <EmailList style={{"width": `${width}`, top: `${ver}`, left: `${hor}`}}>
+        {arrList.map(({name, code}) => (
+        <EmailOptions key={code}>
+          <ItemBtn onClick={handleClick} value={name}>
+          {name}
+          </ItemBtn>
+        </EmailOptions>
+        ))}
+        <EmailOptions last>
+          { last }
+        </EmailOptions>
+    </EmailList>
+)
+}
+
 
 

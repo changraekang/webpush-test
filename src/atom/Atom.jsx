@@ -38,10 +38,17 @@ const MyCategory = atom({
   effects_UNSTABLE: [persistAtom],
 });
 
+const MyCategoryName = atom({
+  key: "MyCategoryName", // unique ID (with respect to other atoms/selectors)
+  default: [], // default value (aka initial value)
+  effects_UNSTABLE: [persistAtom],
+})
+
 export {
   MyProfile,
   MyProject,
   MyPushProject,
   MyCategory,
   IsOpenModal,
+  MyCategoryName
 };
