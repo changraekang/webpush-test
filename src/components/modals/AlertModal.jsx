@@ -88,9 +88,11 @@ const AlertModal = () => {
 
   const handleAlertClose = () => {
     setIsAlertOpen(false);
-    if (alertCode === 1 || 2 ) {
+    if (alertCode === 1 || alertCode === 2 ) {
       window.localStorage.removeItem("recoil-persist");
       navigate("/");
+    } else {
+      
     }
   };
 
