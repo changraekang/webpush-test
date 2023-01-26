@@ -257,6 +257,7 @@ export default function Login() {
         const headersToken = tokenType + accessToken;
         setAccessTokenToCookie(headersToken);
         setRefreshTokenToCookie(refreshToken);
+        setAlertCode(0);
 
         instanceAxios.defaults.headers.common["Authorization"] = headersToken;
         const checkAccount = async () => {
