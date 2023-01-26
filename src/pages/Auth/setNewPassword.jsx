@@ -15,6 +15,9 @@ import {
 import { instanceAxios } from "../../api/axios";
 import { useLocation, useNavigate } from "react-router-dom";
 import SetPasswordBox from "../../components/containers/auth/SetPasswordBox";
+import { useRecoilState } from "recoil";
+import { AlertMessage, IsAlertOpen } from "../../atom/Atom";
+import AlertModal from "../../components/modals/AlertModal";
 
 const Section = styled.section`
   display: flex;
@@ -71,6 +74,10 @@ export default function SetNewPassword() {
   const [passwordVaildation, setPasswordVaildation] = useState(true);
   const [conPasswdVaildation, setConPasswdVaildation] = useState(true);
   const [expiredToken, setExpiredToken] = useState(false);
+  // Alert Modal
+  const [isAlertOpen, setIsAlertOpen] = useRecoilState(IsAlertOpen);
+  const [alertMessage, setAlertMessage] = useRecoilState(AlertMessage);
+
   const [inputs, setInputs] = useState({
     newPassword: "",
     confirmPassword: "",
@@ -78,7 +85,7 @@ export default function SetNewPassword() {
 
   useEffect(() => {
     const location = window.location;
-    if(location.search) {
+    if (location.search) {
       setToken(location.search.split("=")[1].split("&")[0]);
       setEmail(location.search.split("=")[2]);
     }
@@ -129,7 +136,8 @@ export default function SetNewPassword() {
     try {
       const response = await instanceAxios.post("/auth/password/reset", data);
       if (response.status === 200) {
-        alert(response.data.data);
+        setIsAlertOpen(true);
+        setAlertMessage(response.data.data);
         navigate("/");
       }
       console.log(response);
@@ -192,6 +200,9 @@ export default function SetNewPassword() {
             )}
         </FormStyle>
       </SetPasswordBox>
+      {/* alert */}
+      {isAlertOpen && <AlertModal></AlertModal>}
+      {/* alert */}
     </Section>
   );
 }

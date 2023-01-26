@@ -60,7 +60,7 @@ const SubTitle = styled.h2`
   align-items: center;
 `;
 const WrapContents = styled.div`
-  width: 100%;
+  width: 400px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -79,7 +79,7 @@ const CatContents = styled.div`
   }
 `;
 const SelectCatContents = styled.div`
-  width: 324px;
+  width: 340px;
   display: flex;
   padding: 10px;
   margin: 5px;

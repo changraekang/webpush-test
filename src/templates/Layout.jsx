@@ -109,7 +109,7 @@ const SubLI = styled.li`
   font-weight: 600;
 `;
 const LinkStyle = styled(Link)`
-  color: ${props => props.sub ? `${grey7}`: `${grey9}`};
+  color: ${(props) => (props.sub ? `${grey7}` : `${grey9}`)};
 `;
 
 const MyButton = styled.button`
@@ -368,7 +368,7 @@ export default function Layout({ children }) {
   const handleAddProject = () => {
     if (myProject.length > 2) {
       setIsAlertOpen(true);
-      setAlertMessage("프로젝트는 3개까지 가능합니다");
+      setAlertMessage("프로젝트는 3개까지 가능합니다.⚠️");
     } else {
       setIsOpenModal(true);
     }
@@ -377,7 +377,8 @@ export default function Layout({ children }) {
   // refreshToken 재발급
   const logoutTimer = () => {
     logoutSession();
-    alert("세션이 만료되었습니다.");
+    setIsAlertOpen(true);
+    setAlertMessage("세션이 만료되었습니다.🤷‍♂️");
     navigate("/");
   };
 
@@ -428,10 +429,14 @@ export default function Layout({ children }) {
           {isOpenNav && (
             <SubNav>
               <SubLI>
-                <LinkStyle sub to="/makePush">PUSH 작성</LinkStyle>
+                <LinkStyle sub to="/makePush">
+                  PUSH 작성
+                </LinkStyle>
               </SubLI>
               <SubLI>
-                <LinkStyle sub to="/pushList">PUSH 리스트</LinkStyle>
+                <LinkStyle sub to="/pushList">
+                  PUSH 리스트
+                </LinkStyle>
               </SubLI>
             </SubNav>
           )}

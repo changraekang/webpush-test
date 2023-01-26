@@ -32,10 +32,17 @@ import {
   InputValidateGroup,
 } from "../../components/inputs/InputGroups";
 import { useRecoilState } from "recoil";
-import { MyProfile, MyProject, MyPushProject } from "../../atom/Atom";
+import {
+  AlertMessage,
+  IsAlertOpen,
+  MyProfile,
+  MyProject,
+  MyPushProject,
+} from "../../atom/Atom";
 import Cookies from "universal-cookie";
 import { useCookies } from "react-cookie";
 import { version } from "react";
+import AlertModal from "../../components/modals/AlertModal";
 
 const Section = styled.section`
   display: flex;
@@ -170,6 +177,10 @@ export default function Login() {
   const [myProfile, setMyProfile] = useRecoilState(MyProfile);
   const [myProject, setMyProject] = useRecoilState(MyProject);
   const [myPushProject, setMyPushProject] = useRecoilState(MyPushProject);
+
+  // Alert Modal
+  const [isAlertOpen, setIsAlertOpen] = useRecoilState(IsAlertOpen);
+  const [alertMessage, setAlertMessage] = useRecoilState(AlertMessage);
 
   //이메일 저장 날짤 설정
   let today = new Date();
@@ -386,6 +397,9 @@ export default function Login() {
           </WrapContents>
         </LoginBox>
       </InputSection>
+      {/* alert */}
+      {isAlertOpen && <AlertModal></AlertModal>}
+      {/* alert */}
     </Section>
   );
 }
