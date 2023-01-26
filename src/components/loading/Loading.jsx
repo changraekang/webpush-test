@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import loadinggif from "../../assets/images/loading.gif";
-import { primary2, primary4, primary6 } from "../../constants/color";
+import { primary6 } from "../../constants/color";
 const Wrapper = styled.div`
   position: fixed;
   z-index: 10;

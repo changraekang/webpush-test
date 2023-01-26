@@ -160,27 +160,21 @@ const AlertModal = () => {
     }
   };
 
-  const renderCloseModal = () => {
+  const renderCloseModalBtn = () => {
     return (
-      <Button
-        onClick={() => {
-          setIsAlertOpen(false);
-          if (alertCode === 1) {
-            navigate("/");
-          }
-        }}
-      >
+      <Button onClick={handleAlertClose}>
         닫기
       </Button>
     );
   };
+
   const renderModal = () => {
     return (
       <ModalWrapper>
         <ModalContent>
           <WrapContents>{alertMessage}</WrapContents>
         </ModalContent>
-        {renderCloseModal()}
+        {renderCloseModalBtn()}
       </ModalWrapper>
     );
   };
