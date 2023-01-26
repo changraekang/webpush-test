@@ -1,21 +1,12 @@
-import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
-import { instanceAxios } from "../../api/axios";
 import { AlertCode, AlertMessage, IsAlertOpen } from "../../atom/Atom";
 import {
-  grey11,
   grey1,
-  grey2,
   primary4,
-  grey5,
-  grey3,
-  grey6,
-  primary3,
+
 } from "../../constants/color";
-import { getCookie } from "../../cookie/controlCookie";
-import { InputGroup } from "../inputs/InputGroups";
 
 const Wrapper = styled.div`
   position: fixed;
@@ -46,50 +37,13 @@ const Modal = styled.div`
   border-radius: 16px;
 `;
 
-const Title = styled.h2`
-  color: ${grey11};
-  font-size: 24px;
-  font-weight: 700;
-  padding-bottom: 12px;
-  align-items: center;
-`;
-const SubTitle = styled.h2`
-  color: ${grey6};
-  font-size: 14px;
-  font-weight: 400;
-  padding-bottom: 12px;
-  align-items: center;
-`;
 const WrapContents = styled.div`
   width: 400px;
   display: flex;
   justify-content: center;
   align-items: center;
 `;
-const CatContents = styled.div`
-  width: 324px;
-  display: flex;
-  padding: 10px;
-  margin: 5px;
-  justify-content: center;
-  align-items: center;
-  border-radius: 4px;
-  border: 1px solid ${grey5};
-  &:hover {
-    border: 1px solid ${primary3};
-  }
-`;
-const SelectCatContents = styled.div`
-  width: 340px;
-  display: flex;
-  padding: 10px;
-  margin: 5px;
-  justify-content: center;
-  align-items: center;
-  border-radius: 4px;
-  background-color: ${primary3};
-  color: ${grey1};
-`;
+
 const ModalWrapper = styled.div`
   position: relative;
   display: flex;
@@ -103,14 +57,6 @@ const ModalWrapper = styled.div`
   font-family: "Pretendard-Regular";
 `;
 
-const CloseModal = styled.p`
-  position: absolute;
-  right: 13px;
-  top: -13px;
-  width: 24px;
-  height: 14px;
-  cursor: pointer;
-`;
 const ModalContent = styled.div`
   display: flex;
   flex-direction: row;
@@ -121,16 +67,7 @@ const ModalContent = styled.div`
   outline: 0;
   margin-bottom: 24px;
 `;
-const ProjectInputWrap = styled.div`
-  width: 399px;
-  margin-top: 20px;
-`;
-const ButtonWrapper = styled.div`
-  width: 520px;
-  display: flex;
-  justify-content: center;
-  margin-bottom: 18px;
-`;
+
 const Button = styled.div`
   display: flex;
   width: 100px;
