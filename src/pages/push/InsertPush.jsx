@@ -191,6 +191,8 @@ export default function InsertPush() {
         </TopAlign>
         <WrapInputs>
           <TxtBox>
+            {/* <p><script>let titile =""</script></p>
+            <p><script>let content =""</script></p> */}
             <p>{script.split(" ")}</p>
           </TxtBox>
         </WrapInputs>
