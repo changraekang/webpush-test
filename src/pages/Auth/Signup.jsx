@@ -40,6 +40,10 @@ const Section = styled.section`
   width: 100%;
   font-family: "Pretendard-Regular";
   background: ${MAIN_BACKGROUND_COLOR};
+
+  @media screen and (min-height: 750px) {
+    padding: 80px 0;
+    }
 `;
 
 const WrapTitle = styled.div`
