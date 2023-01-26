@@ -28,7 +28,9 @@ import {
   InputGroup,
   InputValidateGroup,
 } from "../../components/inputs/InputGroups";
-
+import { useRecoilState } from "recoil";
+import { AlertMessage, IsAlertOpen } from "../../atom/Atom";
+import AlertModal from "../../components/modals/AlertModal";
 
 const Section = styled.section`
   display: flex;
@@ -171,8 +173,8 @@ const TimeSpan = styled.span`
 
 //--------------회원가입 페이지--------------------------
 export default function Signup() {
-  // 아이디 저장 기능 
-  
+  // 아이디 저장 기능
+
   const [iscapslock, setIsCapsLock] = useState(false);
   const navigate = useNavigate();
   const emailList = [
@@ -195,15 +197,19 @@ export default function Signup() {
   const [agreement, setAgreement] = useState(false);
   const [minutes, setMinutes] = useState(parseInt(3));
   const [seconds, setSeconds] = useState(parseInt(0));
-  
-  //capsLock 여부 
+
+  // Alert Modal
+  const [isAlertOpen, setIsAlertOpen] = useRecoilState(IsAlertOpen);
+  const [alertMessage, setAlertMessage] = useRecoilState(AlertMessage);
+
+  //capsLock 여부
   const handleCheckCapsLock = (e) => {
-    if(e.getModifierState('CapsLock')) {
+    if (e.getModifierState("CapsLock")) {
       setIsCapsLock(true);
     } else {
       setIsCapsLock(false);
     }
-  }
+  };
 
   useEffect(() => {
     if (isOpenTokenBox) {
@@ -312,7 +318,8 @@ export default function Signup() {
         email: `${id}@${email}`,
       });
       if (response.status === 200) {
-        alert(response.data.data);
+        setIsAlertOpen(true);
+        setAlertMessage(response.data.data);
         setIsOpenTokenBox(true);
         setIsTokenVerification(false);
       }
@@ -332,7 +339,8 @@ export default function Signup() {
       });
       if (response.status === 200) {
         setIsTokenVerification(true);
-        alert(response.data.data);
+        setIsAlertOpen(true);
+        setAlertMessage(response.data.data);
       }
       console.log(response);
     } catch (err) {
@@ -479,7 +487,8 @@ export default function Signup() {
             token: token,
           },
         });
-        console.log("회원가입 성공🎉");
+        setIsAlertOpen(true);
+        setAlertMessage("회원가입 성공🎉");
       }
       console.log(response);
     } catch (err) {
@@ -520,7 +529,9 @@ export default function Signup() {
                     비밀번호는 영문/숫자/특문을 포함한 8자이상 입력해주세요.
                   </LabelWarning>
                 )}
-                {iscapslock && <LabelWarning>Caps Lock이 켜져있습니다!</LabelWarning>}
+                {iscapslock && (
+                  <LabelWarning>Caps Lock이 켜져있습니다!</LabelWarning>
+                )}
               </WrapRightItems>
             </InputAlign>
 
@@ -544,7 +555,9 @@ export default function Signup() {
                     비밀번호가 일치하지 않습니다.
                   </LabelWarning>
                 )}
-                {iscapslock && <LabelWarning>Caps Lock이 켜져있습니다!</LabelWarning>}
+                {iscapslock && (
+                  <LabelWarning>Caps Lock이 켜져있습니다!</LabelWarning>
+                )}
               </WrapRightItems>
             </InputAlign>
 
@@ -621,6 +634,9 @@ export default function Signup() {
           </form>
         </WrapContents>
       </SignupBox>
+      {/* alert */}
+      {isAlertOpen && <AlertModal></AlertModal>}
+      {/* alert */}
     </Section>
   );
 }
