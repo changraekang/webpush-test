@@ -505,7 +505,7 @@ export default function PushDetail() {
     if (myPushProject) {
       if (myPushProject.expiryDate) {
         setIsAlertOpen(true);
-        setAlertMessage("현재시간보다 빠르게 설정 할 수 없습니다.");
+        setAlertMessage("삭제예정 홈페이지입니다.");
       }
     }
   }, [myPushProject]);

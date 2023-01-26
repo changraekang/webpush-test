@@ -232,7 +232,8 @@ const PushList = () => {
 
   //handle 함수
   const handleSubmit = async (mid) => {
-    console.log(mid);
+    console.log(mid, "메세지");
+    console.log(myPushProject.pid, " 프로젝트");
     if (window.confirm("push 메세지를 삭제하시겠습니까?")) {
       try {
         const response = await instanceAxios.delete(
@@ -383,9 +384,13 @@ const PushList = () => {
             >
               상세보기
             </ActiveDeletePushButton>
-            <ActiveDeletePushButton handleSubmit={() => handleSubmit(item.mid)}>
-              삭제
-            </ActiveDeletePushButton>
+            {myPushProject.expiryDate ? null : (
+              <ActiveDeletePushButton
+                handleSubmit={() => handleSubmit(item.mid)}
+              >
+                삭제
+              </ActiveDeletePushButton>
+            )}
           </DetailMessage>
         </PushContentListWrapper>
       );

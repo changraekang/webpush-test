@@ -13,7 +13,12 @@ import {
 import { instanceAxios } from "../../api/axios";
 import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
-import { MyCategory, MyProfile } from "../../atom/Atom";
+import {
+  AlertMessage,
+  IsAlertOpen,
+  MyCategory,
+  MyProfile,
+} from "../../atom/Atom";
 
 const WrapInputs = styled.div`
   display: flex;
@@ -53,6 +58,10 @@ export default function MyPage() {
   const [company, setCompany] = useState(myProfile.company);
   const [phone, setPhone] = useState(myProfile.phone);
   const [isValidEmail, setIsValidEmail] = useState(true);
+
+  // Alert Modal
+  const [isAlertOpen, setIsAlertOpen] = useRecoilState(IsAlertOpen);
+  const [alertMessage, setAlertMessage] = useRecoilState(AlertMessage);
 
   useEffect(() => {
     if (phone) {
@@ -102,7 +111,8 @@ export default function MyPage() {
       try {
         const response = await instanceAxios.put("/member/update", updateData);
         if (response.status === 200) {
-          alert("성공적으로 정보를 수정하였습니다.🎉");
+          setIsAlertOpen(true);
+          setAlertMessage("성공적으로 정보를 수정하였습니다.🎉");
           setMyProfile(updateData);
           // console.log(myProfile, '⚠️수정 누르고');
         }
