@@ -17,14 +17,13 @@ import {
   AfterUpdateHomepage,
 } from "../../components/buttons/HompageButtons";
 import { useRecoilState } from "recoil";
-import { MyCategory, MyProject, MyPushProject, MyCategoryName } from "../../atom/Atom";
 import { CategoryDropbox } from "../../components/dropbox/dropbox";
 import {
   AlertMessage,
   IsAlertOpen,
-  MyCategory,
   MyProject,
   MyPushProject,
+  MyCategory
 } from "../../atom/Atom";
 
 const WrapInputs = styled.div`
@@ -82,16 +81,12 @@ export default function Homepage() {
   const [isOpenDrop, setIsOpenDrop] = useState(false);
   const [myProject, setMyProject] = useRecoilState(MyProject);
   const [myCategory, setMyCategory] = useRecoilState(MyCategory);
-  const [myCategoryName, setMyCategoryName] = useState([]);
   const [myPushProject, setMyPushProject] = useRecoilState(MyPushProject);
   const [homepage, setHomepage] = useState(myPushProject.name);
   const [link, setLink] = useState(myPushProject.projectUrl);
   const [cateogry, setCategory] = useState(myCategory[myPushProject.categoryCode - 1].name);
   const [pid, setPid] = useState("");
 
-  useEffect(() => {
-    console.log(myPushProject, "myPushProject🐰");
-  }, [myPushProject, myCategory])
 
   // Alert Modal
   const [isAlertOpen, setIsAlertOpen] = useRecoilState(IsAlertOpen);
