@@ -40,17 +40,16 @@ export const logout = async () => {
       window.location.reload();
     }
   } catch (err) {
-    // cookies.remove('refreshToken');
-    // cookies.remove('accessToken');
-    // instanceAxios.defaults.headers.common['Authorization'] = null;
-    // window.location.reload();
+    cookies.remove("refreshToken");
+    cookies.remove("accessToken");
+    instanceAxios.defaults.headers.common["Authorization"] = null;
+    window.location.reload();
     console.error(err);
   }
 };
 export const logoutSession = async () => {
   try {
     const response = await instanceAxios.post(`/member/logout`, logoutData);
-    const cookies = new Cookies();
     console.log(response);
     console.log("로그아웃");
     if (response.status === 200) {
