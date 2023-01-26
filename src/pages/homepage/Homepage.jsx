@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { HomepageBox } from "../../components/containers/homepage/HomepageBox";
 import Layout from "../../templates/Layout";
-import { InputGroup } from "../../components/inputs/InputGroups";
+import { DropboxInput, InputGroup } from "../../components/inputs/InputGroups";
 import UpdateProfile from "../../components/buttons/ProfileButtons";
 import { instanceAxios } from "../../api/axios";
 import { useEffect, useState } from "react";
@@ -17,15 +17,18 @@ import {
   AfterUpdateHomepage,
 } from "../../components/buttons/HompageButtons";
 import { useRecoilState } from "recoil";
+import { CategoryDropbox } from "../../components/dropbox/dropbox";
 import {
   AlertMessage,
   IsAlertOpen,
-  MyCategory,
   MyProject,
   MyPushProject,
+  MyCategory
 } from "../../atom/Atom";
+
 const WrapInputs = styled.div`
   display: flex;
+  position: relative;
   flex-wrap: wrap;
   width: 380px;
   justify-content: space-between;
@@ -38,10 +41,6 @@ const LabelStyle = styled.label`
   /* width: 180px; */
 `;
 const WrapButton = styled.div`
-  width: 180px;
-  margin: 40px auto 0;
-`;
-const WrapInactiveButton = styled.div`
   width: 180px;
   margin: 40px auto 0;
 `;
@@ -78,14 +77,16 @@ const DeleteBtn = styled.button`
 `;
 
 export default function Homepage() {
+  const [selectedDrop, setSelectedDrop] = useState('');
+  const [isOpenDrop, setIsOpenDrop] = useState(false);
   const [myProject, setMyProject] = useRecoilState(MyProject);
   const [myCategory, setMyCategory] = useRecoilState(MyCategory);
   const [myPushProject, setMyPushProject] = useRecoilState(MyPushProject);
   const [homepage, setHomepage] = useState(myPushProject.name);
-  const [link, setLink] = useState(MyPushProject.projectUrl);
-  const [cateogry, setCategory] = useState(MyPushProject.categoryCode);
+  const [link, setLink] = useState(myPushProject.projectUrl);
+  const [cateogry, setCategory] = useState(myCategory[myPushProject.categoryCode - 1].name);
   const [pid, setPid] = useState("");
-  console.log(myPushProject, "myPushProject🐰");
+
 
   // Alert Modal
   const [isAlertOpen, setIsAlertOpen] = useRecoilState(IsAlertOpen);
@@ -223,6 +224,17 @@ export default function Homepage() {
     );
   };
 
+  const handleClickDropbox = () => {
+    isOpenDrop ? setIsOpenDrop(false) : setIsOpenDrop(true);
+  }
+
+  const handleClickDropItem = (e) => {
+    e.preventDefault();
+    setCategory(e.target.value);
+    setIsOpenDrop(false);
+  }
+  console.log(cateogry);
+ 
   return (
     <Layout>
       <HomepageBox>
@@ -240,7 +252,7 @@ export default function Homepage() {
             <div>
               <InputGroup
                 type="text"
-                value={myPushProject.name}
+                value={homepage}
                 id="homepage"
                 setValue={setHomepage}
               />
@@ -251,7 +263,7 @@ export default function Homepage() {
             <div>
               <InputGroup
                 type="text"
-                value={myPushProject.projectUrl}
+                value={link}
                 id="link"
                 setValue={setLink}
               />
@@ -260,13 +272,22 @@ export default function Homepage() {
           <WrapInputs>
             <LabelStyle htmlFor="category">카테고리</LabelStyle>
             <div>
-              <InputGroup
+              <DropboxInput
                 type="text"
-                value={myCategory[myPushProject.categoryCode - 1]?.name}
+                value={cateogry}
                 id="category"
-                setValue={setCategory}
+                readOnly={true}
+                handleClick={handleClickDropbox}
               />
             </div>
+            {isOpenDrop && 
+            <CategoryDropbox 
+              arrList={myCategory}
+              ver="40px"
+              hor="174px"
+              width="205px"
+              handleClick={handleClickDropItem}
+            />}
           </WrapInputs>
           {myPushProject.expiryDate ? null : (
             <WrapButton>{renderSubmitButton()}</WrapButton>

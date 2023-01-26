@@ -25,9 +25,10 @@ import SignupAgreement from "../../components/agreement/SignupAgreement";
 import { instanceAxios } from "../../api/axios";
 import warning from "../../assets/images/warning.png";
 import {
-  InputGroup,
+  DropboxInput,
   InputValidateGroup,
 } from "../../components/inputs/InputGroups";
+import {EmailDropbox} from '../../components/dropbox/dropbox'
 import { useRecoilState } from "recoil";
 import { AlertMessage, IsAlertOpen } from "../../atom/Atom";
 import AlertModal from "../../components/modals/AlertModal";
@@ -39,6 +40,10 @@ const Section = styled.section`
   width: 100%;
   font-family: "Pretendard-Regular";
   background: ${MAIN_BACKGROUND_COLOR};
+
+  @media screen and (min-height: 750px) {
+    padding: 80px 0;
+    }
 `;
 
 const WrapTitle = styled.div`
@@ -106,37 +111,6 @@ const LabelWarning = styled.span`
   margin-bottom: ${(props) => (props.email ? "8px" : "0")};
 `;
 
-const EmailInput = styled.input`
-  width: 100%;
-  padding: 10px 12px;
-  box-sizing: border-box;
-  border-radius: 4px;
-  border: 1px solid ${grey5};
-  cursor: pointer;
-`;
-
-const EmailList = styled.ul`
-  display: flex;
-  flex-direction: column;
-  position: absolute;
-  width: 173px;
-  right: 0;
-  top: 42px;
-  background-color: ${grey1};
-  font-size: 14px;
-  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.16);
-  border-radius: 8px;
-  border: 1px solid ${grey5};
-  text-align: center;
-  z-index: 5;
-`;
-
-const EmailOptions = styled.li`
-  padding: 12px 0;
-  border-bottom: 1px solid ${grey5};
-  border-bottom: ${(props) => (props.last ? "none" : `1px solid ${grey5}`)};
-`;
-
 const WrapRightItems = styled.div`
   width: 380px;
   margin: ${(props) => (props.first ? "0 0 12px 140px" : "0")};
@@ -170,6 +144,16 @@ const TimeSpan = styled.span`
   top: 12px;
   font-size: 14px;
 `;
+
+const ItemBtn = styled.button`
+  width: 100%;
+  padding: 12px 0;
+
+  &:hover {
+    color: ${primary4};
+    font-weight : 700;
+  }
+`
 
 //--------------회원가입 페이지--------------------------
 export default function Signup() {
@@ -370,42 +354,35 @@ export default function Signup() {
             <span>@</span>
 
             {!isWriteEmail && (
-              <EmailInput
+              <DropboxInput
                 type="text"
                 placeholder="이메일 선택"
-                readOnly
-                onClick={handleOpenEmail}
+                readOnly={true}
+                handleClick={handleOpenEmail}
                 value={email}
                 name="email"
               />
             )}
             {isWriteEmail && (
-              <EmailInput
+              <DropboxInput
                 type="text"
                 placeholder="이메일 선택"
-                onChange={handleWriteEmail}
+                setValue={handleWriteEmail}
                 value={email}
                 name="email"
               />
             )}
           </SubInputAlign>
-
-          {isOpenEmail && (
-            <EmailList>
-              {emailList.map((item, index) => (
-                <EmailOptions key={index}>
-                  <button onClick={handleEmail} value={item}>
-                    {item}
-                  </button>
-                </EmailOptions>
-              ))}
-              <EmailOptions last>
-                <button value="write" onClick={handleEmail}>
-                  직접입력
-                </button>
-              </EmailOptions>
-            </EmailList>
-          )}
+        {isOpenEmail && 
+        <EmailDropbox 
+          arrList={emailList} 
+          handleClick={handleEmail} 
+          width={"173px"}
+          ver={"42px"}
+          hor={"0"}
+          last={<ItemBtn value="write" onClick={handleEmail}>직접입력</ItemBtn>}
+        />
+        }
         </InputAlign>
         <WrapRightItems first>
           {!emailVaildation && (
