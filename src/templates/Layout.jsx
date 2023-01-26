@@ -385,11 +385,10 @@ export default function Layout({ children }) {
     setAlertCode(1);
   };
   const handlelogout = () => {
-    window.localStorage.removeItem("recoil-persist");
-    logout();
-    setIsAlertOpen(true);
     setAlertMessage("로그아웃 성공🎉");
-    setAlertCode(1);
+    setIsAlertOpen(true);
+    setAlertCode(2);
+    logout();
   };
 
   useEffect(() => {

@@ -206,7 +206,6 @@ export default function Login() {
       setIsCheck(false);
       removeCookie("rememberEmail");
     }
-    window.localStorage.removeItem("recoil-persist");
     console.log("test-commit modal");
   }, []);
 
