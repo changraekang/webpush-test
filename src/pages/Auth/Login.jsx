@@ -247,6 +247,7 @@ export default function Login() {
   const requestLogin = async (e) => {
     e.preventDefault();
     window.localStorage.removeItem("recoil-persist");
+    setAlertCode(0);
     try {
       const response = await instanceAxios.post("/auth/login", loginData);
       if (response.status === 200) {
