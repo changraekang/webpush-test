@@ -122,6 +122,21 @@ export default function MyPage() {
     }
   };
 
+  const secessionMember = async(e) => {
+    e.preventDefault();
+    if(window.confirm("정말 탈퇴하시겠습니까?😥")) {
+      try {
+        const response = await instanceAxios.post("/member/secession", {
+          "currentPassword": "String",
+          "reason": "String"
+        })
+        console.log(response);
+      }catch (err) {
+        console.error(err);
+      }
+    }
+  }
+
   return (
     <Layout>
       <ProfileBox>
@@ -170,7 +185,7 @@ export default function MyPage() {
             )}
             {Object.values(myProfile).toString() ===
               Object.values(updateData).toString() && (
-              <UpdateInactiveProfileBtn updateMyInfo={updateMyInfo}>
+              <UpdateInactiveProfileBtn>
                 수정
               </UpdateInactiveProfileBtn>
             )}
