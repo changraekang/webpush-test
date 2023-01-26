@@ -206,6 +206,8 @@ export default function Login() {
       setIsCheck(false);
       removeCookie("rememberEmail");
     }
+    window.localStorage.removeItem("recoil-persist");
+    console.log("test-commit modal");
   }, []);
 
   const handleCheckBox = () => {
@@ -229,10 +231,6 @@ export default function Login() {
       setBrowserName("MOBILE");
     }
   }, [browserName]);
-  useEffect(() => {
-    window.localStorage.removeItem("recoil-persist");
-    console.log("test-commit filter");
-  }, []);
 
   const loginData = {
     deviceInfo: {
@@ -245,9 +243,10 @@ export default function Login() {
   };
 
   // 로그인 요청
-  // 로그인 > me > project
+  // 로그인 > 기존 정보 지우기 >me > project
   const requestLogin = async (e) => {
     e.preventDefault();
+    window.localStorage.removeItem("recoil-persist");
     try {
       const response = await instanceAxios.post("/auth/login", loginData);
       if (response.status === 200) {
@@ -267,7 +266,6 @@ export default function Login() {
                 setCookie("rememberEmail", email, { expires: today });
               }
               setMyProfile(response.data);
-              setAlertCode(0);
               const checkProject = async () => {
                 try {
                   const response = await instanceAxios.get("/all");
