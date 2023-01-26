@@ -97,17 +97,18 @@ export default function MyPage() {
       }
     }
   };
-
+  
   const updateData = {
+    email: email,
     name: myProfile.name,
     company: company,
-    email: email,
     phone: phone,
+    roles: myProfile.roles
   };
 
   const updateMyInfo = async (e) => {
     e.preventDefault();
-    if (window.confirm("개인정보를 수정하시겠습니까?")) {
+    if (window.confirm("개인정보를 수정하시겠습니까?😯")) {
       try {
         const response = await instanceAxios.put("/member/update", updateData);
         if (response.status === 200) {
@@ -122,6 +123,21 @@ export default function MyPage() {
     }
   };
 
+  const secessionMember = async(e) => {
+    e.preventDefault();
+    if(window.confirm("정말 탈퇴하시겠습니까?😥")) {
+      try {
+        const response = await instanceAxios.post("/member/secession", {
+          "currentPassword": "String",
+          "reason": "String"
+        })
+        console.log(response);
+      }catch (err) {
+        console.error(err);
+      }
+    }
+  }
+
   return (
     <Layout>
       <ProfileBox>
@@ -133,7 +149,7 @@ export default function MyPage() {
                 type="text"
                 id="email"
                 name="email"
-                readonly
+                readOnly={true}
                 value={email}
               />
             </div>
@@ -170,7 +186,7 @@ export default function MyPage() {
             )}
             {Object.values(myProfile).toString() ===
               Object.values(updateData).toString() && (
-              <UpdateInactiveProfileBtn updateMyInfo={updateMyInfo}>
+              <UpdateInactiveProfileBtn>
                 수정
               </UpdateInactiveProfileBtn>
             )}
