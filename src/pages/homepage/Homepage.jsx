@@ -251,7 +251,7 @@ export default function Homepage() {
             <div>
               <InputGroup
                 type="text"
-                value={myCategory[myPushProject.categoryCode - 1].name}
+                value={myCategory[myPushProject.categoryCode - 1]?.name}
                 id="category"
                 setValue={setCategory}
               />
