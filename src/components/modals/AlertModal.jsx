@@ -2,11 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { AlertCode, AlertMessage, IsAlertOpen } from "../../atom/Atom";
-import {
-  grey1,
-  primary4,
-
-} from "../../constants/color";
+import { grey1, primary4 } from "../../constants/color";
 
 const Wrapper = styled.div`
   position: fixed;
@@ -98,18 +94,16 @@ const AlertModal = () => {
   };
 
   const renderCloseModalBtn = () => {
-    return (
-      <Button onClick={handleAlertClose}>
-        닫기
-      </Button>
-    );
+    return <Button onClick={handleAlertClose}>닫기</Button>;
   };
 
   const renderModal = () => {
     return (
       <ModalWrapper>
         <ModalContent>
-          <WrapContents>{alertMessage}</WrapContents>
+          <WrapContents>
+            {alertMessage ? alertMessage : "로그아웃 되셨습니다."}
+          </WrapContents>
         </ModalContent>
         {renderCloseModalBtn()}
       </ModalWrapper>
