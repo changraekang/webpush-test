@@ -107,7 +107,7 @@ export default function MyPage() {
 
   const updateMyInfo = async (e) => {
     e.preventDefault();
-    if (window.confirm("개인정보를 수정하시겠습니까?")) {
+    if (window.confirm("개인정보를 수정하시겠습니까?😯")) {
       try {
         const response = await instanceAxios.put("/member/update", updateData);
         if (response.status === 200) {
