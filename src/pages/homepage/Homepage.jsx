@@ -87,7 +87,6 @@ export default function Homepage() {
   const [cateogry, setCategory] = useState(myCategory[myPushProject.categoryCode - 1].name);
   const [pid, setPid] = useState("");
 
-
   // Alert Modal
   const [isAlertOpen, setIsAlertOpen] = useRecoilState(IsAlertOpen);
   const [alertMessage, setAlertMessage] = useRecoilState(AlertMessage);
@@ -110,22 +109,38 @@ export default function Homepage() {
     }
   }, [pid]);
 
+  const upadateMyPushproject = {
+   cateogryCode: cateogry, 
+   expiryDate: myPushProject.expiryDate,
+   name: homepage,
+   pid: myPushProject.projectUrl,
+   projectUrl: link,
+  }
+
   const updateData = {
     code: cateogry,
     name: homepage,
     projectUrl: link,
   };
 
+  console.log(myPushProject, "myPushProject😂")
   const updateHomePage = async (e) => {
     e.preventDefault();
-    try {
-      const response = await instanceAxios.put(
-        `/${myPushProject.pid}`,
-        updateData
-      );
-      console.log(response.data);
-    } catch (err) {
-      console.error(err);
+    if(window.confirm("홈페이지 정보를 수정하시겠습니까?😯")) {
+      try {
+        const response = await instanceAxios.put(
+          `/${myPushProject.pid}`,
+          updateData
+        );
+        if(response.status === 200) {
+          setIsAlertOpen(true);
+          setAlertMessage("성공적으로 정보를 수정하였습니다.🎉");
+          setMyPushProject(upadateMyPushproject);
+        }
+        console.log(response.data);
+      } catch (err) {
+        console.error(err);
+      }
     }
   };
 
@@ -133,12 +148,10 @@ export default function Homepage() {
     e.preventDefault();
     if (window.confirm("정말 홈페이지를 삭제하시겠습니까?")) {
       try {
-        const response = await instanceAxios.delete(`/${myPushProject.pid}`);
+        const response = await instanceAxios.delete(`/${myPushProject.pid}/cancel`);
         if (response.status === 200) {
           setIsAlertOpen(true);
           setAlertMessage("성공적으로 삭제되었습니다.⚠️");
-          window.location.reload();
-          console.log(response.data, "데이터 지우기⚠️");
         }
       } catch (err) {
         console.error(err);
@@ -148,9 +161,9 @@ export default function Homepage() {
 
   const renderSubmitButton = () => {
     if (
-      MyPushProject.projectUrl === link ||
-      MyPushProject.name === homepage ||
-      MyPushProject.categoryCode === cateogry
+      myPushProject.projectUrl === link &&
+      myPushProject.name === homepage &&
+      myCategory[myPushProject.categoryCode - 1].name === cateogry
     ) {
       return <BeforeUpdateHomepage>수정</BeforeUpdateHomepage>;
     } else {
