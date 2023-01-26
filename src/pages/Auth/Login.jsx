@@ -33,14 +33,17 @@ import {
 } from "../../components/inputs/InputGroups";
 import { useRecoilState } from "recoil";
 import {
+  AlertCode,
+  AlertMessage,
+  IsAlertOpen,
   MyProfile,
   MyProject,
   MyPushProject,
-  IsOpenModal,
 } from "../../atom/Atom";
 import Cookies from "universal-cookie";
 import { useCookies } from "react-cookie";
 import { version } from "react";
+import AlertModal from "../../components/modals/AlertModal";
 
 const Section = styled.section`
   display: flex;
@@ -175,13 +178,17 @@ export default function Login() {
   const [myProfile, setMyProfile] = useRecoilState(MyProfile);
   const [myProject, setMyProject] = useRecoilState(MyProject);
   const [myPushProject, setMyPushProject] = useRecoilState(MyPushProject);
-  const [isOpenMobal, setIsOpenModal] = useRecoilState(IsOpenModal);
-  
+
+  // Alert Modal
+  const [isAlertOpen, setIsAlertOpen] = useRecoilState(IsAlertOpen);
+  const [alertMessage, setAlertMessage] = useRecoilState(AlertMessage);
+  const [alertCode, setAlertCode] = useRecoilState(AlertCode);
+
   //이메일 저장 날짤 설정
-  let today = new Date;
+  let today = new Date();
   today.setDate(today.getDate() + 1);
-  
-  //capsLock 여부 
+
+  //capsLock 여부
   const handleCheckCapsLock = (e) => {
     if (e.getModifierState("CapsLock")) {
       setIsCapsLock(true);
@@ -199,12 +206,14 @@ export default function Login() {
       setIsCheck(false);
       removeCookie("rememberEmail");
     }
+    window.localStorage.removeItem("recoil-persist");
+    console.log("test-commit modal");
   }, []);
 
   const handleCheckBox = () => {
     isCheck ? setIsCheck(false) : setIsCheck(true);
-    if(isCheck) {
-      removeCookie('rememberEmail');
+    if (isCheck) {
+      removeCookie("rememberEmail");
     }
   };
 
@@ -222,10 +231,6 @@ export default function Login() {
       setBrowserName("MOBILE");
     }
   }, [browserName]);
-  useEffect(() => {
-    window.localStorage.removeItem("recoil-persist");
-    console.log("test-commit filter");
-  }, []);
 
   const loginData = {
     deviceInfo: {
@@ -238,9 +243,11 @@ export default function Login() {
   };
 
   // 로그인 요청
-  // 로그인 > me > project
+  // 로그인 > 기존 정보 지우기 >me > project
   const requestLogin = async (e) => {
     e.preventDefault();
+    window.localStorage.removeItem("recoil-persist");
+    setAlertCode(0);
     try {
       const response = await instanceAxios.post("/auth/login", loginData);
       if (response.status === 200) {
@@ -256,8 +263,8 @@ export default function Login() {
           try {
             const response = await instanceAxios.post("/member/me");
             if (response.status === 200) {
-              if(isCheck) {
-                setCookie('rememberEmail', email, {expires: today});
+              if (isCheck) {
+                setCookie("rememberEmail", email, { expires: today });
               }
               setMyProfile(response.data);
               const checkProject = async () => {
@@ -276,9 +283,6 @@ export default function Login() {
                       );
                     } else {
                       setMyPushProject(response.data[0]);
-                    }
-                    if (response.data.length > 0) {
-                      setIsOpenModal(false);
                     }
                   }
                 } catch (err) {
@@ -395,6 +399,9 @@ export default function Login() {
           </WrapContents>
         </LoginBox>
       </InputSection>
+      {/* alert */}
+      {isAlertOpen && <AlertModal></AlertModal>}
+      {/* alert */}
     </Section>
   );
 }

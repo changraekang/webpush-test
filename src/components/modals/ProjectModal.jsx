@@ -2,7 +2,13 @@ import React, { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { instanceAxios } from "../../api/axios";
-import { MyCategory, MyProject, MyPushProject } from "../../atom/Atom";
+import {
+  AlertMessage,
+  IsAlertOpen,
+  MyCategory,
+  MyProject,
+  MyPushProject,
+} from "../../atom/Atom";
 import {
   grey11,
   grey1,
@@ -150,7 +156,9 @@ const ProjectModal = (props) => {
   const [myProject, setMyProject] = useRecoilState(MyProject);
   const [myCategory, setMyCategoy] = useRecoilState(MyCategory);
   const [myPushProject, setMyPushProject] = useRecoilState(MyPushProject);
-
+  // Alert Modal
+  const [isAlertOpen, setIsAlertOpen] = useRecoilState(IsAlertOpen);
+  const [alertMessage, setAlertMessage] = useRecoilState(AlertMessage);
   const handleClose = async () => {
     let body = {
       name: homepage,
@@ -165,7 +173,16 @@ const ProjectModal = (props) => {
             const response = await instanceAxios.get("/all");
             if (response.status === 200) {
               setMyProject(response.data);
-              setMyPushProject(response.data[0]);
+              if (
+                response.data.filter((item) => item.expiryDate === null)
+                  .length > 0
+              ) {
+                setMyPushProject(
+                  response.data.filter((item) => item.expiryDate === null)[0]
+                );
+              } else {
+                setMyPushProject(response.data[0]);
+              }
               window.location.reload();
             }
           } catch (err) {
@@ -185,7 +202,8 @@ const ProjectModal = (props) => {
     if (url.includes("https://")) {
       setStep(2);
     } else {
-      alert('홈페이지 주소는 "https://" 가 필요합니다.🥹');
+      setIsAlertOpen(true);
+      setAlertMessage('홈페이지 주소는 "https://"가 필요합니다🥹');
     }
   };
 
@@ -209,6 +227,12 @@ const ProjectModal = (props) => {
           X
         </CloseModal>
       );
+    }
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      handleNext();
     }
   };
 
@@ -238,6 +262,7 @@ const ProjectModal = (props) => {
                   value={url}
                   type="text"
                   placeholder="https://"
+                  isKeyDown={handleKeyDown}
                 />
               </ProjectInputWrap>
             </form>

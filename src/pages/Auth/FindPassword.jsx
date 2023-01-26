@@ -20,6 +20,9 @@ import checkImg from "../../assets/images/Check.png";
 import { useState } from "react";
 import { instanceAxios } from "../../api/axios";
 import { useNavigate } from "react-router";
+import { useRecoilState } from "recoil";
+import { AlertMessage, IsAlertOpen } from "../../atom/Atom";
+import AlertModal from "../../components/modals/AlertModal";
 
 const Section = styled.section`
   display: flex;
@@ -144,6 +147,10 @@ export default function FindPassword() {
   const [emailValidation, setemailValidation] = useState(true);
   const [isSendLink, setIsSendLink] = useState(false);
 
+  // Alert Modal
+  const [isAlertOpen, setIsAlertOpen] = useRecoilState(IsAlertOpen);
+  const [alertMessage, setAlertMessage] = useRecoilState(AlertMessage);
+
   const handleInput = (e) => {
     const re =
       /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -163,10 +170,11 @@ export default function FindPassword() {
         email: email,
       });
       if (response.status === 200) {
-        alert(response.data.data);
+        setIsAlertOpen(true);
+        setAlertMessage(response.data.data);
         setIsSendLink(true);
       }
-      console.log(response);
+      console.log(response, "비번찾기");
     } catch (err) {
       console.error(err);
     }
@@ -229,6 +237,9 @@ export default function FindPassword() {
           </FindMemberBox>
         )}
       </InputSection>
+      {/* alert */}
+      {isAlertOpen && <AlertModal></AlertModal>}
+      {/* alert */}
     </Section>
   );
 }

@@ -21,7 +21,13 @@ import {
   BeforeCopy,
 } from "../../components/buttons/HompageButtons";
 import { useRecoilState } from "recoil";
-import { MyCategory, MyProject, MyPushProject } from "../../atom/Atom";
+import {
+  AlertMessage,
+  IsAlertOpen,
+  MyCategory,
+  MyProject,
+  MyPushProject,
+} from "../../atom/Atom";
 import { async } from "q";
 const WrapInputs = styled.div`
   width: 100%;
@@ -85,6 +91,10 @@ export default function InsertPush() {
   const [pid, setPid] = useState(myPushProject.pid);
   const [script, setScript] = useState("");
 
+  // Alert Modal
+  const [isAlertOpen, setIsAlertOpen] = useRecoilState(IsAlertOpen);
+  const [alertMessage, setAlertMessage] = useRecoilState(AlertMessage);
+
   useEffect(() => {
     console.log(pid, "💕⚠️pid");
     console.log(myPushProject, "myPushProject🐰");
@@ -130,9 +140,11 @@ export default function InsertPush() {
   const handleCopyScript = (text) => {
     try {
       navigator.clipboard.writeText(text);
-      alert("클립보드에 복사되었습니다😆");
+      setIsAlertOpen(true);
+      setAlertMessage("클립보드에 복사되었습니다😆");
     } catch (error) {
-      alert("복사에 실패하였습니다🥹");
+      setIsAlertOpen(true);
+      setAlertMessage("복사에 실패하였습니다🥹");
     }
   };
 

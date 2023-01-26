@@ -19,6 +19,14 @@ import {
 import { useRecoilState } from "recoil";
 import { MyCategory, MyProject, MyPushProject, MyCategoryName } from "../../atom/Atom";
 import { CategoryDropbox } from "../../components/dropbox/dropbox";
+import {
+  AlertMessage,
+  IsAlertOpen,
+  MyCategory,
+  MyProject,
+  MyPushProject,
+} from "../../atom/Atom";
+
 const WrapInputs = styled.div`
   display: flex;
   position: relative;
@@ -85,6 +93,10 @@ export default function Homepage() {
     console.log(myPushProject, "myPushProject🐰");
   }, [myPushProject, myCategory])
 
+  // Alert Modal
+  const [isAlertOpen, setIsAlertOpen] = useRecoilState(IsAlertOpen);
+  const [alertMessage, setAlertMessage] = useRecoilState(AlertMessage);
+
   const getOneHomepage = async () => {
     try {
       const response = await instanceAxios.get(`/${pid}`);
@@ -126,10 +138,11 @@ export default function Homepage() {
     e.preventDefault();
     if (window.confirm("정말 홈페이지를 삭제하시겠습니까?")) {
       try {
-        console.log(pid, "pid");
         const response = await instanceAxios.delete(`/${myPushProject.pid}`);
         if (response.status === 200) {
-          alert("성공적으로 삭제되었습니다.");
+          setIsAlertOpen(true);
+          setAlertMessage("성공적으로 삭제되었습니다.⚠️");
+          window.location.reload();
           console.log(response.data, "데이터 지우기⚠️");
         }
       } catch (err) {

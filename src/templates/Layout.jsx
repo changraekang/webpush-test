@@ -38,10 +38,13 @@ import {
   MyProfile,
   MyProject,
   MyPushProject,
-  IsOpenModal,
+  IsAlertOpen,
+  AlertMessage,
+  AlertCode,
 } from "../atom/Atom";
 import ProjectModal from "../components/modals/ProjectModal";
 import settingHomepage from "../assets/images/homepageSetting.png";
+import AlertModal from "../components/modals/AlertModal";
 
 const Header = styled.header`
   display: flex;
@@ -107,7 +110,7 @@ const SubLI = styled.li`
   font-weight: 600;
 `;
 const LinkStyle = styled(Link)`
-  color: ${props => props.sub ? `${grey7}`: `${grey9}`};
+  color: ${(props) => (props.sub ? `${grey7}` : `${grey9}`)};
 `;
 
 const MyButton = styled.button`
@@ -257,13 +260,18 @@ export default function Layout({ children }) {
   const [isOpenMyMenu, setIsOpenMyMenu] = useState(false);
   const [isProjectOpen, setIsProjectOpen] = useState(false);
   const [isOpenMobal, setIsOpenModal] = useState(false);
-  //const [isOpenMobal, setIsOpenModal] = useRecoilState(IsOpenModal); recoil 나중에 다시 한번 시도
   const [minutes, setMinutes] = useState(5);
   const [seconds, setSeconds] = useState(0);
   const [refreshToken, setRefreshToken] = useState(getCookie("refreshToken"));
   const [myProfile, setMyProfile] = useRecoilState(MyProfile);
   const [myProject, setMyProject] = useRecoilState(MyProject);
   const [myPushProject, setMyPushProject] = useRecoilState(MyPushProject);
+
+  // Alert Modal
+  const [isAlertOpen, setIsAlertOpen] = useRecoilState(IsAlertOpen);
+  const [alertMessage, setAlertMessage] = useRecoilState(AlertMessage);
+  const [alertCode, setAlertCode] = useRecoilState(AlertCode);
+
   const para = document.location.href;
   const params = para.search("pushdetail");
   const requestAccessToken = async () => {
@@ -361,7 +369,8 @@ export default function Layout({ children }) {
 
   const handleAddProject = () => {
     if (myProject.length > 2) {
-      alert("프로젝트는 3개까지 가능합니다.");
+      setIsAlertOpen(true);
+      setAlertMessage("프로젝트는 3개까지 가능합니다.⚠️");
     } else {
       setIsOpenModal(true);
     }
@@ -369,9 +378,18 @@ export default function Layout({ children }) {
 
   // refreshToken 재발급
   const logoutTimer = () => {
+    window.localStorage.removeItem("recoil-persist");
     logoutSession();
-    alert("세션이 만료되었습니다.");
-    navigate("/");
+    setIsAlertOpen(true);
+    setAlertMessage("세션이 만료되었습니다.🤷‍♂️");
+    setAlertCode(1);
+  };
+  const handlelogout = () => {
+    window.localStorage.removeItem("recoil-persist");
+    logout();
+    setIsAlertOpen(true);
+    setAlertMessage("로그아웃 성공🎉");
+    setAlertCode(1);
   };
 
   useEffect(() => {
@@ -396,6 +414,7 @@ export default function Layout({ children }) {
   return (
     <Header>
       {/* 왼쪽 */}
+
       <Nav>
         {isOpenMobal && <ProjectModal setClose={setIsOpenModal} />}
         <Link to="/dashboard">
@@ -420,10 +439,14 @@ export default function Layout({ children }) {
           {isOpenNav && (
             <SubNav>
               <SubLI>
-                <LinkStyle sub to="/makePush">PUSH 작성</LinkStyle>
+                <LinkStyle sub to="/makePush">
+                  PUSH 작성
+                </LinkStyle>
               </SubLI>
               <SubLI>
-                <LinkStyle sub to="/pushList">PUSH 리스트</LinkStyle>
+                <LinkStyle sub to="/pushList">
+                  PUSH 리스트
+                </LinkStyle>
               </SubLI>
             </SubNav>
           )}
@@ -529,7 +552,7 @@ export default function Layout({ children }) {
                 </MyMenuLi>
                 <MyMenuLi logout>
                   <MyMenuIcon src={logoutIcon} alt="로그아웃 아이콘" />
-                  <LinkStyle onClick={logout}>로그아웃</LinkStyle>
+                  <LinkStyle onClick={handlelogout}>로그아웃</LinkStyle>
                 </MyMenuLi>
               </MyMenu>
             )}
@@ -537,6 +560,9 @@ export default function Layout({ children }) {
         </TopHeader>
         <main>{children}</main>
       </WrapRight>
+      {/* alert */}
+      {isAlertOpen && <AlertModal></AlertModal>}
+      {/* alert */}
     </Header>
   );
 }
