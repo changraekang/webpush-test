@@ -97,12 +97,13 @@ export default function MyPage() {
       }
     }
   };
-
+  
   const updateData = {
+    email: email,
     name: myProfile.name,
     company: company,
-    email: email,
     phone: phone,
+    roles: myProfile.roles
   };
 
   const updateMyInfo = async (e) => {
