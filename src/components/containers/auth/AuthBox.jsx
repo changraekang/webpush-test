@@ -8,7 +8,7 @@ const Box = styled.div`
 `;
 
 function SignupBox({ children }) {
-  return <Box signup>{children}</Box>;
+  return <Box signup style={{position: "fix"}}>{children}</Box>;
 }
 
 function LoginBox({ children }) {
