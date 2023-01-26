@@ -7,11 +7,12 @@ export function setRefreshTokenToCookie(refreshToken) {
   cookies.set("refreshToken", refreshToken, {
     sameSite: "strict",
     secure: true,
+    path: "/"
   });
 }
 
 export function setAccessTokenToCookie(accessToken) {
-  cookies.set("accessToken", accessToken, { sameSite: "strict", secure: true });
+  cookies.set("accessToken", accessToken, { path: "/" , ameSite: "strict", secure: true });
 }
 
 export const getCookie = (name) => {

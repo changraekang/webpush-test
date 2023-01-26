@@ -1,3 +1,4 @@
+import { Navigate } from "react-router-dom";
 import styled from "styled-components"
 import { error3, grey1, grey3} from "../../../constants/color";
 
@@ -37,6 +38,7 @@ const Title = styled.h2`
 
 const Withdrawal = styled.button`
   display: block;
+  font-weight: 600;
   color : ${error3}
 `
 
