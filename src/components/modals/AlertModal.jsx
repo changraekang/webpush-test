@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { instanceAxios } from "../../api/axios";
-import { AlertMessage, IsAlertOpen } from "../../atom/Atom";
+import { AlertCode, AlertMessage, IsAlertOpen } from "../../atom/Atom";
 import {
   grey11,
   grey1,
@@ -149,18 +150,30 @@ const Button = styled.div`
 const AlertModal = () => {
   const [isAlertOpen, setIsAlertOpen] = useRecoilState(IsAlertOpen);
   const [alertMessage, setAlertMessage] = useRecoilState(AlertMessage);
+  const [alertCode, setAlertCode] = useRecoilState(AlertCode);
+  const navigate = useNavigate();
+
+  const handleAlertClose = () => {
+    setIsAlertOpen(false);
+    if (alertCode === 1) {
+      navigate("/");
+    }
+  };
+
   const renderCloseModal = () => {
     return (
       <Button
         onClick={() => {
           setIsAlertOpen(false);
+          if (alertCode === 1) {
+            navigate("/");
+          }
         }}
       >
         닫기
       </Button>
     );
   };
-
   const renderModal = () => {
     return (
       <ModalWrapper>
@@ -172,11 +185,7 @@ const AlertModal = () => {
     );
   };
   return (
-    <Wrapper
-      onClick={() => {
-        setIsAlertOpen(false);
-      }}
-    >
+    <Wrapper onClick={handleAlertClose}>
       <Modal onClick={(event) => event.stopPropagation()}>
         {renderModal()}
       </Modal>

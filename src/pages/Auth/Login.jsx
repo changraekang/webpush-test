@@ -33,6 +33,7 @@ import {
 } from "../../components/inputs/InputGroups";
 import { useRecoilState } from "recoil";
 import {
+  AlertCode,
   AlertMessage,
   IsAlertOpen,
   MyProfile,
@@ -181,6 +182,7 @@ export default function Login() {
   // Alert Modal
   const [isAlertOpen, setIsAlertOpen] = useRecoilState(IsAlertOpen);
   const [alertMessage, setAlertMessage] = useRecoilState(AlertMessage);
+  const [alertCode, setAlertCode] = useRecoilState(AlertCode);
 
   //이메일 저장 날짤 설정
   let today = new Date();
@@ -265,6 +267,7 @@ export default function Login() {
                 setCookie("rememberEmail", email, { expires: today });
               }
               setMyProfile(response.data);
+              setAlertCode(0);
               const checkProject = async () => {
                 try {
                   const response = await instanceAxios.get("/all");

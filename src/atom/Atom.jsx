@@ -37,6 +37,11 @@ const AlertMessage = atom({
   default: "", // default value (aka initial value)
   effects_UNSTABLE: [persistAtom],
 });
+const AlertCode = atom({
+  key: "AlertCode", // unique ID (with respect to other atoms/selectors)
+  default: 0, // default value (aka initial value)
+  effects_UNSTABLE: [persistAtom],
+});
 
 export {
   MyProfile,
@@ -45,4 +50,5 @@ export {
   MyCategory,
   IsAlertOpen,
   AlertMessage,
+  AlertCode,
 };

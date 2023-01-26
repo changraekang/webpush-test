@@ -40,6 +40,7 @@ import {
   MyPushProject,
   IsAlertOpen,
   AlertMessage,
+  AlertCode,
 } from "../atom/Atom";
 import ProjectModal from "../components/modals/ProjectModal";
 import settingHomepage from "../assets/images/homepageSetting.png";
@@ -269,6 +270,7 @@ export default function Layout({ children }) {
   // Alert Modal
   const [isAlertOpen, setIsAlertOpen] = useRecoilState(IsAlertOpen);
   const [alertMessage, setAlertMessage] = useRecoilState(AlertMessage);
+  const [alertCode, setAlertCode] = useRecoilState(AlertCode);
 
   const para = document.location.href;
   const params = para.search("pushdetail");
@@ -376,10 +378,18 @@ export default function Layout({ children }) {
 
   // refreshToken 재발급
   const logoutTimer = () => {
+    window.localStorage.removeItem("recoil-persist");
     logoutSession();
     setIsAlertOpen(true);
     setAlertMessage("세션이 만료되었습니다.🤷‍♂️");
-    navigate("/");
+    setAlertCode(1);
+  };
+  const handlelogout = () => {
+    window.localStorage.removeItem("recoil-persist");
+    logout();
+    setIsAlertOpen(true);
+    setAlertMessage("로그아웃 성공🎉");
+    setAlertCode(1);
   };
 
   useEffect(() => {
@@ -542,7 +552,7 @@ export default function Layout({ children }) {
                 </MyMenuLi>
                 <MyMenuLi logout>
                   <MyMenuIcon src={logoutIcon} alt="로그아웃 아이콘" />
-                  <LinkStyle onClick={logout}>로그아웃</LinkStyle>
+                  <LinkStyle onClick={handlelogout}>로그아웃</LinkStyle>
                 </MyMenuLi>
               </MyMenu>
             )}
