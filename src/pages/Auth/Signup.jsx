@@ -28,7 +28,7 @@ import {
   InputGroup,
   InputValidateGroup,
 } from "../../components/inputs/InputGroups";
-
+import Dropbox from '../../components/dropbox/dropbox'
 
 const Section = styled.section`
   display: flex;
@@ -123,7 +123,7 @@ const EmailList = styled.ul`
   background-color: ${grey1};
   font-size: 14px;
   box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.16);
-  border-radius: 8px;
+  border-radius: 4px;
   border: 1px solid ${grey5};
   text-align: center;
   z-index: 5;
@@ -381,23 +381,14 @@ export default function Signup() {
               />
             )}
           </SubInputAlign>
-
-          {isOpenEmail && (
-            <EmailList>
-              {emailList.map((item, index) => (
-                <EmailOptions key={index}>
-                  <button onClick={handleEmail} value={item}>
-                    {item}
-                  </button>
-                </EmailOptions>
-              ))}
-              <EmailOptions last>
-                <button value="write" onClick={handleEmail}>
-                  직접입력
-                </button>
-              </EmailOptions>
-            </EmailList>
-          )}
+        {isOpenEmail && 
+        <Dropbox 
+          arrList={emailList} 
+          handleClick={handleEmail} 
+          width={"173px"} 
+          last={<button value="write" onClick={handleEmail}>직접입력</button>}
+        />
+        }
         </InputAlign>
         <WrapRightItems first>
           {!emailVaildation && (

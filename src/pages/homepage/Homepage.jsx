@@ -79,7 +79,11 @@ export default function Homepage() {
   const [link, setLink] = useState(MyPushProject.projectUrl);
   const [cateogry, setCategory] = useState(MyPushProject.categoryCode);
   const [pid, setPid] = useState("");
-  console.log(myPushProject, "myPushProject🐰");
+
+  useEffect(() => {
+    console.log(myPushProject, "myPushProject🐰");
+    console.log(myCategory, 'myCategory📁');
+  }, [myPushProject, myCategory])
 
   const getOneHomepage = async () => {
     try {
@@ -253,6 +257,7 @@ export default function Homepage() {
                 type="text"
                 value={myCategory[myPushProject.categoryCode - 1].name}
                 id="category"
+                readonly={true}
                 setValue={setCategory}
               />
             </div>
