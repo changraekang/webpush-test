@@ -339,6 +339,7 @@ export default function Layout({ children }) {
     console.log(params, "주소");
     setAlertCode(0);
   }, []);
+  
   const handleOpenNav = () => {
     !isOpenNav ? setIsOpenNav(true) : setIsOpenNav(false);
   };
