@@ -143,9 +143,6 @@ export default function InsertPush() {
     }
   }, [pid]);
   useEffect(() => {
-    if (pid) {
-      handleGetScript();
-    }
     setCopyScript(
       `<script>let dmpush_title = "${title}";</script> \n` +
         `<script>let dmpush_content = "${content}";</script> \n` +
