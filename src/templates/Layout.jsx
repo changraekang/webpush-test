@@ -337,9 +337,6 @@ export default function Layout({ children }) {
   const handleOpenNav = () => {
     !isOpenNav ? setIsOpenNav(true) : setIsOpenNav(false);
   };
-  const handleOpenPushProject = () => {
-    !isProjectOpen ? setIsProjectOpen(true) : setIsProjectOpen(false);
-  };
 
   const handleOpenMyMenu = () => {
     !isOpenMyMenu ? setIsOpenMyMenu(true) : setIsOpenMyMenu(false);
@@ -351,7 +348,6 @@ export default function Layout({ children }) {
     projectUrl,
     expiryDate
   ) => {
-    handleOpenPushProject();
     let body = {
       categoryCode: categoryCode,
       projectUrl: projectUrl,

@@ -87,29 +87,10 @@ export default function Homepage() {
   const [cateogry, setCategory] = useState(
     myCategory[myPushProject.categoryCode - 1].name
   );
-  const [pid, setPid] = useState("");
 
   // Alert Modal
   const [isAlertOpen, setIsAlertOpen] = useRecoilState(IsAlertOpen);
   const [alertMessage, setAlertMessage] = useRecoilState(AlertMessage);
-
-  const getOneHomepage = async () => {
-    try {
-      const response = await instanceAxios.get(`/${pid}`);
-      console.log("하나의 프로젝트⭐", response.data);
-      if (response.status === 200) {
-        setMyPushProject(response.data);
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  useEffect(() => {
-    if (pid) {
-      getOneHomepage();
-    }
-  }, [pid]);
 
   const upadateMyPushproject = {
     cateogryCode: cateogry,
@@ -124,8 +105,23 @@ export default function Homepage() {
     name: homepage,
     projectUrl: link,
   };
+  const handlePushProject = (
+    categoryCode,
+    pid,
+    name,
+    projectUrl,
+    expiryDate
+  ) => {
+    let body = {
+      categoryCode: categoryCode,
+      projectUrl: projectUrl,
+      pid: pid,
+      name: name,
+      expiryDate: expiryDate,
+    };
+    setMyPushProject(body);
+  };
 
-  console.log(myPushProject, "myPushProject😂");
   const updateHomePage = async (e) => {
     e.preventDefault();
     if (window.confirm("홈페이지 정보를 수정하시겠습니까?😯")) {
@@ -138,28 +134,6 @@ export default function Homepage() {
           setIsAlertOpen(true);
           setAlertMessage("성공적으로 정보를 수정하였습니다.🎉");
           setMyPushProject(upadateMyPushproject);
-          const checkProject = async () => {
-            try {
-              const response = await instanceAxios.get("/all");
-              if (response.status === 200) {
-                setMyProject(response.data);
-                if (
-                  response.data.filter((item) => item.expiryDate === null)
-                    .length > 0
-                ) {
-                  setMyPushProject(
-                    response.data.filter((item) => item.expiryDate === null)[0]
-                  );
-                } else {
-                  setMyPushProject(response.data[0]);
-                }
-              }
-            } catch (err) {
-              // login yet
-              console.error(err);
-            }
-          };
-          checkProject();
         }
         console.log(response.data);
       } catch (err) {
@@ -204,61 +178,83 @@ export default function Homepage() {
   const handleRenderHomepageBtns = () => {
     return (
       <>
-        {myProject?.map(({ name, pid, expiryDate }) => {
-          if (expiryDate) {
-            if (pid === myPushProject.pid) {
-              return (
-                <li key={pid}>
-                  <DeleteSelectedHomepage
-                    setValue={() => {
-                      setPid(pid);
-                    }}
+        {myProject?.map(
+          ({ categoryCode, pid, name, projectUrl, expiryDate }) => {
+            if (expiryDate) {
+              if (pid === myPushProject.pid) {
+                return (
+                  <li
+                    key={pid}
+                    onClick={() =>
+                      handlePushProject(
+                        categoryCode,
+                        pid,
+                        name,
+                        projectUrl,
+                        expiryDate
+                      )
+                    }
                   >
-                    {name}
-                  </DeleteSelectedHomepage>
-                </li>
-              );
+                    <DeleteSelectedHomepage>{name}</DeleteSelectedHomepage>
+                  </li>
+                );
+              } else {
+                return (
+                  <li
+                    key={pid}
+                    onClick={() =>
+                      handlePushProject(
+                        categoryCode,
+                        pid,
+                        name,
+                        projectUrl,
+                        expiryDate
+                      )
+                    }
+                  >
+                    <DeleteHomepage>{name}</DeleteHomepage>
+                  </li>
+                );
+              }
             } else {
-              return (
-                <li key={pid}>
-                  <DeleteHomepage
-                    setValue={() => {
-                      setPid(pid);
-                    }}
+              if (pid === myPushProject.pid) {
+                return (
+                  <li
+                    key={pid}
+                    onClick={() =>
+                      handlePushProject(
+                        categoryCode,
+                        pid,
+                        name,
+                        projectUrl,
+                        expiryDate
+                      )
+                    }
                   >
-                    {name}
-                  </DeleteHomepage>
-                </li>
-              );
-            }
-          } else {
-            if (pid === myPushProject.pid) {
-              return (
-                <li key={pid}>
-                  <SelectedHomepage
-                    setValue={() => {
-                      setPid(pid);
-                    }}
+                    <SelectedHomepage>{name}</SelectedHomepage>
+                  </li>
+                );
+              } else {
+                return (
+                  <li
+                    key={pid}
+                    onClick={() =>
+                      handlePushProject(
+                        categoryCode,
+                        pid,
+                        name,
+                        projectUrl,
+                        expiryDate
+                      )
+                    }
                   >
-                    {name}
-                  </SelectedHomepage>
-                </li>
-              );
-            } else {
-              return (
-                <li key={pid}>
-                  <SelectHomepage
-                    setValue={() => {
-                      setPid(pid);
-                    }}
-                  >
-                    {name}
-                  </SelectHomepage>
-                </li>
-              );
+                    <SelectHomepage>{name}</SelectHomepage>
+                  </li>
+                );
+              }
             }
           }
-        })}
+        )}
       </>
     );
   };
@@ -272,7 +268,6 @@ export default function Homepage() {
     setCategory(e.target.value);
     setIsOpenDrop(false);
   };
-  console.log(cateogry);
 
   return (
     <Layout>
