@@ -28,13 +28,12 @@ const Modal = styled.div`
   justify-content: center;
   align-items: center;
   background-color: ${grey1};
-  width: 360px;
   padding: 40px 0;
   border-radius: 16px;
+  min-width: 400px;
 `;
 
 const WrapContents = styled.div`
-  width: 400px;
   display: flex;
   justify-content: center;
   align-items: center;
