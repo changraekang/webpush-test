@@ -44,7 +44,6 @@ import {
   MyPushProject,
 } from "../../atom/Atom";
 import Cookies from "universal-cookie";
-import { useCookies } from "react-cookie";
 import { version } from "react";
 import AlertModal from "../../components/modals/AlertModal";
 import { LogoutMadal, NewpasswordMadal } from "../../components/modals/LogoutMadal";
