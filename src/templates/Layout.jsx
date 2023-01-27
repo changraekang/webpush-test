@@ -291,6 +291,7 @@ export default function Layout({ children }) {
       console.error(err);
     }
   };
+
   useEffect(() => {
     const checkAccount = async () => {
       try {
@@ -313,7 +314,6 @@ export default function Layout({ children }) {
         console.error(err);
       }
     };
-
     const checkProject = async () => {
       try {
         const response = await instanceAxios.get("/all");
@@ -328,7 +328,6 @@ export default function Layout({ children }) {
         console.error(err);
       }
     };
-    checkProject();
     if (!refreshToken) {
       // login yet
       navigate("/");
@@ -386,10 +385,11 @@ export default function Layout({ children }) {
     setAlertCode(1);
   };
   const handlelogout = () => {
-    setAlertMessage("로그아웃 성공🎉");
+    window.localStorage.removeItem("recoil-persist");
     setIsAlertOpen(true);
+    setAlertMessage("로그아웃 성공🎉");
     setAlertCode(2);
-    logout();
+    logoutSession();
   };
 
   useEffect(() => {

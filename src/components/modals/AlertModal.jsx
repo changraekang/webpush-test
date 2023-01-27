@@ -88,11 +88,12 @@ const AlertModal = () => {
 
   const handleAlertClose = () => {
     setIsAlertOpen(false);
-    if (alertCode === 1 || alertCode === 2 ) {
-      window.localStorage.removeItem("recoil-persist");
+    if (alertCode === 2) {
+      setAlertMessage("로그아웃 성공🎉");
+    }
+    if (alertCode === 1 || alertCode === 2) {
       navigate("/");
     } else {
-      
     }
   };
 
@@ -106,7 +107,7 @@ const AlertModal = () => {
         <ModalContent>
           <WrapContents>
             {/* {alertMessage ? alertMessage : "로그아웃 되셨습니다."} */}
-            {alertCode ===2 ? "로그아웃 성공🎉" : alertMessage}
+            {alertCode === 2 ? "로그아웃 성공🎉" : alertMessage}
           </WrapContents>
         </ModalContent>
         {renderCloseModalBtn()}

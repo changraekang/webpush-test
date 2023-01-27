@@ -7,12 +7,16 @@ export function setRefreshTokenToCookie(refreshToken) {
   cookies.set("refreshToken", refreshToken, {
     sameSite: "strict",
     secure: true,
-    path: "/"
+    path: "/",
   });
 }
 
 export function setAccessTokenToCookie(accessToken) {
-  cookies.set("accessToken", accessToken, { path: "/" , ameSite: "strict", secure: true });
+  cookies.set("accessToken", accessToken, {
+    path: "/",
+    ameSite: "strict",
+    secure: true,
+  });
 }
 
 export const getCookie = (name) => {
@@ -28,6 +32,10 @@ const logoutData = {
 };
 
 export const logout = async () => {
+  const cookies = new Cookies();
+  cookies.remove("refreshToken");
+  cookies.remove("accessToken");
+  instanceAxios.defaults.headers.common["Authorization"] = null;
   try {
     const response = await instanceAxios.post(`/member/logout`, logoutData);
     console.log(response);
@@ -35,17 +43,11 @@ export const logout = async () => {
     // window.localStorage.setItem('logout', Date.now());
     if (response.status === 200) {
       // dispatch({type: 'logout'})
-      cookies.remove("refreshToken");
-      cookies.remove("accessToken");
-      instanceAxios.defaults.headers.common["Authorization"] = null;
       window.location.reload();
     }
   } catch (err) {
-    cookies.remove("refreshToken");
-    cookies.remove("accessToken");
-    instanceAxios.defaults.headers.common["Authorization"] = null;
-    window.location.reload();
     console.error(err);
+    window.location.reload();
   }
 };
 export const logoutSession = async () => {
