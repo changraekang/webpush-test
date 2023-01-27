@@ -308,15 +308,7 @@ export default function Layout({ children }) {
         console.error(err);
       }
     };
-    const getCategory = async () => {
-      try {
-        const response = await instanceAxios.get("/category/all");
-        setMyCategory(response.data);
-        // console.log(myCategory, "🍓");
-      } catch (err) {
-        console.error(err);
-      }
-    };
+
     const checkProject = async () => {
       try {
         const response = await instanceAxios.get("/all");

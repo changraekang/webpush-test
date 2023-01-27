@@ -37,6 +37,7 @@ import {
   AlertMessage,
   IsAlertOpen,
   IsLogoutOpen,
+  MyCategory,
   MyProfile,
   MyProject,
   MyPushProject,
@@ -177,10 +178,12 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [isCheck, setIsCheck] = useState(false);
   const [password, setPassword] = useState("");
+
+  // Recoil 부분
   const [myProfile, setMyProfile] = useRecoilState(MyProfile);
   const [myProject, setMyProject] = useRecoilState(MyProject);
   const [myPushProject, setMyPushProject] = useRecoilState(MyPushProject);
-
+  const [myCategory, setMyCategory] = useRecoilState(MyCategory);
   // Alert Modal
   const [isAlertOpen, setIsAlertOpen] = useRecoilState(IsAlertOpen);
   const [isLogoutOpen, setIsLogoutOpen] = useRecoilState(IsLogoutOpen);
@@ -213,6 +216,7 @@ export default function Login() {
   }, []);
 
   const handleCheckBox = () => {
+    console.log("test-check");
     isCheck ? setIsCheck(false) : setIsCheck(true);
     if (isCheck) {
       removeCookie("rememberEmail");
@@ -258,17 +262,28 @@ export default function Login() {
         const accessToken = response.data.accessToken;
         const tokenType = response.data.tokenType;
         const headersToken = tokenType + accessToken;
-        setAccessTokenToCookie(headersToken);
         setRefreshTokenToCookie(refreshToken);
+        setAccessTokenToCookie(headersToken);
         setAlertCode(0);
-
+        const getCategory = async () => {
+          try {
+            const response = await instanceAxios.get("/category/all");
+            setMyCategory(response.data);
+            // console.log(myCategory, "🍓");
+          } catch (err) {
+            console.error(err);
+          }
+        };
         instanceAxios.defaults.headers.common["Authorization"] = headersToken;
         const checkAccount = async () => {
           try {
             const response = await instanceAxios.post("/member/me");
             if (response.status === 200) {
               if (isCheck) {
-                setCookie("rememberEmail", email, { expires: today , path : "/"});
+                setCookie("rememberEmail", email, {
+                  expires: today,
+                  path: "/",
+                });
               }
               setMyProfile(response.data);
               const checkProject = async () => {
@@ -302,6 +317,7 @@ export default function Login() {
             console.error(err);
           }
         };
+        getCategory();
         checkAccount();
         navigate("/dashboard");
         console.log(response);
