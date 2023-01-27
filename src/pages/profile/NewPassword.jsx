@@ -11,6 +11,8 @@ import { instanceAxios } from "../../api/axios";
 import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import { AlertMessage, IsAlertOpen, MyProfile } from "../../atom/Atom";
+import Cookies from "universal-cookie";
+import { logout } from "../../cookie/controlCookie";
 
 const WrapInputs = styled.div`
   display: flex;
@@ -72,6 +74,7 @@ export default function NewPassword() {
 
   const updatePassword = async (e) => {
     e.preventDefault();
+    const cookies = new Cookies();
     if (window.confirm("비밀번호를 수정하시겠습니까?")) {
       try {
         const response = await instanceAxios.put(
@@ -79,19 +82,18 @@ export default function NewPassword() {
           updateData
         );
         console.log(response, "비밀번호 변경 api");
-        const data = response.data;
         if (response.status === 200) {
-          // setEmail(data.email);
-          // setPhone(data.phone);
-          // setCompany(data.company);
           setIsAlertOpen(true);
-          setAlertMessage("성공적으로 비밀번호를 수정하였습니다.🎉");
-          window.location.reload();
-        }
+          setAlertMessage(`비밀번호를 수정하였습니다.🎉 \n 다시 로그인해주세요!`);
+          cookies.remove("refreshToken");
+          cookies.remove("accessToken");
+          instanceAxios.defaults.headers.common["Authorization"] = null;
+        } 
       } catch (err) {
         console.error(err);
       }
     }
+    window.location.reload();
   };
   return (
     <Layout>
