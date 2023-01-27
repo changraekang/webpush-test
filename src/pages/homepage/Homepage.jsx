@@ -23,7 +23,7 @@ import {
   IsAlertOpen,
   MyProject,
   MyPushProject,
-  MyCategory
+  MyCategory,
 } from "../../atom/Atom";
 
 const WrapInputs = styled.div`
@@ -77,14 +77,16 @@ const DeleteBtn = styled.button`
 `;
 
 export default function Homepage() {
-  const [selectedDrop, setSelectedDrop] = useState('');
+  const [selectedDrop, setSelectedDrop] = useState("");
   const [isOpenDrop, setIsOpenDrop] = useState(false);
   const [myProject, setMyProject] = useRecoilState(MyProject);
   const [myCategory, setMyCategory] = useRecoilState(MyCategory);
   const [myPushProject, setMyPushProject] = useRecoilState(MyPushProject);
   const [homepage, setHomepage] = useState(myPushProject.name);
   const [link, setLink] = useState(myPushProject.projectUrl);
-  const [cateogry, setCategory] = useState(myCategory[myPushProject.categoryCode - 1].name);
+  const [cateogry, setCategory] = useState(
+    myCategory[myPushProject.categoryCode - 1].name
+  );
   const [pid, setPid] = useState("");
 
   // Alert Modal
@@ -110,12 +112,12 @@ export default function Homepage() {
   }, [pid]);
 
   const upadateMyPushproject = {
-   cateogryCode: cateogry, 
-   expiryDate: myPushProject.expiryDate,
-   name: homepage,
-   pid: myPushProject.projectUrl,
-   projectUrl: link,
-  }
+    cateogryCode: cateogry,
+    expiryDate: myPushProject.expiryDate,
+    name: homepage,
+    pid: myPushProject.projectUrl,
+    projectUrl: link,
+  };
 
   const updateData = {
     code: cateogry,
@@ -123,19 +125,41 @@ export default function Homepage() {
     projectUrl: link,
   };
 
-  console.log(myPushProject, "myPushProject😂")
+  console.log(myPushProject, "myPushProject😂");
   const updateHomePage = async (e) => {
     e.preventDefault();
-    if(window.confirm("홈페이지 정보를 수정하시겠습니까?😯")) {
+    if (window.confirm("홈페이지 정보를 수정하시겠습니까?😯")) {
       try {
         const response = await instanceAxios.put(
           `/${myPushProject.pid}`,
           updateData
         );
-        if(response.status === 200) {
+        if (response.status === 200) {
           setIsAlertOpen(true);
           setAlertMessage("성공적으로 정보를 수정하였습니다.🎉");
           setMyPushProject(upadateMyPushproject);
+          const checkProject = async () => {
+            try {
+              const response = await instanceAxios.get("/all");
+              if (response.status === 200) {
+                setMyProject(response.data);
+                if (
+                  response.data.filter((item) => item.expiryDate === null)
+                    .length > 0
+                ) {
+                  setMyPushProject(
+                    response.data.filter((item) => item.expiryDate === null)[0]
+                  );
+                } else {
+                  setMyPushProject(response.data[0]);
+                }
+              }
+            } catch (err) {
+              // login yet
+              console.error(err);
+            }
+          };
+          checkProject();
         }
         console.log(response.data);
       } catch (err) {
@@ -148,7 +172,9 @@ export default function Homepage() {
     e.preventDefault();
     if (window.confirm("정말 홈페이지를 삭제하시겠습니까?")) {
       try {
-        const response = await instanceAxios.delete(`/${myPushProject.pid}/cancel`);
+        const response = await instanceAxios.delete(
+          `/${myPushProject.pid}/cancel`
+        );
         if (response.status === 200) {
           setIsAlertOpen(true);
           setAlertMessage("성공적으로 삭제되었습니다.⚠️");
@@ -239,15 +265,15 @@ export default function Homepage() {
 
   const handleClickDropbox = () => {
     isOpenDrop ? setIsOpenDrop(false) : setIsOpenDrop(true);
-  }
+  };
 
   const handleClickDropItem = (e) => {
     e.preventDefault();
     setCategory(e.target.value);
     setIsOpenDrop(false);
-  }
+  };
   console.log(cateogry);
- 
+
   return (
     <Layout>
       <HomepageBox>
@@ -293,14 +319,15 @@ export default function Homepage() {
                 handleClick={handleClickDropbox}
               />
             </div>
-            {isOpenDrop && 
-            <CategoryDropbox 
-              arrList={myCategory}
-              ver="40px"
-              hor="174px"
-              width="205px"
-              handleClick={handleClickDropItem}
-            />}
+            {isOpenDrop && (
+              <CategoryDropbox
+                arrList={myCategory}
+                ver="40px"
+                hor="174px"
+                width="205px"
+                handleClick={handleClickDropItem}
+              />
+            )}
           </WrapInputs>
           {myPushProject.expiryDate ? null : (
             <WrapButton>{renderSubmitButton()}</WrapButton>

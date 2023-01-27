@@ -24,7 +24,6 @@ import NotFound from "./pages/NotFound";
 import NewPassword from "./pages/profile/NewPassword";
 import PushDetail from "./pages/push/PushDetail";
 import InsertPush from "./pages/push/InsertPush";
-
 function App() {
   return (
     <>

@@ -110,3 +110,33 @@ export const LogoutMadal = () => {
     </Wrapper>
   );
 };
+export const NewpasswordMadal = () => {
+  const [isAlertOpen, setIsAlertOpen] = useRecoilState(IsLogoutOpen);
+  const [alertMessage, setAlertMessage] = useRecoilState(LogoutMessage);
+
+  const handleAlertClose = () => {
+    setIsAlertOpen(false);
+  };
+
+  const renderCloseModalBtn = () => {
+    return <Button onClick={handleAlertClose}>닫기</Button>;
+  };
+
+  const renderModal = () => {
+    return (
+      <ModalWrapper>
+        <ModalContent>
+          <WrapContents>{alertMessage}</WrapContents>
+        </ModalContent>
+        {renderCloseModalBtn()}
+      </ModalWrapper>
+    );
+  };
+  return (
+    <Wrapper onClick={handleAlertClose}>
+      <Modal onClick={(event) => event.stopPropagation()}>
+        {renderModal()}
+      </Modal>
+    </Wrapper>
+  );
+};

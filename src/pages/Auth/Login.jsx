@@ -46,8 +46,7 @@ import Cookies from "universal-cookie";
 import { useCookies } from "react-cookie";
 import { version } from "react";
 import AlertModal from "../../components/modals/AlertModal";
-import { LogoutMadal } from "../../components/modals/LogoutMadal";
-
+import { LogoutMadal, NewpasswordMadal } from "../../components/modals/LogoutMadal";
 const Section = styled.section`
   display: flex;
   justify-content: center;
@@ -202,6 +201,8 @@ export default function Login() {
       setIsCapsLock(false);
     }
   };
+  // cookie 새로 설정
+  const loginCookie = new Cookies();
 
   // 처음 페이지 진입
   useEffect(() => {
@@ -212,6 +213,8 @@ export default function Login() {
       setIsCheck(false);
       removeCookie("rememberEmail");
     }
+    loginCookie.remove("accessToken");
+    loginCookie.remove("refreshToken");
     console.log("test-commit modal");
   }, []);
 
@@ -422,6 +425,7 @@ export default function Login() {
       {/* alert */}
       {isAlertOpen && <AlertModal></AlertModal>}
       {isLogoutOpen && <LogoutMadal></LogoutMadal>}
+      {isLogoutOpen && <NewpasswordMadal></NewpasswordMadal>}
       {/* alert */}
     </Section>
   );

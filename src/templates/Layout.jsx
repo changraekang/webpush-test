@@ -331,6 +331,7 @@ export default function Layout({ children }) {
     }
     requestAccessToken(refreshToken);
     console.log(params, "주소");
+    checkProject();
   }, []);
 
   const handleOpenNav = () => {
