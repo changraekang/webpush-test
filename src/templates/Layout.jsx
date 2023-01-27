@@ -41,10 +41,12 @@ import {
   IsAlertOpen,
   AlertMessage,
   AlertCode,
+  IsLogoutOpen,
 } from "../atom/Atom";
 import ProjectModal from "../components/modals/ProjectModal";
 import settingHomepage from "../assets/images/homepageSetting.png";
 import AlertModal from "../components/modals/AlertModal";
+import { LogoutMadal } from "../components/modals/LogoutMadal";
 
 const Header = styled.header`
   display: flex;
@@ -269,6 +271,7 @@ export default function Layout({ children }) {
 
   // Alert Modal
   const [isAlertOpen, setIsAlertOpen] = useRecoilState(IsAlertOpen);
+  const [isLogoutOpen, setIsLogoutOpen] = useRecoilState(IsLogoutOpen);
   const [alertMessage, setAlertMessage] = useRecoilState(AlertMessage);
   const [alertCode, setAlertCode] = useRecoilState(AlertCode);
 
@@ -334,12 +337,8 @@ export default function Layout({ children }) {
     } else {
       checkAccount();
     }
-    checkProject();
-    checkAccount();
-    getCategory();
     requestAccessToken(refreshToken);
     console.log(params, "주소");
-    setAlertCode(0);
   }, []);
 
   const handleOpenNav = () => {
@@ -385,14 +384,11 @@ export default function Layout({ children }) {
     logoutSession();
     setIsAlertOpen(true);
     setAlertMessage("세션이 만료되었습니다.🤷‍♂️");
-    setAlertCode(1);
   };
   const handlelogout = () => {
     window.localStorage.removeItem("recoil-persist");
-    setIsAlertOpen(true);
-    setAlertMessage("로그아웃 성공🎉");
-    setAlertCode(2);
     logout();
+    setIsLogoutOpen(true);
   };
 
   useEffect(() => {
@@ -565,6 +561,7 @@ export default function Layout({ children }) {
       </WrapRight>
       {/* alert */}
       {isAlertOpen && <AlertModal></AlertModal>}
+      {isLogoutOpen && <LogoutMadal></LogoutMadal>}
       {/* alert */}
     </Header>
   );

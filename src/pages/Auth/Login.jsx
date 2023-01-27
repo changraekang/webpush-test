@@ -36,6 +36,7 @@ import {
   AlertCode,
   AlertMessage,
   IsAlertOpen,
+  IsLogoutOpen,
   MyProfile,
   MyProject,
   MyPushProject,
@@ -44,6 +45,7 @@ import Cookies from "universal-cookie";
 import { useCookies } from "react-cookie";
 import { version } from "react";
 import AlertModal from "../../components/modals/AlertModal";
+import { LogoutMadal } from "../../components/modals/LogoutMadal";
 
 const Section = styled.section`
   display: flex;
@@ -181,6 +183,7 @@ export default function Login() {
 
   // Alert Modal
   const [isAlertOpen, setIsAlertOpen] = useRecoilState(IsAlertOpen);
+  const [isLogoutOpen, setIsLogoutOpen] = useRecoilState(IsLogoutOpen);
   const [alertMessage, setAlertMessage] = useRecoilState(AlertMessage);
   const [alertCode, setAlertCode] = useRecoilState(AlertCode);
 
@@ -402,6 +405,7 @@ export default function Login() {
       </InputSection>
       {/* alert */}
       {isAlertOpen && <AlertModal></AlertModal>}
+      {isLogoutOpen && <LogoutMadal></LogoutMadal>}
       {/* alert */}
     </Section>
   );

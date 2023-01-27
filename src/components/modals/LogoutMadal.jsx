@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
-import { AlertCode, AlertMessage, IsAlertOpen } from "../../atom/Atom";
+import { IsLogoutOpen, LogoutMessage } from "../../atom/Atom";
 import { grey1, primary4 } from "../../constants/color";
 
 const Wrapper = styled.div`
@@ -80,9 +80,9 @@ const Button = styled.div`
     color: ${grey1};
   }
 `;
-const AlertModal = () => {
-  const [isAlertOpen, setIsAlertOpen] = useRecoilState(IsAlertOpen);
-  const [alertMessage, setAlertMessage] = useRecoilState(AlertMessage);
+export const LogoutMadal = () => {
+  const [isAlertOpen, setIsAlertOpen] = useRecoilState(IsLogoutOpen);
+  const [alertMessage, setAlertMessage] = useRecoilState(LogoutMessage);
 
   const handleAlertClose = () => {
     setIsAlertOpen(false);
@@ -110,5 +110,3 @@ const AlertModal = () => {
     </Wrapper>
   );
 };
-
-export default AlertModal;
