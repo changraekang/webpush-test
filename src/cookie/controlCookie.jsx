@@ -33,19 +33,23 @@ const logoutData = {
 
 export const logout = async () => {
   const cookies = new Cookies();
-  cookies.remove("refreshToken");
-  cookies.remove("accessToken");
-  instanceAxios.defaults.headers.common["Authorization"] = null;
   try {
     const response = await instanceAxios.post(`/member/logout`, logoutData);
     console.log(response);
     console.log("로그아웃");
     // window.localStorage.setItem('logout', Date.now());
     if (response.status === 200) {
+      cookies.remove("refreshToken");
+      cookies.remove("accessToken");
+      instanceAxios.defaults.headers.common["Authorization"] = null;
       // dispatch({type: 'logout'})
       window.location.reload();
     }
   } catch (err) {
+    cookies.remove("refreshToken");
+    cookies.remove("accessToken");
+    instanceAxios.defaults.headers.common["Authorization"] = null;
+    window.location.reload();
     console.error(err);
     window.location.reload();
   }
