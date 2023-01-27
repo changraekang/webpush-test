@@ -298,7 +298,7 @@ export default function MakePush() {
     mobile: false,
     title: "",
     content: "",
-    link: "",
+    link: "https://",
     image: "",
     date: "",
     pid: myPushProject.pid,
@@ -497,10 +497,26 @@ export default function MakePush() {
       setIid(imageSrc.split("/").at(-1));
     }
   };
+  const onKeyDown = (e) => {
+    if (e.key === "Enter") {
+      if (link.includes("https://")) {
+        return;
+      } else {
+        setIsAlertOpen(true);
+        setAlertMessage('링크는 "https://"가 필요합니다🥹');
+      }
+    }
+  };
 
   // 제출
   const onClickSubmit = async (e) => {
     e.preventDefault();
+    if (!link.includes("https://")) {
+      return (
+        setIsAlertOpen(true), setAlertMessage('링크는 "https://"가 필요합니다🥹')
+      );
+    }
+
     if (!isMobileCheck && !isWebCheck) {
       return alert("Please select Push Type");
     }
@@ -680,6 +696,7 @@ export default function MakePush() {
                   placeholder="연결할 주소를 입력해주세요 ex.(www.example.com)"
                   value={link}
                   name="link"
+                  onKeyDown={onKeyDown}
                   onChange={handleInputValues}
                 ></Input>
               </WrapMessage>
