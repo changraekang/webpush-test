@@ -19,6 +19,14 @@ export function setAccessTokenToCookie(accessToken) {
   });
 }
 
+export function setRememberEmail(email) {
+  cookies.set("rememberEmail", email, {
+    path: "/",
+    ameSite: "strict",
+    secure: true,
+  });
+}
+
 export const getCookie = (name) => {
   return cookies.get(name);
 };
@@ -51,7 +59,6 @@ export const logout = async () => {
     instanceAxios.defaults.headers.common["Authorization"] = null;
     window.location.reload();
     console.error(err);
-    window.location.reload();
   }
 };
 export const logoutSession = async () => {
