@@ -90,17 +90,16 @@ export default function InsertPush() {
   const [myProject, setMyProject] = useRecoilState(MyProject);
   const [myPushProject, setMyPushProject] = useRecoilState(MyPushProject);
   const [pid, setPid] = useState(myPushProject.pid);
-  
+
   // Alert Modal
   const [isAlertOpen, setIsAlertOpen] = useRecoilState(IsAlertOpen);
   const [alertMessage, setAlertMessage] = useRecoilState(AlertMessage);
-  
-  // script 
+
+  // script
   const [script, setScript] = useState("");
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [copyScript , setCopyScript] = useState("");
-
+  const [copyScript, setCopyScript] = useState("");
 
   useEffect(() => {
     console.log(pid, "💕⚠️pid");
@@ -125,7 +124,6 @@ export default function InsertPush() {
     }
   }, [pid]);
 
-
   const handleGetScript = async () => {
     try {
       const response = await instanceAxios.get(`/${pid}/resource`);
@@ -144,8 +142,17 @@ export default function InsertPush() {
       handleGetScript();
     }
   }, [pid]);
-  
-  
+  useEffect(() => {
+    if (pid) {
+      handleGetScript();
+    }
+    setCopyScript(
+      `<script>let dmpush_title = "${title}";</script> \n` +
+        `<script>let dmpush_content = "${content}";</script> \n` +
+        script
+    );
+  }, [title, content]);
+
   const handleCopyScript = (text) => {
     try {
       navigator.clipboard.writeText(text);
@@ -156,13 +163,17 @@ export default function InsertPush() {
       setAlertMessage("복사에 실패하였습니다🥹");
     }
   };
-  
-  const textareaRef  = useRef();
-  const handleCopytextAreaValue = (e) => {
-    setCopyScript(`<script>let dmpush_title = "${title}";</script>` + `<script>let dmpush_content = "${content}";</script>` + script);
+
+  const textareaRef = useRef();
+  const handleCopytextAreaValue = () => {
+    setCopyScript(
+      `<script>let dmpush_title = "${title}";</script>` +
+        `<script>let dmpush_content = "${content}";</script>` +
+        script
+    );
     // textareaRef.current.focus(); `<script>let dmpush_title = "${title}";</script>` + `<script>let dmpush_content = "${content}";</script>` + script
-    console.log(copyScript)
-  }
+    console.log(copyScript);
+  };
 
   const handleRenderBtns = () => {
     return (
@@ -198,7 +209,6 @@ export default function InsertPush() {
     );
   };
 
-
   return (
     <Layout>
       <InsertScriptBox>
@@ -207,22 +217,16 @@ export default function InsertPush() {
           {/* <GetScript>출력하기</GetScript> */}
         </TopAlign>
         <WrapInputs>
-            <LabelStyle htmlFor="link">타이틀</LabelStyle>
-            <div>
-              <InputGroup
-                type="text"
-                setValue={setTitle}
-              />
-            </div>
+          <LabelStyle htmlFor="link">타이틀</LabelStyle>
+          <div>
+            <InputGroup type="text" setValue={setTitle} />
+          </div>
         </WrapInputs>
         <WrapInputs>
-            <LabelStyle htmlFor="link">콘텐츠</LabelStyle>
-            <div>
-              <InputGroup
-                type="text"
-                setValue={setContent}
-              />
-            </div>
+          <LabelStyle htmlFor="link">콘텐츠</LabelStyle>
+          <div>
+            <InputGroup type="text" setValue={setContent} />
+          </div>
         </WrapInputs>
         <WrapInputs>
           <TxtBox>
@@ -230,20 +234,25 @@ export default function InsertPush() {
             type="text" 
             /> */}
             <p id="title">
-              {'<script>let dmpush_title = "'}{title}{'";</script>'}
+              {'<script>let dmpush_title = "'}
+              {title}
+              {'";</script>'}
             </p>
             <p id="content">
-              {'<script>let dmpush_content = "'}{content}{'";</script>'}
+              {'<script>let dmpush_content = "'}
+              {content}
+              {'";</script>'}
             </p>
             <p>{script.split(" ")}</p>
           </TxtBox>
         </WrapInputs>
-        {/* <input 
-        // ref={textareaRef}
-        onChange={handleCopytextAreaValue} 
-        type="text"
-        value={copyScript}
-        /> */}
+        <input
+          onChange={handleCopytextAreaValue}
+          type="text"
+          value={copyScript}
+          hidden
+          readOnly
+        />
         <WrapButton>
           {!script && <BeforeCopy>복사하기</BeforeCopy>}
           {script && (

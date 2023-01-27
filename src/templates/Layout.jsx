@@ -30,8 +30,8 @@ import {
   logoutSession,
   setAccessTokenToCookie,
   setRefreshTokenToCookie,
+  logout,
 } from "../cookie/controlCookie";
-import { logout } from "../cookie/controlCookie";
 import { useRecoilState } from "recoil";
 import {
   MyCategory,
@@ -334,12 +334,14 @@ export default function Layout({ children }) {
     } else {
       checkAccount();
     }
+    checkProject();
+    checkAccount();
     getCategory();
     requestAccessToken(refreshToken);
     console.log(params, "주소");
     setAlertCode(0);
   }, []);
-  
+
   const handleOpenNav = () => {
     !isOpenNav ? setIsOpenNav(true) : setIsOpenNav(false);
   };
@@ -390,7 +392,7 @@ export default function Layout({ children }) {
     setIsAlertOpen(true);
     setAlertMessage("로그아웃 성공🎉");
     setAlertCode(2);
-    logoutSession();
+    logout();
   };
 
   useEffect(() => {
