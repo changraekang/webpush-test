@@ -5,7 +5,7 @@ const openPopup = () => {
   Div.innerHTML = `
   <article style="
       position:fixed;
-      z-index: 10;
+      z-index: 10000;
       left:50%;
       right:50%;
       top: 10px;
@@ -17,8 +17,8 @@ const openPopup = () => {
       border-radius: 16px;
       box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.2);"
   >
-      <h1 style="font-size: 24px; padding-bottom:16px;">🎉 푸시 알림 받기</h1>
-      <p style="font-size: 16px; padding-bottom:16px;">지금 푸시 알림을 구독하고 디엠푸시의 중요한 최신 소식들을 가장 먼저 받아보세요</p>
+      <h1 style="font-size: 24px; padding-bottom:16px;">${dmpush_title}</h1>
+      <p style="font-size: 16px; padding-bottom:16px;">${dmpush_content}</p>
       <div 
       style="display: flex;
       justify-content: center;

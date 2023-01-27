@@ -142,6 +142,7 @@ export default function InsertPush() {
       handleGetScript();
     }
   }, [pid]);
+
   useEffect(() => {
     setCopyScript(
       `<script>let dmpush_title = "${title}";</script> \n` +
@@ -161,15 +162,12 @@ export default function InsertPush() {
     }
   };
 
-  const textareaRef = useRef();
   const handleCopytextAreaValue = () => {
     setCopyScript(
       `<script>let dmpush_title = "${title}";</script>` +
-        `<script>let dmpush_content = "${content}";</script>` +
-        script
+      `<script>let dmpush_content = "${content}";</script>` +
+      script
     );
-    // textareaRef.current.focus(); `<script>let dmpush_title = "${title}";</script>` + `<script>let dmpush_content = "${content}";</script>` + script
-    console.log(copyScript);
   };
 
   const handleRenderBtns = () => {
@@ -227,9 +225,6 @@ export default function InsertPush() {
         </WrapInputs>
         <WrapInputs>
           <TxtBox>
-            {/* <input 
-            type="text" 
-            /> */}
             <p id="title">
               {'<script>let dmpush_title = "'}
               {title}

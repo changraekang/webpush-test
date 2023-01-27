@@ -265,7 +265,7 @@ export default function Login() {
             const response = await instanceAxios.post("/member/me");
             if (response.status === 200) {
               if (isCheck) {
-                setCookie("rememberEmail", email, { expires: today });
+                setCookie("rememberEmail", email, { expires: today , path : "/"});
               }
               setMyProfile(response.data);
               const checkProject = async () => {
