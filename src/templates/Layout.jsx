@@ -454,6 +454,9 @@ export default function Layout({ children }) {
           <ProLi>
             {myProject.map(
               ({ categoryCode, pid, name, projectUrl, expiryDate }) => {
+                if (name.length > 8) {
+                  name = name.substring(0, 8) + "...";
+                }
                 if (params > 0) {
                   return null;
                 } else if (expiryDate) {
