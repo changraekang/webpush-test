@@ -29,6 +29,7 @@ import {
   MyPushProject,
 } from "../../atom/Atom";
 import { async } from "q";
+import { useRef } from "react";
 const WrapInputs = styled.div`
   width: 100%;
   margin-bottom: 12px;
@@ -89,11 +90,17 @@ export default function InsertPush() {
   const [myProject, setMyProject] = useRecoilState(MyProject);
   const [myPushProject, setMyPushProject] = useRecoilState(MyPushProject);
   const [pid, setPid] = useState(myPushProject.pid);
-  const [script, setScript] = useState("");
-
+  
   // Alert Modal
   const [isAlertOpen, setIsAlertOpen] = useRecoilState(IsAlertOpen);
   const [alertMessage, setAlertMessage] = useRecoilState(AlertMessage);
+  
+  // script 
+  const [script, setScript] = useState("");
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [copyScript , setCopyScript] = useState("");
+
 
   useEffect(() => {
     console.log(pid, "💕⚠️pid");
@@ -102,7 +109,7 @@ export default function InsertPush() {
 
   const getOneHomepage = async () => {
     try {
-      const response = await instanceAxios.get(`/project/${pid}`);
+      const response = await instanceAxios.get(`/${pid}`);
       console.log("하나의 프로젝트⭐", response.data);
       if (response.status === 200) {
         setMyPushProject(response.data);
@@ -117,6 +124,7 @@ export default function InsertPush() {
       getOneHomepage();
     }
   }, [pid]);
+
 
   const handleGetScript = async () => {
     try {
@@ -136,7 +144,8 @@ export default function InsertPush() {
       handleGetScript();
     }
   }, [pid]);
-
+  
+  
   const handleCopyScript = (text) => {
     try {
       navigator.clipboard.writeText(text);
@@ -147,6 +156,13 @@ export default function InsertPush() {
       setAlertMessage("복사에 실패하였습니다🥹");
     }
   };
+  
+  const textareaRef  = useRef();
+  const handleCopytextAreaValue = (e) => {
+    setCopyScript(`<script>let dmpush_title = "${title}";</script>` + `<script>let dmpush_content = "${content}";</script>` + script);
+    // textareaRef.current.focus(); `<script>let dmpush_title = "${title}";</script>` + `<script>let dmpush_content = "${content}";</script>` + script
+    console.log(copyScript)
+  }
 
   const handleRenderBtns = () => {
     return (
@@ -182,6 +198,7 @@ export default function InsertPush() {
     );
   };
 
+
   return (
     <Layout>
       <InsertScriptBox>
@@ -190,18 +207,49 @@ export default function InsertPush() {
           {/* <GetScript>출력하기</GetScript> */}
         </TopAlign>
         <WrapInputs>
+            <LabelStyle htmlFor="link">타이틀</LabelStyle>
+            <div>
+              <InputGroup
+                type="text"
+                setValue={setTitle}
+              />
+            </div>
+        </WrapInputs>
+        <WrapInputs>
+            <LabelStyle htmlFor="link">콘텐츠</LabelStyle>
+            <div>
+              <InputGroup
+                type="text"
+                setValue={setContent}
+              />
+            </div>
+        </WrapInputs>
+        <WrapInputs>
           <TxtBox>
-            {/* <p><script>let titile =""</script></p>
-            <p><script>let content =""</script></p> */}
+            {/* <input 
+            type="text" 
+            /> */}
+            <p id="title">
+              {'<script>let dmpush_title = "'}{title}{'";</script>'}
+            </p>
+            <p id="content">
+              {'<script>let dmpush_content = "'}{content}{'";</script>'}
+            </p>
             <p>{script.split(" ")}</p>
           </TxtBox>
         </WrapInputs>
+        {/* <input 
+        // ref={textareaRef}
+        onChange={handleCopytextAreaValue} 
+        type="text"
+        value={copyScript}
+        /> */}
         <WrapButton>
           {!script && <BeforeCopy>복사하기</BeforeCopy>}
           {script && (
             <AfterCopy
               handleCopyScript={() => {
-                handleCopyScript(script);
+                handleCopyScript(copyScript);
               }}
             >
               복사하기
