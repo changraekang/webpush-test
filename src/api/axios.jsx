@@ -6,7 +6,7 @@ export const instanceAxios = axios.create({
   baseURL: "https://api.dmpush.kr/api/",
   // baseURL: "http://localhost:8080/api/", // 로컬
   headers: {
-    Authorization: `${userAccessToken}`,
+    Authorization: userAccessToken? userAccessToken : null,
   },
 });
 
@@ -17,6 +17,8 @@ instanceAxios.interceptors.request.use(
     const userAccessToken = getCookie("accessToken");
     if (userAccessToken) {
       config.headers["Authorization"] = userAccessToken;
+    } else {
+      config.headers["Authorization"] = null;
     }
     return config;
   },
