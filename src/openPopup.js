@@ -17,12 +17,30 @@ const openPopup = () => {
       border-radius: 16px;
       box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.2);"
   >
-      <h1 style="font-size: 24px; padding-bottom:16px;">${dmpush_title}</h1>
-      <p style="font-size: 16px; padding-bottom:16px;">${dmpush_content}</p>
+      <h1 style="
+      margin: 0; 
+      padding: 0;
+      white-space:normal;
+      word-wrap: break-word;
+      font-size: 18px;
+      font-weight: 600; 
+      padding-bottom:16px;">
+        ${dmpush_title}
+      </h1>
+      <p style="
+      margin: 0; 
+      padding: 0;
+      font-size: 16px; 
+      white-space:normal;
+      word-wrap: break-word;
+      min-height: 20px;">
+        ${dmpush_content}
+      </p>
       <div 
-      style="display: flex;
-      justify-content: center;
-      gap: 12px;"
+        style="display: flex;
+        margin-top: 24px;
+        justify-content: center;
+        gap: 12px;"
       >
       <button
         id="regretBtn" 
@@ -31,7 +49,7 @@ const openPopup = () => {
           display: block;
           width: 100px;
           border: none;
-          padding: 10px 12px;
+          padding: 8px 6px;
           border-radius: 8px;
           background: #7124D3;
           color: #fff;
@@ -48,16 +66,15 @@ const openPopup = () => {
           display: block;
           width: 100px;
           border: none;
-          padding: 10px 12px;
+          padding: 8px 6px;
           border-radius: 8px;
           background: #7124D3;
           color: #fff;
           font-size: 16px;
           font-weight: 600; 
-          cusor: pointer;
           text-align: center;"   
       >
-          알림 받기
+        알림 받기
       </button>
       </div>
   </article>
