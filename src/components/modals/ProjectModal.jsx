@@ -148,7 +148,7 @@ const Button = styled.div`
     color: ${grey1};
   }
 `;
-const ProjectModal = (props) => {
+const ProjectModal = ({setIsOpenModal}) => {
   const [step, setStep] = useState(1);
   const [homepage, setHomepage] = useState("");
   const [cat, setCat] = useState("");
@@ -159,45 +159,54 @@ const ProjectModal = (props) => {
   // Alert Modal
   const [isAlertOpen, setIsAlertOpen] = useRecoilState(IsAlertOpen);
   const [alertMessage, setAlertMessage] = useRecoilState(AlertMessage);
+
+  // 프로젝트 expire에 따른 체크
+  const checkProject = async () => {
+    try {
+      const response = await instanceAxios.get("/all");
+      if (response.status === 200) {
+        setMyProject(response.data);
+        if (
+          response.data.filter((item) => item.expiryDate === null)
+            .length > 0
+        ) {
+          setMyPushProject(
+            response.data.filter((item) => item.expiryDate === null)[0]
+          );
+        } else {
+          setMyPushProject(response.data[0]);
+        }
+        //window.location.reload();
+      }
+    } catch (err) {
+      // login yet
+      console.error(err);
+    }
+  };
+
+  // 모달 닫기 버튼
   const handleClose = async () => {
     let body = {
       name: homepage,
       projectUrl: url,
       code: cat,
     };
+
     try {
       const response = await instanceAxios.post("/add", body);
-      if (response.status === 200) {
-        const checkProject = async () => {
-          try {
-            const response = await instanceAxios.get("/all");
-            if (response.status === 200) {
-              setMyProject(response.data);
-              if (
-                response.data.filter((item) => item.expiryDate === null)
-                  .length > 0
-              ) {
-                setMyPushProject(
-                  response.data.filter((item) => item.expiryDate === null)[0]
-                );
-              } else {
-                setMyPushProject(response.data[0]);
-              }
-              window.location.reload();
-            }
-          } catch (err) {
-            // login yet
-            console.error(err);
-          }
-        };
+      console.log(response)
+      if (response.status === 200 || response.status === 201) {
         checkProject();
-        props.setClose(false);
+        setIsOpenModal(false);
       }
     } catch (err) {
       console.error(err);
       console.error("실패");
     }
   };
+
+
+
   const handleNext = () => {
     if (url.includes("https://")) {
       setStep(2);
@@ -221,7 +230,7 @@ const ProjectModal = (props) => {
       return (
         <CloseModal
           onClick={() => {
-            props.setClose(false);
+            setIsOpenModal(false);
           }}
         >
           X

@@ -256,19 +256,17 @@ const ProfileImg = styled.img`
 `;
 
 export default function Layout({ children }) {
-  const [myCategory, setMyCategory] = useRecoilState(MyCategory);
   const navigate = useNavigate();
   const [isOpenNav, setIsOpenNav] = useState(false);
   const [isOpenMyMenu, setIsOpenMyMenu] = useState(false);
-  const [isProjectOpen, setIsProjectOpen] = useState(false);
-  const [isOpenMobal, setIsOpenModal] = useState(false);
+  const [isOpenModal, setIsOpenModal] = useState(false);
   const [minutes, setMinutes] = useState(5);
   const [seconds, setSeconds] = useState(0);
   const [refreshToken, setRefreshToken] = useState(getCookie("refreshToken"));
   const [myProfile, setMyProfile] = useRecoilState(MyProfile);
   const [myProject, setMyProject] = useRecoilState(MyProject);
   const [myPushProject, setMyPushProject] = useRecoilState(MyPushProject);
-
+   
   // Alert Modal
   const [isAlertOpen, setIsAlertOpen] = useRecoilState(IsAlertOpen);
   const [isLogoutOpen, setIsLogoutOpen] = useRecoilState(IsLogoutOpen);
@@ -404,7 +402,7 @@ export default function Layout({ children }) {
       {/* 왼쪽 */}
 
       <Nav>
-        {isOpenMobal && <ProjectModal setClose={setIsOpenModal} />}
+        {isOpenModal && <ProjectModal setIsOpenModal={setIsOpenModal} />}
         <Link to="/dashboard">
           <MainLogo src={logo} alt="메인 로고" />
         </Link>
