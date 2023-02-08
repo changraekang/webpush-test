@@ -22,7 +22,8 @@ export function setAccessTokenToCookie(accessToken) {
 
 export function setRememberEmail(email) {
   let date = new Date();
-  date.setTime(date.getTime() + (7 * 24 * 60 * 60 * 1000));
+  let expiredDay = 365;
+  date.setTime(date.getTime() + (expiredDay * 24 * 60 * 60 * 1000));
 
   cookies.set("rememberEmail", email, {
     path: "/",
