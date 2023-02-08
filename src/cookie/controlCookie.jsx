@@ -49,7 +49,6 @@ export const logout = async () => {
     cookies.remove("refreshToken");
     cookies.remove("accessToken");
     instanceAxios.defaults.headers.common["Authorization"] = null;
-    window.location.reload();
     console.error(err);
     window.location.reload();
   }

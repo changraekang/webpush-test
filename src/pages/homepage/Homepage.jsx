@@ -83,10 +83,10 @@ export default function Homepage() {
   const [myCategory, setMyCategory] = useRecoilState(MyCategory);
   const [myPushProject, setMyPushProject] = useRecoilState(MyPushProject);
   const [homepage, setHomepage] = useState(myPushProject.name);
+  const [pid, setPid] = useState(myPushProject.pid);
+  const [script, setScript] = useState("");
   const [link, setLink] = useState(myPushProject.projectUrl);
-  const [cateogry, setCategory] = useState(
-    myCategory[myPushProject.categoryCode - 1].name
-  );
+  const [cateogry, setCategory] = useState("");
 
   // Alert Modal
   const [isAlertOpen, setIsAlertOpen] = useRecoilState(IsAlertOpen);
@@ -105,23 +105,45 @@ export default function Homepage() {
     name: homepage,
     projectUrl: link,
   };
-  const handlePushProject = (
-    categoryCode,
-    pid,
-    name,
-    projectUrl,
-    expiryDate
-  ) => {
-    let body = {
-      categoryCode: categoryCode,
-      projectUrl: projectUrl,
-      pid: pid,
-      name: name,
-      expiryDate: expiryDate,
-    };
-    setMyPushProject(body);
+
+  const getOneHomepage = async () => {
+    try {
+      const response = await instanceAxios.get(`/${pid}`);
+      console.log("하나의 프로젝트⭐", response.data);
+      if (response.status === 200) {
+        setMyPushProject(response.data);
+        setHomepage(response.data.name);
+        setLink(response.data.projectUrl);
+        setCategory(myCategory[myPushProject.categoryCode - 1]?.name);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+  const handleGetScript = async () => {
+    try {
+      const response = await instanceAxios.get(`/${pid}/resource`);
+      console.log(response);
+      if (response.status === 200) {
+        console.log("출력하기 성공");
+        setScript(response.data);
+      }
+    } catch (err) {
+      console.error(err);
+    }
   };
 
+  useEffect(() => {
+    if (pid) {
+      handleGetScript();
+    }
+  }, [pid]);
+  useEffect(() => {
+    if (pid) {
+      getOneHomepage();
+    }
+    console.log(myPushProject, "myPushProject");
+  }, [pid]);
   const updateHomePage = async (e) => {
     e.preventDefault();
     if (window.confirm("홈페이지 정보를 수정하시겠습니까?😯")) {
@@ -163,7 +185,7 @@ export default function Homepage() {
     if (
       myPushProject.projectUrl === link &&
       myPushProject.name === homepage &&
-      myCategory[myPushProject.categoryCode - 1].name === cateogry
+      myCategory[myPushProject.categoryCode - 1]?.name === cateogry
     ) {
       return <BeforeUpdateHomepage>수정</BeforeUpdateHomepage>;
     } else {
@@ -174,91 +196,39 @@ export default function Homepage() {
       );
     }
   };
-
-  const handleRenderHomepageBtns = () => {
+  const handleRenderBtns = () => {
     return (
       <>
-        {myProject?.map(
-          ({ categoryCode, pid, name, projectUrl, expiryDate }) => {
-            if (expiryDate) {
-              if (pid === myPushProject.pid) {
-                return (
-                  <li
-                    key={pid}
-                    onClick={() =>
-                      handlePushProject(
-                        categoryCode,
-                        pid,
-                        name,
-                        projectUrl,
-                        expiryDate
-                      )
-                    }
-                  >
-                    <DeleteSelectedHomepage>{name}</DeleteSelectedHomepage>
-                  </li>
-                );
-              } else {
-                return (
-                  <li
-                    key={pid}
-                    onClick={() =>
-                      handlePushProject(
-                        categoryCode,
-                        pid,
-                        name,
-                        projectUrl,
-                        expiryDate
-                      )
-                    }
-                  >
-                    <DeleteHomepage>{name}</DeleteHomepage>
-                  </li>
-                );
-              }
-            } else {
-              if (pid === myPushProject.pid) {
-                return (
-                  <li
-                    key={pid}
-                    onClick={() =>
-                      handlePushProject(
-                        categoryCode,
-                        pid,
-                        name,
-                        projectUrl,
-                        expiryDate
-                      )
-                    }
-                  >
-                    <SelectedHomepage>{name}</SelectedHomepage>
-                  </li>
-                );
-              } else {
-                return (
-                  <li
-                    key={pid}
-                    onClick={() =>
-                      handlePushProject(
-                        categoryCode,
-                        pid,
-                        name,
-                        projectUrl,
-                        expiryDate
-                      )
-                    }
-                  >
-                    <SelectHomepage>{name}</SelectHomepage>
-                  </li>
-                );
-              }
-            }
+        {myProject?.map(({ name, pid }) => {
+          if (pid === myPushProject.pid) {
+            return (
+              <li key={pid}>
+                <SelectedHomepage
+                  setValue={() => {
+                    setPid(pid);
+                  }}
+                >
+                  {name}
+                </SelectedHomepage>
+              </li>
+            );
+          } else {
+            return (
+              <li key={pid}>
+                <SelectHomepage
+                  setValue={() => {
+                    setPid(pid);
+                  }}
+                >
+                  {name}
+                </SelectHomepage>
+              </li>
+            );
           }
-        )}
+        })}
       </>
     );
   };
-
   const handleClickDropbox = () => {
     isOpenDrop ? setIsOpenDrop(false) : setIsOpenDrop(true);
   };
@@ -273,7 +243,7 @@ export default function Homepage() {
     <Layout>
       <HomepageBox>
         <TopAlign>
-          <WrapHomepages>{handleRenderHomepageBtns()}</WrapHomepages>
+          <WrapHomepages>{handleRenderBtns()}</WrapHomepages>
           {myPushProject.expiryDate ? (
             <>{myPushProject.expiryDate.slice(0, 10)}에 삭제 예정입니다</>
           ) : (
