@@ -225,8 +225,8 @@ export default function Login() {
     }
   };
 
-  const handleGoSignup = () => {
-    // e.preventDefault();
+  const handleGoSignup = (e) => {
+    e.preventDefault();
     navigate("/signup");
   };
 
