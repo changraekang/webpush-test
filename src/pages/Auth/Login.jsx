@@ -26,6 +26,7 @@ import { instanceAxios } from "../../api/axios";
 import {
   setAccessTokenToCookie,
   setRefreshTokenToCookie,
+  setRememberEmail,
 } from "../../cookie/controlCookie";
 import {
   InputGroup,
@@ -43,7 +44,6 @@ import {
   MyPushProject,
 } from "../../atom/Atom";
 import Cookies from "universal-cookie";
-import { useCookies } from "react-cookie";
 import { version } from "react";
 import AlertModal from "../../components/modals/AlertModal";
 import { LogoutMadal, NewpasswordMadal } from "../../components/modals/LogoutMadal";
@@ -173,7 +173,6 @@ const LabelWarning = styled.span`
 export default function Login() {
   const navigate = useNavigate();
   const [iscapslock, setIsCapsLock] = useState(false);
-  const [cookies, setCookie, removeCookie] = useCookies(["rememberEmail"]);
   const [email, setEmail] = useState("");
   const [isCheck, setIsCheck] = useState(false);
   const [password, setPassword] = useState("");
@@ -206,12 +205,12 @@ export default function Login() {
 
   // 처음 페이지 진입
   useEffect(() => {
-    if (cookies.rememberEmail !== undefined) {
-      setEmail(cookies.rememberEmail);
+    if (loginCookie.get("rememberEmail") !== undefined) {
+      setEmail(loginCookie.get("rememberEmail"));
       setIsCheck(true);
     } else {
       setIsCheck(false);
-      removeCookie("rememberEmail");
+      loginCookie.remove("rememberEmail");
     }
     loginCookie.remove("accessToken");
     loginCookie.remove("refreshToken");
@@ -222,7 +221,7 @@ export default function Login() {
     console.log("test-check");
     isCheck ? setIsCheck(false) : setIsCheck(true);
     if (isCheck) {
-      removeCookie("rememberEmail");
+      loginCookie.remove("rememberEmail");
     }
   };
 
@@ -283,10 +282,7 @@ export default function Login() {
             const response = await instanceAxios.post("/member/me");
             if (response.status === 200) {
               if (isCheck) {
-                setCookie("rememberEmail", email, {
-                  expires: today,
-                  path: "/",
-                });
+                setRememberEmail(email);
               }
               setMyProfile(response.data);
               const checkProject = async () => {

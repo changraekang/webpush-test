@@ -92,14 +92,6 @@ export default function Homepage() {
   const [isAlertOpen, setIsAlertOpen] = useRecoilState(IsAlertOpen);
   const [alertMessage, setAlertMessage] = useRecoilState(AlertMessage);
 
-  const upadateMyPushproject = {
-    cateogryCode: cateogry,
-    expiryDate: myPushProject.expiryDate,
-    name: homepage,
-    pid: myPushProject.projectUrl,
-    projectUrl: link,
-  };
-
   const updateData = {
     code: cateogry,
     name: homepage,
@@ -149,13 +141,13 @@ export default function Homepage() {
     if (window.confirm("홈페이지 정보를 수정하시겠습니까?😯")) {
       try {
         const response = await instanceAxios.put(
-          `/${myPushProject.pid}`,
+          console.log(response, "📍")`/${myPushProject.pid}`,
           updateData
         );
         if (response.status === 200) {
-          setIsAlertOpen(true);
-          setAlertMessage("성공적으로 정보를 수정하였습니다.🎉");
-          setMyPushProject(upadateMyPushproject);
+          // setIsAlertOpen(true);
+          // setAlertMessage("성공적으로 정보를 수정하였습니다.🎉");
+          // handlePushProject();
         }
         console.log(response.data);
       } catch (err) {
