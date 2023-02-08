@@ -87,31 +87,26 @@ export default function Homepage() {
   const [cateogry, setCategory] = useState(
     myCategory[myPushProject.categoryCode - 1].name
   );
-
+  
   // Alert Modal
   const [isAlertOpen, setIsAlertOpen] = useRecoilState(IsAlertOpen);
   const [alertMessage, setAlertMessage] = useRecoilState(AlertMessage);
 
-  const upadateMyPushproject = {
-    cateogryCode: cateogry,
-    expiryDate: myPushProject.expiryDate,
-    name: homepage,
-    pid: myPushProject.projectUrl,
-    projectUrl: link,
-  };
 
-  const updateData = {
-    code: cateogry,
-    name: homepage,
-    projectUrl: link,
-  };
+  useEffect(() => {
+    console.log("myPushProject🔥", myPushProject)
+    console.log("myCategory🦖",myCategory)
+    console.log("category🔫", cateogry)
+  }, [myPushProject, myCategory, cateogry])
+
+
   const handlePushProject = (
-    categoryCode,
     pid,
     name,
+    categoryCode,
     projectUrl,
     expiryDate
-  ) => {
+    ) => {
     let body = {
       categoryCode: categoryCode,
       projectUrl: projectUrl,
@@ -122,18 +117,25 @@ export default function Homepage() {
     setMyPushProject(body);
   };
 
+  const updateData = {
+    code: myCategory.code,
+    name: homepage,
+    projectUrl: link,
+  };
+
   const updateHomePage = async (e) => {
     e.preventDefault();
     if (window.confirm("홈페이지 정보를 수정하시겠습니까?😯")) {
       try {
         const response = await instanceAxios.put(
+          console.log(response, "📍")
           `/${myPushProject.pid}`,
           updateData
         );
         if (response.status === 200) {
-          setIsAlertOpen(true);
-          setAlertMessage("성공적으로 정보를 수정하였습니다.🎉");
-          setMyPushProject(upadateMyPushproject);
+          // setIsAlertOpen(true);
+          // setAlertMessage("성공적으로 정보를 수정하였습니다.🎉");
+          // handlePushProject();
         }
         console.log(response.data);
       } catch (err) {
@@ -152,6 +154,7 @@ export default function Homepage() {
         if (response.status === 200) {
           setIsAlertOpen(true);
           setAlertMessage("성공적으로 삭제되었습니다.⚠️");
+          handlePushProject();
         }
       } catch (err) {
         console.error(err);
@@ -179,7 +182,7 @@ export default function Homepage() {
     return (
       <>
         {myProject?.map(
-          ({ categoryCode, pid, name, projectUrl, expiryDate }) => {
+          ({ pid, name, categoryCode, projectUrl, expiryDate }) => {
             if (expiryDate) {
               if (pid === myPushProject.pid) {
                 return (
@@ -187,9 +190,9 @@ export default function Homepage() {
                     key={pid}
                     onClick={() =>
                       handlePushProject(
-                        categoryCode,
                         pid,
                         name,
+                        categoryCode,
                         projectUrl,
                         expiryDate
                       )
@@ -204,9 +207,9 @@ export default function Homepage() {
                     key={pid}
                     onClick={() =>
                       handlePushProject(
-                        categoryCode,
                         pid,
                         name,
+                        categoryCode,
                         projectUrl,
                         expiryDate
                       )
@@ -223,9 +226,9 @@ export default function Homepage() {
                     key={pid}
                     onClick={() =>
                       handlePushProject(
-                        categoryCode,
                         pid,
                         name,
+                        categoryCode,
                         projectUrl,
                         expiryDate
                       )
@@ -240,9 +243,9 @@ export default function Homepage() {
                     key={pid}
                     onClick={() =>
                       handlePushProject(
-                        categoryCode,
                         pid,
                         name,
+                        categoryCode,
                         projectUrl,
                         expiryDate
                       )
