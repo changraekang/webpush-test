@@ -202,7 +202,7 @@ export default function Login() {
   };
   // cookie 새로 설정
   const loginCookie = new Cookies();
-  console.log(isCheck, '🍑isCheck')
+
   // 처음 페이지 진입
   useEffect(() => {
     if (loginCookie.get("rememberEmail") !== undefined) {
