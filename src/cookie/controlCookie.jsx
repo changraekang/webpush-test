@@ -14,16 +14,22 @@ export function setRefreshTokenToCookie(refreshToken) {
 export function setAccessTokenToCookie(accessToken) {
   cookies.set("accessToken", accessToken, {
     path: "/",
-    ameSite: "strict",
+    sameSite: "strict",
     secure: true,
   });
 }
 
+
 export function setRememberEmail(email) {
+  let date = new Date();
+  let expiredDay = 365;
+  date.setTime(date.getTime() + (expiredDay * 24 * 60 * 60 * 1000));
+
   cookies.set("rememberEmail", email, {
     path: "/",
-    ameSite: "strict",
+    sameSite: "strict",
     secure: true,
+    expires: date
   });
 }
 
