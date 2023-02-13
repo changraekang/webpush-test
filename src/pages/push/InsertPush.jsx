@@ -9,7 +9,6 @@ import {
   grey1,
   grey4,
   primary4,
-  error3,
   grey3,
   grey8,
   grey5,
@@ -25,12 +24,9 @@ import { useRecoilState } from "recoil";
 import {
   AlertMessage,
   IsAlertOpen,
-  MyCategory,
   MyProject,
   MyPushProject,
 } from "../../atom/Atom";
-import { async } from "q";
-import { useRef } from "react";
 const WrapInputs = styled.div`
   width: 100%;
   margin-bottom: 12px;
@@ -40,7 +36,6 @@ const LabelStyle = styled.label`
   display: flex;
   font-size: 16px;
   margin-bottom: 10px;
-  /* width: 180px; */
 `;
 const WrapButton = styled.div`
   width: 180px;
@@ -84,7 +79,6 @@ const TxtBox = styled.div`
 
 const DemoArticle = styled.article`
   width: 500px;
-  min-height: ;
   margin: 20px auto;
   padding: 20px;
   box-sizing: border-box;
@@ -110,20 +104,20 @@ const DemoBtnAlign = styled.div`
   display: flex;
   margin-top: 24px;
   justify-content: center;
-  gap: 12px;"
+  gap: 12px;
 `
 const DemoBtn = styled.button`
   cursor: pointer;
   display: block;
-  width: 100px;
+  width: 90px;
   border: none;
-  padding: 8px 6px;
+  padding: 6px 8px;
   border-radius: 8px;
   background: ${primary4};
   color: ${grey1};
   font-size: 16px;
-  font-weight: 600;
-  text-align: center;"
+  font-weight: 500;
+  text-align: center;
 `
 
 export default function InsertPush() {
