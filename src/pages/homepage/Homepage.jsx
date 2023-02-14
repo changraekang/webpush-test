@@ -92,12 +92,6 @@ export default function Homepage() {
   const [isAlertOpen, setIsAlertOpen] = useRecoilState(IsAlertOpen);
   const [alertMessage, setAlertMessage] = useRecoilState(AlertMessage);
 
-  const updateData = {
-    code: cateogry,
-    name: homepage,
-    projectUrl: link,
-  };
-
   const getOneHomepage = async () => {
     try {
       const response = await instanceAxios.get(`/${pid}`);
@@ -112,25 +106,18 @@ export default function Homepage() {
       console.error(err);
     }
   };
-  const handleGetScript = async () => {
-    try {
-      const response = await instanceAxios.get(`/${pid}/resource`);
-      console.log(response);
-      if (response.status === 200) {
-        console.log("출력하기 성공");
-        setScript(response.data);
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
 
   useEffect(() => {
     if (pid) {
       getOneHomepage();
     }
   }, [pid]);
+
+  const updateData = {
+    code: cateogry,
+    name: homepage,
+    projectUrl: link,
+  };
 
   const updateHomePage = async (e) => {
     e.preventDefault();
@@ -183,7 +170,7 @@ export default function Homepage() {
       );
     }
   };
-  const handleRenderBtns = () => {
+  const renderHomepageList = () => {
     return (
       <>
         {myProject?.map(({ name, pid }) => {
@@ -216,6 +203,7 @@ export default function Homepage() {
       </>
     );
   };
+
   const handleClickDropbox = () => {
     isOpenDrop ? setIsOpenDrop(false) : setIsOpenDrop(true);
   };
@@ -230,7 +218,7 @@ export default function Homepage() {
     <Layout>
       <HomepageBox>
         <TopAlign>
-          <WrapHomepages>{handleRenderBtns()}</WrapHomepages>
+          <WrapHomepages>{renderHomepageList()}</WrapHomepages>
           {myPushProject.expiryDate ? (
             <>{myPushProject.expiryDate.slice(0, 10)}에 삭제 예정입니다</>
           ) : (
