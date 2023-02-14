@@ -77,26 +77,19 @@ const DeleteBtn = styled.button`
 `;
 
 export default function Homepage() {
-  const [selectedDrop, setSelectedDrop] = useState("");
   const [isOpenDrop, setIsOpenDrop] = useState(false);
   const [myProject, setMyProject] = useRecoilState(MyProject);
   const [myCategory, setMyCategory] = useRecoilState(MyCategory);
   const [myPushProject, setMyPushProject] = useRecoilState(MyPushProject);
   const [homepage, setHomepage] = useState(myPushProject.name);
   const [pid, setPid] = useState(myPushProject.pid);
-  const [script, setScript] = useState("");
   const [link, setLink] = useState(myPushProject.projectUrl);
-  const [cateogry, setCategory] = useState("");
+  const [cateogryName, setCategoryName] = useState("");
+  const [categoryCode, setCategoryCode] = useState("");
 
   // Alert Modal
   const [isAlertOpen, setIsAlertOpen] = useRecoilState(IsAlertOpen);
   const [alertMessage, setAlertMessage] = useRecoilState(AlertMessage);
-
-  const updateData = {
-    code: cateogry,
-    name: homepage,
-    projectUrl: link,
-  };
 
   const getOneHomepage = async () => {
     try {
@@ -106,19 +99,7 @@ export default function Homepage() {
         setMyPushProject(response.data);
         setHomepage(response.data.name);
         setLink(response.data.projectUrl);
-        setCategory(myCategory[myPushProject.categoryCode - 1]?.name);
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  };
-  const handleGetScript = async () => {
-    try {
-      const response = await instanceAxios.get(`/${pid}/resource`);
-      console.log(response);
-      if (response.status === 200) {
-        console.log("출력하기 성공");
-        setScript(response.data);
+        setCategoryName(myCategory[response.data.categoryCode - 1].name)
       }
     } catch (err) {
       console.error(err);
@@ -127,21 +108,21 @@ export default function Homepage() {
 
   useEffect(() => {
     if (pid) {
-      handleGetScript();
-    }
-  }, [pid]);
-  useEffect(() => {
-    if (pid) {
       getOneHomepage();
     }
-    console.log(myPushProject, "myPushProject");
   }, [pid]);
+
+  const updateData = {
+    code: categoryCode,
+    name: homepage,
+    projectUrl: link,
+  };
+
   const updateHomePage = async (e) => {
     e.preventDefault();
     if (window.confirm("홈페이지 정보를 수정하시겠습니까?😯")) {
       try {
-        const response = await instanceAxios.put(
-          console.log(response, "📍")`/${myPushProject.pid}`,
+        const response = await instanceAxios.put(`/${myPushProject.pid}`,
           updateData
         );
         if (response.status === 200) {
@@ -161,7 +142,7 @@ export default function Homepage() {
     if (window.confirm("정말 홈페이지를 삭제하시겠습니까?")) {
       try {
         const response = await instanceAxios.delete(
-          `/${myPushProject.pid}/cancel`
+          `/${myPushProject.pid}`
         );
         if (response.status === 200) {
           setIsAlertOpen(true);
@@ -177,7 +158,7 @@ export default function Homepage() {
     if (
       myPushProject.projectUrl === link &&
       myPushProject.name === homepage &&
-      myCategory[myPushProject.categoryCode - 1]?.name === cateogry
+      myCategory[myPushProject.categoryCode - 1]?.name === cateogryName
     ) {
       return <BeforeUpdateHomepage>수정</BeforeUpdateHomepage>;
     } else {
@@ -188,7 +169,7 @@ export default function Homepage() {
       );
     }
   };
-  const handleRenderBtns = () => {
+  const renderHomepageList = () => {
     return (
       <>
         {myProject?.map(({ name, pid }) => {
@@ -221,13 +202,15 @@ export default function Homepage() {
       </>
     );
   };
+
   const handleClickDropbox = () => {
     isOpenDrop ? setIsOpenDrop(false) : setIsOpenDrop(true);
   };
 
   const handleClickDropItem = (e) => {
     e.preventDefault();
-    setCategory(e.target.value);
+    setCategoryName(e.target.value);
+    setCategoryCode(e.target.id);
     setIsOpenDrop(false);
   };
 
@@ -235,7 +218,7 @@ export default function Homepage() {
     <Layout>
       <HomepageBox>
         <TopAlign>
-          <WrapHomepages>{handleRenderBtns()}</WrapHomepages>
+          <WrapHomepages>{renderHomepageList()}</WrapHomepages>
           {myPushProject.expiryDate ? (
             <>{myPushProject.expiryDate.slice(0, 10)}에 삭제 예정입니다</>
           ) : (
@@ -270,7 +253,7 @@ export default function Homepage() {
             <div>
               <DropboxInput
                 type="text"
-                value={cateogry}
+                value={cateogryName}
                 id="category"
                 readOnly={true}
                 handleClick={handleClickDropbox}

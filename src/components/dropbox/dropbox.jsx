@@ -60,7 +60,7 @@ export  function CategoryDropbox ({ arrList, handleClick, width, ver, hor, last 
     <EmailList style={{"width": `${width}`, top: `${ver}`, left: `${hor}`}}>
         {arrList.map(({name, code}) => (
         <EmailOptions key={code}>
-          <ItemBtn onClick={handleClick} value={name}>
+          <ItemBtn id={code} onClick={handleClick} value={name}>
           {name}
           </ItemBtn>
         </EmailOptions>
