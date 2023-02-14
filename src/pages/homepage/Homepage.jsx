@@ -125,23 +125,18 @@ export default function Homepage() {
     }
   };
 
-  useEffect(() => {
-    if (pid) {
-      handleGetScript();
-    }
-  }, [pid]);
+
   useEffect(() => {
     if (pid) {
       getOneHomepage();
     }
-    console.log(myPushProject, "myPushProject");
   }, [pid]);
+
   const updateHomePage = async (e) => {
     e.preventDefault();
     if (window.confirm("홈페이지 정보를 수정하시겠습니까?😯")) {
       try {
-        const response = await instanceAxios.put(
-          console.log(response, "📍")`/${myPushProject.pid}`,
+        const response = await instanceAxios.put(`/${myPushProject.pid}`,
           updateData
         );
         if (response.status === 200) {
@@ -161,7 +156,7 @@ export default function Homepage() {
     if (window.confirm("정말 홈페이지를 삭제하시겠습니까?")) {
       try {
         const response = await instanceAxios.delete(
-          `/${myPushProject.pid}/cancel`
+          `/${myPushProject.pid}`
         );
         if (response.status === 200) {
           setIsAlertOpen(true);
