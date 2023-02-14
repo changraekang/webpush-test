@@ -77,16 +77,15 @@ const DeleteBtn = styled.button`
 `;
 
 export default function Homepage() {
-  const [selectedDrop, setSelectedDrop] = useState("");
   const [isOpenDrop, setIsOpenDrop] = useState(false);
   const [myProject, setMyProject] = useRecoilState(MyProject);
   const [myCategory, setMyCategory] = useRecoilState(MyCategory);
   const [myPushProject, setMyPushProject] = useRecoilState(MyPushProject);
   const [homepage, setHomepage] = useState(myPushProject.name);
   const [pid, setPid] = useState(myPushProject.pid);
-  const [script, setScript] = useState("");
   const [link, setLink] = useState(myPushProject.projectUrl);
-  const [cateogry, setCategory] = useState("");
+  const [cateogryName, setCategoryName] = useState("");
+  const [categoryCode, setCategoryCode] = useState("");
 
   // Alert Modal
   const [isAlertOpen, setIsAlertOpen] = useRecoilState(IsAlertOpen);
@@ -100,7 +99,7 @@ export default function Homepage() {
         setMyPushProject(response.data);
         setHomepage(response.data.name);
         setLink(response.data.projectUrl);
-        setCategory(myCategory[myPushProject.categoryCode - 1]?.name);
+        setCategoryName(myCategory[response.data.categoryCode - 1].name)
       }
     } catch (err) {
       console.error(err);
@@ -114,7 +113,7 @@ export default function Homepage() {
   }, [pid]);
 
   const updateData = {
-    code: cateogry,
+    code: categoryCode,
     name: homepage,
     projectUrl: link,
   };
@@ -159,7 +158,7 @@ export default function Homepage() {
     if (
       myPushProject.projectUrl === link &&
       myPushProject.name === homepage &&
-      myCategory[myPushProject.categoryCode - 1]?.name === cateogry
+      myCategory[myPushProject.categoryCode - 1]?.name === cateogryName
     ) {
       return <BeforeUpdateHomepage>수정</BeforeUpdateHomepage>;
     } else {
@@ -210,7 +209,8 @@ export default function Homepage() {
 
   const handleClickDropItem = (e) => {
     e.preventDefault();
-    setCategory(e.target.value);
+    setCategoryName(e.target.value);
+    setCategoryCode(e.target.id);
     setIsOpenDrop(false);
   };
 
@@ -253,7 +253,7 @@ export default function Homepage() {
             <div>
               <DropboxInput
                 type="text"
-                value={cateogry}
+                value={cateogryName}
                 id="category"
                 readOnly={true}
                 handleClick={handleClickDropbox}
